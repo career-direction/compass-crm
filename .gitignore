@@ -13,6 +13,9 @@
 # testing
 /coverage
 
+# supabase
+supabase/config.toml
+
 # next.js
 /.next/
 /out/
