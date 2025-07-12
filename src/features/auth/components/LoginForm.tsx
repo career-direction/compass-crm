@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Anchor,
@@ -8,10 +8,10 @@ import {
   Text,
   TextInput,
   Title,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useState } from 'react';
-import { validateEmail } from '../utils/validation';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useState } from "react";
+import { validateEmail } from "../utils/validation";
 
 interface LoginFormData {
   email: string;
@@ -23,24 +23,24 @@ export function LoginForm() {
 
   const form = useForm<LoginFormData>({
     initialValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
 
     validate: {
       email: validateEmail,
       password: (value: string) =>
-        value.length < 1 ? 'パスワードを入力してください' : null,
+        value.length < 1 ? "パスワードを入力してください" : null,
     },
   });
 
   const handleSubmit = async (values: LoginFormData) => {
     setLoading(true);
     try {
-      console.log('Login data:', values);
+      console.log("Login data:", values);
       // TODO: Implement actual login logic
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
     } finally {
       setLoading(false);
     }
@@ -58,14 +58,14 @@ export function LoginForm() {
             label="メールアドレス"
             placeholder="メールアドレスを入力してください"
             required
-            {...form.getInputProps('email')}
+            {...form.getInputProps("email")}
           />
 
           <PasswordInput
             label="パスワード"
             placeholder="パスワードを入力してください"
             required
-            {...form.getInputProps('password')}
+            {...form.getInputProps("password")}
           />
 
           <Button type="submit" fullWidth mt="xl" loading={loading}>
@@ -75,7 +75,7 @@ export function LoginForm() {
       </form>
 
       <Text ta="center" mt="md">
-        アカウントをお持ちでない方は{' '}
+        アカウントをお持ちでない方は{" "}
         <Anchor href="/register" size="sm">
           新規登録
         </Anchor>

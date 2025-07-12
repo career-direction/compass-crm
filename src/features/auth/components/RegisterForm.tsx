@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Anchor,
@@ -8,15 +8,15 @@ import {
   Text,
   TextInput,
   Title,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useState } from 'react';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useState } from "react";
 import {
   validateEmail,
   validateName,
   validatePassword,
   validatePasswordConfirmation,
-} from '../utils/validation';
+} from "../utils/validation";
 
 interface RegisterFormData {
   email: string;
@@ -31,11 +31,11 @@ export function RegisterForm() {
 
   const form = useForm<RegisterFormData>({
     initialValues: {
-      email: '',
-      password: '',
-      confirmPassword: '',
-      firstName: '',
-      lastName: '',
+      email: "",
+      password: "",
+      confirmPassword: "",
+      firstName: "",
+      lastName: "",
     },
 
     validate: {
@@ -43,18 +43,18 @@ export function RegisterForm() {
       password: validatePassword,
       confirmPassword: (value: string, values: RegisterFormData) =>
         validatePasswordConfirmation(values.password, value),
-      firstName: (value: string) => validateName(value, '姓'),
-      lastName: (value: string) => validateName(value, '名'),
+      firstName: (value: string) => validateName(value, "姓"),
+      lastName: (value: string) => validateName(value, "名"),
     },
   });
 
   const handleSubmit = async (values: RegisterFormData) => {
     setLoading(true);
     try {
-      console.log('Registration data:', values);
+      console.log("Registration data:", values);
       // TODO: Implement actual registration logic
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error("Registration error:", error);
     } finally {
       setLoading(false);
     }
@@ -72,35 +72,35 @@ export function RegisterForm() {
             label="姓"
             placeholder="姓を入力してください"
             required
-            {...form.getInputProps('firstName')}
+            {...form.getInputProps("firstName")}
           />
 
           <TextInput
             label="名"
             placeholder="名を入力してください"
             required
-            {...form.getInputProps('lastName')}
+            {...form.getInputProps("lastName")}
           />
 
           <TextInput
             label="メールアドレス"
             placeholder="メールアドレスを入力してください"
             required
-            {...form.getInputProps('email')}
+            {...form.getInputProps("email")}
           />
 
           <PasswordInput
             label="パスワード"
             placeholder="パスワードを入力してください"
             required
-            {...form.getInputProps('password')}
+            {...form.getInputProps("password")}
           />
 
           <PasswordInput
             label="パスワード確認"
             placeholder="パスワードを再入力してください"
             required
-            {...form.getInputProps('confirmPassword')}
+            {...form.getInputProps("confirmPassword")}
           />
 
           <Button type="submit" fullWidth mt="xl" loading={loading}>
@@ -110,7 +110,7 @@ export function RegisterForm() {
       </form>
 
       <Text ta="center" mt="md">
-        すでにアカウントをお持ちですか？{' '}
+        すでにアカウントをお持ちですか？{" "}
         <Anchor href="/login" size="sm">
           ログイン
         </Anchor>

@@ -1,5 +1,5 @@
-import { Container } from '@mantine/core';
-import { LoginForm } from '@/features/auth/components/LoginForm';
+import { Container } from "@mantine/core";
+import { LoginForm } from "@/features/auth/components/LoginForm";
 
 export default function LoginPage() {
   return (

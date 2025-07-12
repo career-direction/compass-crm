@@ -21,7 +21,7 @@ export function dijkstra(graph: Graph, start: string): DijkstraResult {
 
   while (unvisited.size > 0) {
     const current = Array.from(unvisited).reduce((min, node) =>
-      distances[node] < distances[min] ? node : min
+      distances[node] < distances[min] ? node : min,
     );
 
     unvisited.delete(current);

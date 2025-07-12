@@ -10,7 +10,7 @@ export function isValidEmail(email: string): boolean {
   if (atCount !== 1) return false;
 
   // @で分割してローカル部とドメイン部を取得
-  const parts = email.split('@');
+  const parts = email.split("@");
   const localPart = parts[0];
   const domainPart = parts[1];
 
@@ -25,10 +25,10 @@ export function isValidEmail(email: string): boolean {
   if (!localRegex.test(localPart)) return false;
 
   // ローカル部の先頭末尾にピリオドがないことを確認
-  if (localPart.startsWith('.') || localPart.endsWith('.')) return false;
+  if (localPart.startsWith(".") || localPart.endsWith(".")) return false;
 
   // ローカル部に連続するピリオドがないことを確認
-  if (localPart.includes('..')) return false;
+  if (localPart.includes("..")) return false;
 
   // ドメイン部の妥当性チェック
   const domainRegex =
@@ -36,13 +36,13 @@ export function isValidEmail(email: string): boolean {
   if (!domainRegex.test(domainPart)) return false;
 
   // ドメイン部にピリオドが含まれていることを確認（TLDが必要）
-  if (!domainPart.includes('.')) return false;
+  if (!domainPart.includes(".")) return false;
 
   // ドメイン部の先頭末尾にピリオドがないことを確認
-  if (domainPart.startsWith('.') || domainPart.endsWith('.')) return false;
+  if (domainPart.startsWith(".") || domainPart.endsWith(".")) return false;
 
   // ドメイン部に連続するピリオドがないことを確認
-  if (domainPart.includes('..')) return false;
+  if (domainPart.includes("..")) return false;
 
   return true;
 }
@@ -53,7 +53,7 @@ export function isValidPassword(password: string): boolean {
 
 export function isPasswordMatching(
   password: string,
-  confirmPassword: string
+  confirmPassword: string,
 ): boolean {
   return password === confirmPassword;
 }
@@ -68,12 +68,12 @@ export function isEmpty(value: string): boolean {
 
 // Error message constants
 export const ERROR_MESSAGES = {
-  EMAIL_REQUIRED: 'メールアドレスを入力してください',
-  EMAIL_INVALID: '正しいメールアドレスを入力してください',
-  PASSWORD_REQUIRED: 'パスワードを入力してください',
-  PASSWORD_TOO_SHORT: 'パスワードは8文字以上で入力してください',
-  PASSWORD_CONFIRMATION_REQUIRED: 'パスワード確認を入力してください',
-  PASSWORD_MISMATCH: 'パスワードが一致しません',
+  EMAIL_REQUIRED: "メールアドレスを入力してください",
+  EMAIL_INVALID: "正しいメールアドレスを入力してください",
+  PASSWORD_REQUIRED: "パスワードを入力してください",
+  PASSWORD_TOO_SHORT: "パスワードは8文字以上で入力してください",
+  PASSWORD_CONFIRMATION_REQUIRED: "パスワード確認を入力してください",
+  PASSWORD_MISMATCH: "パスワードが一致しません",
   NAME_REQUIRED: (fieldName: string) => `${fieldName}を入力してください`,
   NAME_TOO_SHORT: (fieldName: string) =>
     `${fieldName}は2文字以上で入力してください`,
@@ -106,7 +106,7 @@ export function validatePassword(password: string): string | null {
 
 export function validatePasswordConfirmation(
   password: string,
-  confirmPassword: string
+  confirmPassword: string,
 ): string | null {
   if (isEmpty(confirmPassword)) {
     return ERROR_MESSAGES.PASSWORD_CONFIRMATION_REQUIRED;
