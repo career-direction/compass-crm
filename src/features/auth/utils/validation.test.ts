@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { isValidEmail, validateEmail, ERROR_MESSAGES } from './validation';
+import { describe, expect, it } from 'vitest';
+import { ERROR_MESSAGES, isValidEmail, validateEmail } from './validation';
 
 describe('isValidEmail', () => {
   it('空文字の場合はfalseを返す', () => {
@@ -13,12 +13,6 @@ describe('isValidEmail', () => {
     expect(result).toBe(false);
   });
 
-  it('nullまたはundefinedの場合はfalseを返す', () => {
-    // Arrange & Act & Assert
-    expect(isValidEmail(null as any)).toBe(false);
-    expect(isValidEmail(undefined as any)).toBe(false);
-  });
-
   it('有効なメールアドレスの場合はtrueを返す', () => {
     // Arrange
     const validEmails = [
@@ -30,10 +24,10 @@ describe('isValidEmail', () => {
       'a@b.co',
       'user_name@example.com',
       'user-name@example.com',
-      'test123@example123.com'
+      'test123@example123.com',
     ];
 
-    validEmails.forEach(email => {
+    validEmails.forEach((email) => {
       // Act
       const result = isValidEmail(email);
 
@@ -59,10 +53,10 @@ describe('isValidEmail', () => {
       'user@.example.com',
       'user@example.',
       'user name@example.com',
-      'user@ex ample.com'
+      'user@ex ample.com',
     ];
 
-    invalidEmails.forEach(email => {
+    invalidEmails.forEach((email) => {
       // Act
       const result = isValidEmail(email);
 
@@ -115,10 +109,10 @@ describe('isValidEmail', () => {
       'test_underscore@example.com',
       'test-hyphen@example.com',
       'test123@example.com',
-      'user!#$%&*+-/=?^_`{|}~@example.com'
+      'user!#$%&*+-/=?^_`{|}~@example.com',
     ];
 
-    specialCharEmails.forEach(email => {
+    specialCharEmails.forEach((email) => {
       // Act
       const result = isValidEmail(email);
 

@@ -1,17 +1,22 @@
 'use client';
 
 import {
-  TextInput,
-  PasswordInput,
-  Button,
-  Title,
-  Stack,
   Anchor,
+  Button,
+  PasswordInput,
+  Stack,
   Text,
+  TextInput,
+  Title,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useState } from 'react';
-import { validateEmail, validatePassword, validatePasswordConfirmation, validateName } from '../utils/validation';
+import {
+  validateEmail,
+  validateName,
+  validatePassword,
+  validatePasswordConfirmation,
+} from '../utils/validation';
 
 interface RegisterFormData {
   email: string;
