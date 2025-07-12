@@ -1,8 +1,49 @@
 // Pure validation logic functions
 export function isValidEmail(email: string): boolean {
   if (!email) return false;
-  const emailRegex = /^\S+@\S+$/;
-  return emailRegex.test(email);
+  
+  // 基本的な長さチェック（320文字はRFC 5321の制限）
+  if (email.length > 320) return false;
+  
+  // @が1つだけ存在することを確認
+  const atCount = (email.match(/@/g) || []).length;
+  if (atCount !== 1) return false;
+  
+  // @で分割してローカル部とドメイン部を取得
+  const parts = email.split('@');
+  const localPart = parts[0];
+  const domainPart = parts[1];
+  
+  // ローカル部とドメイン部が存在することを確認
+  if (!localPart || !domainPart) return false;
+  
+  // ローカル部の長さチェック（64文字制限）
+  if (localPart.length > 64) return false;
+  
+  // ローカル部の妥当性チェック
+  const localRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+$/;
+  if (!localRegex.test(localPart)) return false;
+  
+  // ローカル部の先頭末尾にピリオドがないことを確認
+  if (localPart.startsWith('.') || localPart.endsWith('.')) return false;
+  
+  // ローカル部に連続するピリオドがないことを確認
+  if (localPart.includes('..')) return false;
+  
+  // ドメイン部の妥当性チェック
+  const domainRegex = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  if (!domainRegex.test(domainPart)) return false;
+  
+  // ドメイン部にピリオドが含まれていることを確認（TLDが必要）
+  if (!domainPart.includes('.')) return false;
+  
+  // ドメイン部の先頭末尾にピリオドがないことを確認
+  if (domainPart.startsWith('.') || domainPart.endsWith('.')) return false;
+  
+  // ドメイン部に連続するピリオドがないことを確認
+  if (domainPart.includes('..')) return false;
+  
+  return true;
 }
 
 export function isValidPassword(password: string): boolean {
