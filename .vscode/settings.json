@@ -21,5 +21,6 @@
 	},
 	// ─ VSCode 全体の設定 ───────────────
 	"editor.defaultFormatter": "biomejs.biome",
-	"editor.formatOnSave": true
+	"editor.formatOnSave": true,
+	"cSpell.words": ["biomejs"]
 }
