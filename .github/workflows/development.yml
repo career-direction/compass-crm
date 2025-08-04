@@ -1,40 +1,119 @@
-name: Migrate Development DB
+# # .github/workflows/development.yml
+
+# name: "Development: DB Migration on PR"
+
+# on:
+#   pull_request:
+#     branches:
+#       - main
+#     # Only run this workflow if migration files have changed.
+#     paths:
+#       - "prisma/migrations/**"
+
+# jobs:
+#   migrate-dev-db:
+#     name: "Migrate Development DB"
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 5
+
+#     env:
+#       # SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+#       # SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DEVELOPMENT_DB_PASSWORD }}
+#       # The DATABASE_URL is used by Prisma to connect to the Supabase database.
+#       DATABASE_URL: "postgresql://postgres:${{ secrets.SUPABASE_DEVELOPMENT_DB_PASSWORD }}@db.${{ secrets.SUPABASE_DEVELOPMENT_PROJECT_ID }}.supabase.co:5432/postgres?sslmode=require"
+
+#     steps:
+#       - name: "Checkout Repository"
+#         uses: actions/checkout@v4
+
+#       - name: "Set up Node.js from .nvmrc"
+#         uses: actions/setup-node@v4
+#         with:
+#           # Reads the Node.js version from the .nvmrc file for consistency.
+#           node-version-file: ".nvmrc"
+#           # Cache npm for faster installs.
+#           cache: "npm"
+
+#       - name: "Install Dependencies"
+#         # Use 'npm ci' for clean, reliable builds in CI environments.
+#         run: npm ci
+
+#       - name: "Generate Prisma Client"
+#         # Ensures the Prisma Client is up-to-date with the schema.
+#         run: npx prisma generate
+
+#       - name: "Apply Database Migrations"
+#         # Deploys pending migrations to the development database.
+#         run: npx prisma migrate deploy
+
+name: Prisma Migration Workflow
 
 on:
-  push:
-    branches:
-      - 'feature/**'
   pull_request:
+    branches:
+      - main
+  push:
     branches:
       - main
 
 jobs:
-  migrate-dev-db:
+  # ==============================
+  # 1. PR時: ローカルPostgresでマイグレーションをテスト
+  # ==============================
+  test-migrations:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Run migrations on local Postgres
+        run: npx prisma migrate dev --name pr_test --skip-seed
+
+  # ==============================
+  # 2. mainマージ時: Supabase dev に deploy
+  # ==============================
+  deploy-migrations:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
     env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DEVELOPMENT_DB_PASSWORD }}
-      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_DEVELOPMENT_PROJECT_ID }}
-      DATABASE_URL: postgresql://postgres:${{ secrets.SUPABASE_DEVELOPMENT_DB_PASSWORD }}@db.vnmlqmebcmhtjsclwkod.supabase.co:5432/postgres?sslmode=require
+      DATABASE_URL: postgresql://postgres:${{ secrets.SUPABASE_DEVELOPMENT_DB_PASSWORD }}@db.vnmlqmebcmhtjsclwkod.supabase.co:5432/postgres
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '22.15.1'
+          node-version: 20
+          cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
-      - name: Generate Prisma Client
-        run: npx prisma generate
-
-      - name: Run migrations (deploy mode)
+      - name: Deploy migrations to Supabase dev
         run: npx prisma migrate deploy
-
-      - name: Verify migration (optional)
-        run: npx prisma db pull && npx prisma validate
