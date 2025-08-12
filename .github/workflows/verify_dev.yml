@@ -47,9 +47,13 @@ jobs:
       - name: Dump remote schema (schema only)
         run: |
           pg_dump "$REMOTE_DB_URL" --schema-only --no-owner --no-privileges > schema.sql
+        env:
+          PGHOSTADDR: 54.85.113.108
       - name: Dump _prisma_migrations table data
         run: |
           pg_dump "$REMOTE_DB_URL" --data-only --inserts --table _prisma_migrations --no-owner --no-privileges > migrations_data.sql
+        env:
+          PGHOSTADDR: 54.85.113.108
 
       # --- 2) CI内の一時Postgresへ復元 ---
       - name: Restore schema to snapshot DB
