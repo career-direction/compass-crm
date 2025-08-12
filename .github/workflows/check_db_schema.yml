@@ -29,11 +29,11 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y postgresql-client netcat-openbsd
           # 1) TCP到達性
-          nc -vz $(echo $DATABASE_URL | sed -E 's#.*/\\/(.*)\\?.*#\\1#' | awk -F'@' '{print $2}' | awk -F':' '{print $1}') 5432 || true
+          nc -vz $(echo $REMOTE_DB_URL | sed -E 's#.*/\\/(.*)\\?.*#\\1#' | awk -F'@' '{print $2}' | awk -F':' '{print $1}') 5432 || true
           # 2) pg_isready（SSL必須）
-          pg_isready -d "$DATABASE_URL" || true
+          pg_isready -d "$REMOTE_DB_URL" || true
           # 3) 実接続
-          psql "$DATABASE_URL" -c '\conninfo'
+          psql "$REMOTE_DB_URL" -c '\conninfo'
 
       # remote(dev) -> schema.prisma への変換SQLを出力
       - name: Compute diff (remote dev -> local schema.prisma)
