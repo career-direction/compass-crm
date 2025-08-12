@@ -1,0 +1,48 @@
+name: Check Schema Drift (dev vs schema.prisma)
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "prisma/**"
+  workflow_dispatch:
+
+jobs:
+  schema-drift:
+    runs-on: ubuntu-latest
+    env:
+      # Supabase(dev) の接続文字列をSecretsに入れておく
+      REMOTE_DB_URL: ${{ secrets.SUPABASE_DEVELOPMENT_DB_URL }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npx prisma generate
+
+      # remote(dev) -> schema.prisma への変換SQLを出力
+      - name: Compute diff (remote dev -> local schema.prisma)
+        run: |
+          npx prisma migrate diff \
+            --from-url "$REMOTE_DB_URL" \
+            --to-schema-datamodel ./prisma/schema.prisma \
+            --script > schema_diff.sql
+          # ファイルが空でなければ差分ありとして失敗させる
+          if [ -s schema_diff.sql ]; then
+            echo "❌ Schema drift detected between dev DB and schema.prisma"
+            exit 1
+          else
+            echo "✅ No drift: dev DB matches schema.prisma"
+          fi
+
+      - name: Upload diff artifact (for review)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: schema-diff-sql
+          path: schema_diff.sql
