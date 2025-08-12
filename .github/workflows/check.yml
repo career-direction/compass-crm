@@ -1,0 +1,14 @@
+env:
+  DATABASE_URL: ${{ secrets.SUPABASE_DEVELOPMENT_DB_URL }}
+
+steps:
+  - uses: actions/checkout@v4
+  - name: Check TCP reachability
+    run: |
+      sudo apt-get update && sudo apt-get install -y postgresql-client netcat-openbsd
+      # 1) TCP到達性
+      nc -vz $(echo $DATABASE_URL | sed -E 's#.*/\\/(.*)\\?.*#\\1#' | awk -F'@' '{print $2}' | awk -F':' '{print $1}') 5432 || true
+      # 2) pg_isready（SSL必須）
+      pg_isready -d "$DATABASE_URL" || true
+      # 3) 実接続
+      psql "$DATABASE_URL" -c '\conninfo'
