@@ -256,8 +256,9 @@ model RequiredFunction {
   updated_at              DateTime @updatedAt
 
   // Relations
-  curriculumUnit  CurriculumUnit  @relation(fields: [curriculum_unit_id], references: [id])
-  treatmentMenus  TreatmentMenu[]
+  curriculumUnit CurriculumUnit  @relation(fields: [curriculum_unit_id], references: [id])
+  treatmentMenus TreatmentMenu[]
+  TrainingMenu   TrainingMenu[]
 
   @@map("required_functions")
 }
@@ -274,8 +275,8 @@ model TreatmentMenu {
   updated_at           DateTime @updatedAt
 
   // Relations
-  requiredFunction  RequiredFunction  @relation(fields: [required_function_id], references: [id])
-  learningMaterial  LearningMaterial  @relation(fields: [learning_material_id], references: [id])
+  requiredFunction RequiredFunction @relation(fields: [required_function_id], references: [id])
+  learningMaterial LearningMaterial @relation(fields: [learning_material_id], references: [id])
 
   @@map("treatment_menus")
 }
@@ -293,8 +294,8 @@ model TrainingMenu {
   updated_at           DateTime @updatedAt
 
   // Relations
-  requiredFunction  RequiredFunction  @relation(fields: [required_function_id], references: [id])
-  learningMaterial  LearningMaterial  @relation(fields: [learning_material_id], references: [id])
+  requiredFunction RequiredFunction @relation(fields: [required_function_id], references: [id])
+  learningMaterial LearningMaterial @relation(fields: [learning_material_id], references: [id])
 
   @@map("training_menus")
 }
