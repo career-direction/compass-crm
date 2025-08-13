@@ -1,0 +1,97 @@
+name: Verify Prisma Migrations against latest dev schema
+
+on:
+  pull_request:
+    branches: [ main ]      # mainに対するPRで実行
+    paths:
+      - "prisma/**"         # Prisma配下の変更があるときだけ（任意）
+  workflow_dispatch:
+
+jobs:
+  verify-migrations:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: snapshotdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      # スナップショットの復元先（CI内の一時Postgres）
+      SNAPSHOT_DB_URL: postgresql://postgres:postgres@localhost:5432/snapshotdb
+      # ダンプ元：Supabase dev の接続文字列（Dashboard → Project Settings → Database → Connection string / URI）
+      REMOTE_DB_URL: ${{ secrets.SUPABASE_DEVELOPMENT_DB_URL }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Install Postgres client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        # schema.prisma の場所が ./prisma 以外なら --schema で明示
+
+      # --- 1) devの“現行”スキーマをスナップショットとして取得 ---
+      - name: Dump dev schema (DDL only)
+        run: |
+          pg_dump "$REMOTE_DB_URL" --schema-only --no-owner --no-privileges > schema.sql
+      - name: Dump _prisma_migrations table (data only)
+        run: |
+          # Prismaの履歴テーブルをデータとして取り込むことで、本番/開発と同じ履歴前提で検証できる
+          pg_dump "$REMOTE_DB_URL" --data-only --inserts \
+            --table _prisma_migrations \
+            --no-owner --no-privileges > migrations_data.sql || true
+
+      # --- 2) CI内のPostgresへ復元（リモートは一切変更しない）---
+      - name: Restore schema into snapshot DB
+        run: psql "$SNAPSHOT_DB_URL" -f schema.sql
+      - name: Restore _prisma_migrations data
+        run: |
+          if [ -s migrations_data.sql ]; then
+            psql "$SNAPSHOT_DB_URL" -f migrations_data.sql
+          else
+            echo "No _prisma_migrations data found (new project?)"
+          fi
+
+      # --- 3) トピックブランチに含まれる新規マイグレーションが適用できるか検証 ---
+      - name: Apply migrations (deploy to snapshot)
+        env:
+          DATABASE_URL: ${{ env.SNAPSHOT_DB_URL }}
+        run: npx prisma migrate deploy
+
+      # --- 4) 参考: 差分SQLを出力してレビュアーに見せる（任意）---
+      - name: Generate SQL diff (snapshot -> schema.prisma)
+        env:
+          FROM_URL: ${{ env.SNAPSHOT_DB_URL }}
+        run: |
+          npx prisma migrate diff \
+            --from-url "$FROM_URL" \
+            --to-schema-datamodel ./prisma/schema.prisma \
+            --script > migration_diff.sql || true
+          # diffはレビュー用。ここでは失敗させない（適用は上のdeployで検証済み）
+
+      - name: Upload diff artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: migration-sql-diff
+          path: migration_diff.sql
