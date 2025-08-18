@@ -7,10 +7,8 @@ import {
 	Select,
 	SimpleGrid,
 	Stack,
-	Text,
 	TextInput,
 	Textarea,
-	Title,
 } from "@mantine/core";
 
 import { DateInput, TimeInput } from "@mantine/dates";
@@ -20,7 +18,7 @@ export const NewSessionModal = () => {
 	const [formData, setFormData] = useState({
 		client: "",
 		trainer: "",
-		date: null as Date | null,
+		date: "",
 		time: "",
 		sessionType: "",
 		duration: "",
@@ -68,13 +66,6 @@ export const NewSessionModal = () => {
 	return (
 		<Box>
 			<Stack gap="md">
-				<Box>
-					<Title order={4}>新しいセッションを追加</Title>
-					<Text size="sm" c="dimmed">
-						クライアントとのセッション情報を入力してください。
-					</Text>
-				</Box>
-
 				<SimpleGrid cols={2} spacing="md">
 					<Select
 						label="クライアント"
@@ -102,8 +93,13 @@ export const NewSessionModal = () => {
 					<DateInput
 						label="日付"
 						placeholder="日付を選択"
-						value={formData.date}
-						onChange={(value) => setFormData({ ...formData, date: value })}
+						value={formData.date ? new Date(formData.date) : null}
+						onChange={(value) =>
+							setFormData({
+								...formData,
+								date: value ? value.toString().split("T")[0] : "",
+							})
+						}
 						required
 					/>
 
