@@ -10,10 +10,16 @@ import {
 	Text,
 	SimpleGrid,
 	Chip,
+	Modal,
 } from "@mantine/core";
+
 import { SessionListItem } from "../components/SessionListItem.ui";
+import { useDisclosure } from "@mantine/hooks";
+import { NewSessionModal } from "../components/NewSessionModal.ui";
 
 export const SessionList = () => {
+	const [opened, { open, close }] = useDisclosure(false);
+
 	return (
 		<>
 			<Group justify="space-between" align="center" my="md">
@@ -23,7 +29,7 @@ export const SessionList = () => {
 				<Space></Space>
 				<Group>
 					<Button>フィルター</Button>
-					<Button>セッション追加</Button>
+					<Button onClick={open}>セッション追加</Button>
 				</Group>
 			</Group>
 
@@ -48,6 +54,11 @@ export const SessionList = () => {
 					<SessionListItem />
 				</List.Item>
 			</List>
+
+			{/* セッション追加モーダル */}
+			<Modal opened={opened} onClose={close} title="Authentication" centered>
+				<NewSessionModal />
+			</Modal>
 		</>
 	);
 };
