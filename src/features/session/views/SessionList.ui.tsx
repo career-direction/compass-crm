@@ -56,7 +56,13 @@ export const SessionList = () => {
 			</List>
 
 			{/* セッション追加モーダル */}
-			<Modal opened={opened} onClose={close} title="Authentication" centered>
+			<Modal
+				opened={opened}
+				onClose={close}
+				title="新しいセッション"
+				centered
+				size="lg"
+			>
 				<NewSessionModal />
 			</Modal>
 		</>
