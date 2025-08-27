@@ -9,10 +9,35 @@ import {
 	Flex,
 } from "@mantine/core";
 import { IconClock, IconHourglass, IconTarget } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 
 export const SessionListItem = () => {
+	const router = useRouter();
+
+	const handleClick = () => {
+		router.push("/sessions/1"); // TODO: 実際のセッションIDを使用
+	};
+
 	return (
-		<Card shadow="sm" padding="lg" radius="md" withBorder>
+		<Card
+			shadow="sm"
+			padding="lg"
+			radius="md"
+			withBorder
+			onClick={handleClick}
+			style={{
+				cursor: "pointer",
+				transition: "transform 0.1s ease, box-shadow 0.1s ease",
+			}}
+			styles={{
+				root: {
+					"&:hover": {
+						transform: "translateY(-2px)",
+						boxShadow: "var(--mantine-shadow-md)",
+					},
+				},
+			}}
+		>
 			<Group justify="space-between" mt="xs" mb="xs">
 				<div>
 					<Text fw={500}>田中太郎</Text>
