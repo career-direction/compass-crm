@@ -2,34 +2,37 @@
 
 import { AppShell, Burger } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import type { ReactNode } from "react";
 import { Sidebar } from "@/components/layout/Sidebar.ui";
-import { ReactNode } from "react";
 
 type Props = {
 	children: ReactNode;
 };
 
 export default function DashboardLayout({ children }: Props) {
-	const [opened, { toggle }] = useDisclosure();
+	const [opened, { toggle }] = useDisclosure(true);
 
 	return (
 		<AppShell
 			navbar={{
 				width: 250,
 				breakpoint: "sm",
-				collapsed: { mobile: !opened },
+				collapsed: { mobile: !opened, desktop: !opened },
 			}}
 			padding="md"
 		>
-			<AppShell.Header>
-				<Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" m="sm" />
-			</AppShell.Header>
-
 			<AppShell.Navbar>
-				<Sidebar />
+				<Sidebar onToggle={toggle} />
 			</AppShell.Navbar>
 
-			<AppShell.Main>{children}</AppShell.Main>
+			<AppShell.Main>
+				{!opened && (
+					<div style={{ position: "fixed", top: 16, left: 16, zIndex: 1000 }}>
+						<Burger opened={opened} onClick={toggle} size="sm" />
+					</div>
+				)}
+				{children}
+			</AppShell.Main>
 		</AppShell>
 	);
 }

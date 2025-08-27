@@ -1,7 +1,12 @@
 "use client";
 
-import { NavLink, Stack, Text, Group, Box } from "@mantine/core";
-import { IconCalendar, IconUsers, IconSettings } from "@tabler/icons-react";
+import { ActionIcon, Box, Group, NavLink, Stack, Text } from "@mantine/core";
+import {
+	IconCalendar,
+	IconSettings,
+	IconUsers,
+	IconX,
+} from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
 
 const navItems = [
@@ -22,16 +27,23 @@ const navItems = [
 	},
 ];
 
-export const Sidebar = () => {
+type Props = {
+	onToggle: () => void;
+};
+
+export const Sidebar = ({ onToggle }: Props) => {
 	const pathname = usePathname();
 
 	return (
 		<Stack gap="sm" p="md">
-			<Box mb="lg">
+			<Group justify="space-between" mb="lg">
 				<Text fw={700} size="lg" c="blue">
-					Compass CRM
+					COMPASS
 				</Text>
-			</Box>
+				<ActionIcon variant="subtle" onClick={onToggle} size="sm">
+					<IconX size={16} />
+				</ActionIcon>
+			</Group>
 
 			<Stack gap="xs">
 				{navItems.map((item) => (
