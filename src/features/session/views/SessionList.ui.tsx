@@ -3,19 +3,18 @@
 import {
 	Box,
 	Button,
-	Group,
-	Space,
-	Title,
-	Text,
-	SimpleGrid,
 	Chip,
+	Group,
 	Modal,
+	SimpleGrid,
+	Space,
 	Stack,
+	Text,
+	Title,
 } from "@mantine/core";
-
-import { SessionListItem } from "../components/SessionListItem.ui";
 import { useDisclosure } from "@mantine/hooks";
 import { NewSessionModal } from "../components/NewSessionModal.ui";
+import { SessionListItem } from "../components/SessionListItem.ui";
 
 export const SessionList = () => {
 	const [opened, { open, close }] = useDisclosure(false);

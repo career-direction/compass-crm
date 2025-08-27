@@ -7,8 +7,8 @@ import {
 	Select,
 	SimpleGrid,
 	Stack,
-	TextInput,
 	Textarea,
+	TextInput,
 } from "@mantine/core";
 
 import { DateInput, TimeInput } from "@mantine/dates";

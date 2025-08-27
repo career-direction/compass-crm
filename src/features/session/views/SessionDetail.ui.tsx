@@ -1,7 +1,21 @@
 "use client";
 
-import { Container, Title, Text, Card, Group, Badge, Stack, Flex } from "@mantine/core";
-import { IconClock, IconHourglass, IconTarget, IconUser } from "@tabler/icons-react";
+import {
+	Badge,
+	Card,
+	Container,
+	Flex,
+	Group,
+	Stack,
+	Text,
+	Title,
+} from "@mantine/core";
+import {
+	IconClock,
+	IconHourglass,
+	IconTarget,
+	IconUser,
+} from "@tabler/icons-react";
 
 type Props = {
 	sessionId: string;

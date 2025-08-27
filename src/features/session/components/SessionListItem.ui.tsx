@@ -1,12 +1,12 @@
 import {
+	Badge,
 	Button,
 	Card,
-	Text,
-	Image,
-	Group,
-	Badge,
-	Stack,
 	Flex,
+	Group,
+	Image,
+	Stack,
+	Text,
 } from "@mantine/core";
 import { IconClock, IconHourglass, IconTarget } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
