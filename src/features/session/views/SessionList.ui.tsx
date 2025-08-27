@@ -4,13 +4,13 @@ import {
 	Box,
 	Button,
 	Group,
-	List,
 	Space,
 	Title,
 	Text,
 	SimpleGrid,
 	Chip,
 	Modal,
+	Stack,
 } from "@mantine/core";
 
 import { SessionListItem } from "../components/SessionListItem.ui";
@@ -46,14 +46,15 @@ export const SessionList = () => {
 				</SimpleGrid>
 			</Group>
 
-			<List>
-				<List.Item>
-					<SessionListItem />
-				</List.Item>
-				<List.Item>
-					<SessionListItem />
-				</List.Item>
-			</List>
+			<Stack gap="md">
+				<SessionListItem />
+				<SessionListItem />
+				<SessionListItem />
+				<SessionListItem />
+				<SessionListItem />
+				<SessionListItem />
+				<SessionListItem />
+			</Stack>
 
 			{/* セッション追加モーダル */}
 			<Modal
