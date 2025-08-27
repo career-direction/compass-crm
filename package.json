@@ -11,15 +11,17 @@
 		"check": "npx @biomejs/biome check --write src/",
 		"test": "vitest run"
 	},
-
 	"dependencies": {
+		"@mantine/core": "^8.1.3",
+		"@mantine/dates": "^8.2.5",
+		"@mantine/form": "^8.1.3",
+		"@mantine/hooks": "^8.1.3",
 		"@prisma/client": "^6.11.1",
+		"@tabler/icons": "^3.34.1",
+		"@tabler/icons-react": "^3.34.1",
 		"next": "15.3.3",
 		"react": "^19.0.0",
-		"react-dom": "^19.0.0",
-		"@mantine/core": "^8.1.3",
-		"@mantine/form": "^8.1.3",
-		"@mantine/hooks": "^8.1.3"
+		"react-dom": "^19.0.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.1.2",
