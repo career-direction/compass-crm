@@ -14,7 +14,7 @@ const config: CodegenConfig = {
     },
   },
   // APIから取得したスキーマを元に、型定義を生成
-  documents: ['src/**/*.tsx', 'src/**/*.ts'], // クエリが書かれているファイルを指定
+  documents: ['src/**/*.tsx', 'src/**/*.ts', '!src/generated/**/*'], // クエリが書かれているファイルを指定
   generates: {
     './src/gql/': { // 生成先のディレクトリ
       preset: 'client',
