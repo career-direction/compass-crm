@@ -38,7 +38,7 @@ export const TrainingMaterialList = () => {
 
 	return (
 		<>
-			<Card bg="white" shadow="sm" padding="xl" radius="lg" mb="xl" withBorder={false}>
+			<Card bg="white" shadow="sm" padding="md" radius="lg" mb="md" withBorder={false}>
 				<Stack gap="md">
 					<Group justify="space-between" align="center" wrap="wrap">
 						<Box>
@@ -52,13 +52,13 @@ export const TrainingMaterialList = () => {
 				</Stack>
 			</Card>
 
-			<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing={{ base: "md", sm: "lg", md: "xl" }}>
+			<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
 				{trainingMaterials.map((material) => (
 					<Card 
 						key={material.id} 
 						bg="white"
 						shadow="md" 
-						padding={{ base: "lg", sm: "xl" }} 
+						padding="lg" 
 						radius="lg" 
 						withBorder={false}
 						style={{
