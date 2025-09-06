@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
+import { ApolloProvider } from '@apollo/client/react';
+import client from '../lib/apollo-client';
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -29,7 +31,9 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<MantineProvider>{children}</MantineProvider>
+				<ApolloProvider client={client}>
+					<MantineProvider>{children}</MantineProvider>
+				</ApolloProvider>
 			</body>
 		</html>
 	);
