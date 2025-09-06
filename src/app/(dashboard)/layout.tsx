@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }: Props) {
 				breakpoint: "sm",
 				collapsed: { mobile: !opened, desktop: !opened },
 			}}
-			padding="md"
+			padding="xl"
 			transitionDuration={300}
 			transitionTimingFunction="cubic-bezier(0.25, 0.46, 0.45, 0.94)"
 		>
@@ -27,7 +27,12 @@ export default function DashboardLayout({ children }: Props) {
 				<Sidebar onToggle={toggle} />
 			</AppShell.Navbar>
 
-			<AppShell.Main>
+			<AppShell.Main
+				style={{
+					backgroundColor: '#F9FAFC',
+					minHeight: '100vh'
+				}}
+			>
 				{!opened && (
 					<div style={{ position: "fixed", top: 16, left: 16, zIndex: 1000 }}>
 						<Burger opened={opened} onClick={toggle} size="sm" />
