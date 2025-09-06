@@ -2,7 +2,6 @@
 
 import {
 	Badge,
-	Card,
 	Container,
 	Flex,
 	Group,
@@ -16,6 +15,7 @@ import {
 	IconTarget,
 	IconUser,
 } from "@tabler/icons-react";
+import { CPCard } from "@/components/ui/CPCard";
 
 type Props = {
 	sessionId: string;
@@ -32,7 +32,7 @@ export const SessionDetail = ({ sessionId }: Props) => {
 					<Text c="dimmed">セッションID: {sessionId}</Text>
 				</div>
 
-				<Card shadow="sm" padding="xl" radius="md" withBorder>
+				<CPCard padding="xl">
 					<Group justify="space-between" mb="lg">
 						<div>
 							<Text fw={600} size="lg">
@@ -98,7 +98,7 @@ export const SessionDetail = ({ sessionId }: Props) => {
 							クライアントの現在の状態をヒアリングし、最適なアプローチを検討します。
 						</Text>
 					</div>
-				</Card>
+				</CPCard>
 			</Stack>
 		</Container>
 	);

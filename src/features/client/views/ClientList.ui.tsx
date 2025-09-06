@@ -1,16 +1,9 @@
 "use client";
 
-import {
-	Badge,
-	Card,
-	Group,
-	SimpleGrid,
-	Stack,
-	Text,
-	Title,
-} from "@mantine/core";
+import { Badge, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { IconMail, IconPhone, IconUser } from "@tabler/icons-react";
 import { CPButton } from "@/components/ui/CPButton";
+import { CPCard } from "@/components/ui/CPCard";
 
 const clients = [
 	{
@@ -66,7 +59,7 @@ export const ClientList = () => {
 
 			<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
 				{clients.map((client) => (
-					<Card key={client.id} shadow="sm" padding="lg" radius="md" withBorder>
+					<CPCard key={client.id}>
 						<Group justify="space-between" mb="sm">
 							<Group>
 								<IconUser size={24} />
@@ -103,7 +96,7 @@ export const ClientList = () => {
 								編集
 							</CPButton>
 						</Group>
-					</Card>
+					</CPCard>
 				))}
 			</SimpleGrid>
 		</Stack>

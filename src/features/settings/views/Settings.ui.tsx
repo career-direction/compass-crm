@@ -1,7 +1,6 @@
 "use client";
 
 import {
-	Card,
 	Container,
 	Group,
 	Stack,
@@ -11,6 +10,7 @@ import {
 	Title,
 } from "@mantine/core";
 import { CPButton } from "@/components/ui/CPButton";
+import { CPCard } from "@/components/ui/CPCard";
 
 export const Settings = () => {
 	const handleSaveClick = () => {
@@ -27,7 +27,7 @@ export const Settings = () => {
 					<Text c="dimmed">アプリケーションの設定を管理</Text>
 				</div>
 
-				<Card shadow="sm" padding="lg" radius="md" withBorder>
+				<CPCard>
 					<Title order={3} mb="md">
 						プロフィール設定
 					</Title>
@@ -40,9 +40,9 @@ export const Settings = () => {
 						<TextInput label="電話番号" placeholder="090-1234-5678" />
 						<CPButton onClick={handleSaveClick}>保存</CPButton>
 					</Stack>
-				</Card>
+				</CPCard>
 
-				<Card shadow="sm" padding="lg" radius="md" withBorder>
+				<CPCard>
 					<Title order={3} mb="md">
 						通知設定
 					</Title>
@@ -75,9 +75,9 @@ export const Settings = () => {
 							<Switch />
 						</Group>
 					</Stack>
-				</Card>
+				</CPCard>
 
-				<Card shadow="sm" padding="lg" radius="md" withBorder>
+				<CPCard>
 					<Title order={3} mb="md">
 						セッション設定
 					</Title>
@@ -94,7 +94,7 @@ export const Settings = () => {
 						/>
 						<CPButton onClick={handleSaveClick}>保存</CPButton>
 					</Stack>
-				</Card>
+				</CPCard>
 			</Stack>
 		</Container>
 	);

@@ -1,15 +1,8 @@
 "use client";
 
-import {
-	Box,
-	Card,
-	Group,
-	SimpleGrid,
-	Stack,
-	Text,
-	Title,
-} from "@mantine/core";
+import { Box, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { CPButton } from "@/components/ui/CPButton";
+import { CPCard } from "@/components/ui/CPCard";
 
 export const TrainingMaterialList = () => {
 	const handleFilterClick = () => {
@@ -66,26 +59,7 @@ export const TrainingMaterialList = () => {
 
 			<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
 				{trainingMaterials.map((material) => (
-					<Card
-						key={material.id}
-						bg="white"
-						shadow="md"
-						padding="lg"
-						radius="lg"
-						withBorder={false}
-						style={{
-							cursor: "pointer",
-							transition: "transform 0.2s ease, box-shadow 0.2s ease",
-						}}
-						styles={{
-							root: {
-								"&:hover": {
-									transform: "translateY(-4px)",
-									boxShadow: "0 8px 25px rgba(0, 0, 0, 0.12)",
-								},
-							},
-						}}
-					>
+					<CPCard key={material.id}>
 						<Stack gap="md">
 							<Title order={3} size="h4">
 								{material.title}
@@ -109,7 +83,7 @@ export const TrainingMaterialList = () => {
 								詳細を見る
 							</CPButton>
 						</Stack>
-					</Card>
+					</CPCard>
 				))}
 			</SimpleGrid>
 		</>
