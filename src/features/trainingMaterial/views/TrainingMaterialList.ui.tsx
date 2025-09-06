@@ -1,8 +1,8 @@
 "use client";
 
+import { CPButton } from "@/components/ui/CPButton";
 import {
 	Box,
-	Button,
 	Card,
 	Group,
 	SimpleGrid,
@@ -12,6 +12,18 @@ import {
 } from "@mantine/core";
 
 export const TrainingMaterialList = () => {
+	const handleFilterClick = () => {
+		console.log("フィルターボタンがクリックされました");
+	};
+
+	const handleAddClick = () => {
+		console.log("教材追加ボタンがクリックされました");
+	};
+
+	const handleDetailClick = () => {
+		console.log("詳細を見るボタンがクリックされました");
+	};
+
 	const trainingMaterials = [
 		{
 			id: 1,
@@ -43,19 +55,23 @@ export const TrainingMaterialList = () => {
 					<Title>教材一覧</Title>
 				</Box>
 				<Group gap="sm">
-					<Button variant="light" size="sm">フィルター</Button>
-					<Button size="sm">教材追加</Button>
+					<CPButton variant="light" size="sm" onClick={handleFilterClick}>
+						フィルター
+					</CPButton>
+					<CPButton size="sm" onClick={handleAddClick}>
+						教材追加
+					</CPButton>
 				</Group>
 			</Group>
 
 			<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
 				{trainingMaterials.map((material) => (
-					<Card 
-						key={material.id} 
+					<Card
+						key={material.id}
 						bg="white"
-						shadow="md" 
-						padding="lg" 
-						radius="lg" 
+						shadow="md"
+						padding="lg"
+						radius="lg"
 						withBorder={false}
 						style={{
 							cursor: "pointer",
@@ -82,9 +98,16 @@ export const TrainingMaterialList = () => {
 									{material.type} / {material.duration}
 								</Text>
 							</Group>
-							<Button variant="light" fullWidth mt="md" radius="md" size="sm">
+							<CPButton
+								variant="light"
+								fullWidth
+								mt="md"
+								radius="md"
+								size="sm"
+								onClick={handleDetailClick}
+							>
 								詳細を見る
-							</Button>
+							</CPButton>
 						</Stack>
 					</Card>
 				))}

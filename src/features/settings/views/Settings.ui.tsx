@@ -1,7 +1,7 @@
 "use client";
 
+import { CPButton } from "@/components/ui/CPButton";
 import {
-	Button,
 	Card,
 	Container,
 	Group,
@@ -13,6 +13,10 @@ import {
 } from "@mantine/core";
 
 export const Settings = () => {
+	const handleSaveClick = () => {
+		console.log("保存ボタンがクリックされました");
+	};
+
 	return (
 		<Container>
 			<Stack gap="xl">
@@ -34,7 +38,7 @@ export const Settings = () => {
 							placeholder="yamada@example.com"
 						/>
 						<TextInput label="電話番号" placeholder="090-1234-5678" />
-						<Button>保存</Button>
+						<CPButton onClick={handleSaveClick}>保存</CPButton>
 					</Stack>
 				</Card>
 
@@ -88,7 +92,7 @@ export const Settings = () => {
 							placeholder="8000"
 							rightSection="円"
 						/>
-						<Button>保存</Button>
+						<CPButton onClick={handleSaveClick}>保存</CPButton>
 					</Stack>
 				</Card>
 			</Stack>

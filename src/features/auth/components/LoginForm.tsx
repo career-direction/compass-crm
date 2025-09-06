@@ -2,13 +2,13 @@
 
 import {
 	Anchor,
-	Button,
 	PasswordInput,
 	Stack,
 	Text,
 	TextInput,
 	Title,
 } from "@mantine/core";
+import { CPButton } from "@/components/ui";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
 import { validateEmail } from "../utils/validation";
@@ -68,9 +68,9 @@ export function LoginForm() {
 						{...form.getInputProps("password")}
 					/>
 
-					<Button type="submit" fullWidth mt="xl" loading={loading}>
+					<CPButton type="submit" fullWidth mt="xl" loading={loading}>
 						ログイン
-					</Button>
+					</CPButton>
 				</Stack>
 			</form>
 

@@ -1,8 +1,8 @@
 "use client";
 
+import { CPButton } from "@/components/ui/CPButton";
 import {
 	Box,
-	Button,
 	Group,
 	Select,
 	SimpleGrid,
@@ -61,6 +61,10 @@ export const NewSessionModal = () => {
 
 	const handleSubmit = () => {
 		console.log("フォームデータ:", formData);
+	};
+
+	const handleCancelClick = () => {
+		console.log("キャンセルボタンがクリックされました");
 	};
 
 	return (
@@ -165,8 +169,10 @@ export const NewSessionModal = () => {
 				/>
 
 				<Group justify="flex-end" mt="md">
-					<Button variant="outline">キャンセル</Button>
-					<Button onClick={handleSubmit}>セッションを追加</Button>
+					<CPButton variant="outline" onClick={handleCancelClick}>
+						キャンセル
+					</CPButton>
+					<CPButton onClick={handleSubmit}>セッションを追加</CPButton>
 				</Group>
 			</Stack>
 		</Box>
