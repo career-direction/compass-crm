@@ -3,6 +3,7 @@
 import { ActionIcon, Box, Group, NavLink, Stack, Text } from "@mantine/core";
 import {
 	IconCalendar,
+	IconBook,
 	IconSettings,
 	IconUsers,
 	IconX,
@@ -19,6 +20,11 @@ const navItems = [
 		label: "クライアント",
 		icon: IconUsers,
 		href: "/clients",
+	},
+	{
+		label: "教材一覧",
+		icon: IconBook,
+		href: "/trainingMaterial",
 	},
 	{
 		label: "設定",
