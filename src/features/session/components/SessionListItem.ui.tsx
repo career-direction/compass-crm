@@ -11,21 +11,7 @@ export const SessionListItem = () => {
 	};
 
 	return (
-		<CPCard
-			onClick={handleClick}
-			style={{
-				cursor: "pointer",
-				transition: "transform 0.1s ease, box-shadow 0.1s ease",
-			}}
-			styles={{
-				root: {
-					"&[dataHovered]": {
-						transform: "translateY(-2px)",
-						boxShadow: "var(--mantine-shadow-md)",
-					},
-				},
-			}}
-		>
+		<CPCard onClick={handleClick}>
 			<Group justify="space-between" mt="xs" mb="xs">
 				<div>
 					<Text fw={500}>田中太郎</Text>
