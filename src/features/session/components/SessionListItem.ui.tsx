@@ -1,4 +1,4 @@
-import { Badge, Button, Flex, Group, Image, Stack, Text } from "@mantine/core";
+import { Badge, Flex, Group, Stack, Text } from "@mantine/core";
 import { IconClock, IconHourglass, IconTarget } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { CPCard } from "@/components/ui/CPCard";

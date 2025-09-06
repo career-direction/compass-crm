@@ -3,12 +3,22 @@
 import { Card, type CardProps } from "@mantine/core";
 import { forwardRef } from "react";
 
-export type Props = CardProps;
+export type Props = CardProps & {
+	onClick?: () => void;
+};
 
 export const CPCard = forwardRef<HTMLDivElement, Props>(
-	({ children, ...props }, ref) => {
+	({ children, onClick, ...props }, ref) => {
 		return (
-			<Card ref={ref} shadow="sm" padding="lg" radius="md" {...props}>
+			<Card
+				ref={ref}
+				shadow="sm"
+				padding="lg"
+				radius="md"
+				withBorder
+				{...props}
+				onClick={onClick}
+			>
 				{children}
 			</Card>
 		);
