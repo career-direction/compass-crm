@@ -20,6 +20,8 @@ export default function DashboardLayout({ children }: Props) {
 				collapsed: { mobile: !opened, desktop: !opened },
 			}}
 			padding="md"
+			transitionDuration={300}
+			transitionTimingFunction="cubic-bezier(0.25, 0.46, 0.45, 0.94)"
 		>
 			<AppShell.Navbar>
 				<Sidebar onToggle={toggle} />
