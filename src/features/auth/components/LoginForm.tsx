@@ -8,9 +8,9 @@ import {
 	TextInput,
 	Title,
 } from "@mantine/core";
-import { CPButton } from "@/components/ui";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
+import { CPButton } from "@/components/ui";
 import { validateEmail } from "../utils/validation";
 
 interface LoginFormData {

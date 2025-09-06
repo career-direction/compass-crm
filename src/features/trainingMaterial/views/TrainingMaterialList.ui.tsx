@@ -1,6 +1,5 @@
 "use client";
 
-import { CPButton } from "@/components/ui/CPButton";
 import {
 	Box,
 	Card,
@@ -10,6 +9,7 @@ import {
 	Text,
 	Title,
 } from "@mantine/core";
+import { CPButton } from "@/components/ui/CPButton";
 
 export const TrainingMaterialList = () => {
 	const handleFilterClick = () => {

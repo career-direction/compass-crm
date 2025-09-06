@@ -1,6 +1,5 @@
 "use client";
 
-import { CPButton } from "@/components/ui/CPButton";
 import {
 	Box,
 	Group,
@@ -10,9 +9,9 @@ import {
 	Textarea,
 	TextInput,
 } from "@mantine/core";
-
 import { DateInput, TimeInput } from "@mantine/dates";
 import { useState } from "react";
+import { CPButton } from "@/components/ui/CPButton";
 
 export const NewSessionModal = () => {
 	const [formData, setFormData] = useState({

@@ -1,8 +1,10 @@
 "use client";
 
-import { AppShell, Burger } from "@mantine/core";
+import { ActionIcon, AppShell } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { IconLayoutSidebar } from "@tabler/icons-react";
 import type { ReactNode } from "react";
+import { useCallback } from "react";
 import { Sidebar } from "@/components/layout/Sidebar.ui";
 
 type Props = {
@@ -11,6 +13,10 @@ type Props = {
 
 export default function DashboardLayout({ children }: Props) {
 	const [opened, { toggle }] = useDisclosure(true);
+
+	const stableToggle = useCallback(() => {
+		toggle();
+	}, [toggle]);
 
 	return (
 		<AppShell
@@ -24,18 +30,20 @@ export default function DashboardLayout({ children }: Props) {
 			transitionTimingFunction="cubic-bezier(0.25, 0.46, 0.45, 0.94)"
 		>
 			<AppShell.Navbar>
-				<Sidebar onToggle={toggle} />
+				<Sidebar onToggle={stableToggle} />
 			</AppShell.Navbar>
 
 			<AppShell.Main
 				style={{
-					backgroundColor: '#F9FAFC',
-					minHeight: '100vh'
+					backgroundColor: "#F9FAFC",
+					minHeight: "100vh",
 				}}
 			>
 				{!opened && (
 					<div style={{ position: "fixed", top: 16, left: 16, zIndex: 1000 }}>
-						<Burger opened={opened} onClick={toggle} size="sm" />
+						<ActionIcon onClick={stableToggle} size="md" variant="transparent">
+							<IconLayoutSidebar size={48} />
+						</ActionIcon>
 					</div>
 				)}
 				{children}

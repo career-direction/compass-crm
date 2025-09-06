@@ -1,6 +1,5 @@
 "use client";
 
-import { CPButton } from "@/components/ui/CPButton";
 import {
 	Card,
 	Container,
@@ -11,6 +10,7 @@ import {
 	TextInput,
 	Title,
 } from "@mantine/core";
+import { CPButton } from "@/components/ui/CPButton";
 
 export const Settings = () => {
 	const handleSaveClick = () => {

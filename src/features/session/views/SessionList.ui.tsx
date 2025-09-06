@@ -12,9 +12,9 @@ import {
 	Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { CPButton } from "@/components/ui/CPButton";
 import { NewSessionModal } from "../components/NewSessionModal.ui";
 import { SessionListItem } from "../components/SessionListItem.ui";
-import { CPButton } from "@/components/ui/CPButton";
 
 export const SessionList = () => {
 	const [opened, { open, close }] = useDisclosure(false);

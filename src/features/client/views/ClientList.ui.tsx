@@ -1,6 +1,5 @@
 "use client";
 
-import { CPButton } from "@/components/ui/CPButton";
 import {
 	Badge,
 	Card,
@@ -11,6 +10,7 @@ import {
 	Title,
 } from "@mantine/core";
 import { IconMail, IconPhone, IconUser } from "@tabler/icons-react";
+import { CPButton } from "@/components/ui/CPButton";
 
 const clients = [
 	{
