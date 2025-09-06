@@ -14,7 +14,7 @@ import {
 
 export const Settings = () => {
 	return (
-		<Container size="md">
+		<Container>
 			<Stack gap="xl">
 				<div>
 					<Title order={1} mb="sm">

@@ -38,19 +38,15 @@ export const TrainingMaterialList = () => {
 
 	return (
 		<>
-			<Card bg="white" shadow="sm" padding="md" radius="lg" mb="md" withBorder={false}>
-				<Stack gap="md">
-					<Group justify="space-between" align="center" wrap="wrap">
-						<Box>
-							<Title>教材一覧</Title>
-						</Box>
-						<Group gap="sm">
-							<Button variant="light" size="sm">フィルター</Button>
-							<Button size="sm">教材追加</Button>
-						</Group>
-					</Group>
-				</Stack>
-			</Card>
+			<Group justify="space-between" align="center" my="md">
+				<Box>
+					<Title>教材一覧</Title>
+				</Box>
+				<Group gap="sm">
+					<Button variant="light" size="sm">フィルター</Button>
+					<Button size="sm">教材追加</Button>
+				</Group>
+			</Group>
 
 			<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
 				{trainingMaterials.map((material) => (

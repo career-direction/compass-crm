@@ -4,7 +4,6 @@ import {
 	Badge,
 	Button,
 	Card,
-	Container,
 	Group,
 	SimpleGrid,
 	Stack,
@@ -42,19 +41,18 @@ const clients = [
 
 export const ClientList = () => {
 	return (
-		<Container size="xl">
-			<Stack gap="xl">
-				<Group justify="space-between" align="center">
-					<div>
-						<Title order={1} mb="sm">
-							クライアント一覧
-						</Title>
-						<Text c="dimmed">登録されているクライアントの管理</Text>
-					</div>
-					<Button>新規クライアント登録</Button>
-				</Group>
+		<Stack gap="xl">
+			<Group justify="space-between" align="center">
+				<div>
+					<Title order={1} mb="sm">
+						クライアント一覧
+					</Title>
+					<Text c="dimmed">登録されているクライアントの管理</Text>
+				</div>
+				<Button>新規クライアント登録</Button>
+			</Group>
 
-				<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
+			<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
 					{clients.map((client) => (
 						<Card
 							key={client.id}
@@ -103,8 +101,7 @@ export const ClientList = () => {
 							</Group>
 						</Card>
 					))}
-				</SimpleGrid>
-			</Stack>
-		</Container>
+			</SimpleGrid>
+		</Stack>
 	);
 };
