@@ -2,7 +2,6 @@
 
 import {
 	Box,
-	Button,
 	Chip,
 	Group,
 	Modal,
@@ -13,11 +12,16 @@ import {
 	Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { CPButton } from "@/components/ui/CPButton";
 import { NewSessionModal } from "../components/NewSessionModal.ui";
 import { SessionListItem } from "../components/SessionListItem.ui";
 
 export const SessionList = () => {
 	const [opened, { open, close }] = useDisclosure(false);
+
+	const handleFilterClick = () => {
+		console.log("フィルターボタンがクリックされました");
+	};
 
 	return (
 		<>
@@ -27,8 +31,8 @@ export const SessionList = () => {
 				</Box>
 				<Space></Space>
 				<Group>
-					<Button>フィルター</Button>
-					<Button onClick={open}>セッション追加</Button>
+					<CPButton onClick={handleFilterClick}>フィルター</CPButton>
+					<CPButton onClick={open}>セッション追加</CPButton>
 				</Group>
 			</Group>
 

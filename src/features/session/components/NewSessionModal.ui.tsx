@@ -2,7 +2,6 @@
 
 import {
 	Box,
-	Button,
 	Group,
 	Select,
 	SimpleGrid,
@@ -10,9 +9,9 @@ import {
 	Textarea,
 	TextInput,
 } from "@mantine/core";
-
 import { DateInput, TimeInput } from "@mantine/dates";
 import { useState } from "react";
+import { CPButton } from "@/components/ui/CPButton";
 
 export const NewSessionModal = () => {
 	const [formData, setFormData] = useState({
@@ -61,6 +60,10 @@ export const NewSessionModal = () => {
 
 	const handleSubmit = () => {
 		console.log("フォームデータ:", formData);
+	};
+
+	const handleCancelClick = () => {
+		console.log("キャンセルボタンがクリックされました");
 	};
 
 	return (
@@ -165,8 +168,10 @@ export const NewSessionModal = () => {
 				/>
 
 				<Group justify="flex-end" mt="md">
-					<Button variant="outline">キャンセル</Button>
-					<Button onClick={handleSubmit}>セッションを追加</Button>
+					<CPButton variant="outline" onClick={handleCancelClick}>
+						キャンセル
+					</CPButton>
+					<CPButton onClick={handleSubmit}>セッションを追加</CPButton>
 				</Group>
 			</Stack>
 		</Box>

@@ -2,7 +2,6 @@
 
 import {
 	Anchor,
-	Button,
 	PasswordInput,
 	Stack,
 	Text,
@@ -11,6 +10,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
+import { CPButton } from "@/components/ui/CPButton";
 import {
 	validateEmail,
 	validateName,
@@ -103,9 +103,9 @@ export function RegisterForm() {
 						{...form.getInputProps("confirmPassword")}
 					/>
 
-					<Button type="submit" fullWidth mt="xl" loading={loading}>
+					<CPButton fullWidth mt="xl" loading={loading}>
 						アカウント作成
-					</Button>
+					</CPButton>
 				</Stack>
 			</form>
 

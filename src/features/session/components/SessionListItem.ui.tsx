@@ -1,15 +1,7 @@
-import {
-	Badge,
-	Button,
-	Card,
-	Flex,
-	Group,
-	Image,
-	Stack,
-	Text,
-} from "@mantine/core";
+import { Badge, Flex, Group, Stack, Text } from "@mantine/core";
 import { IconClock, IconHourglass, IconTarget } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import { CPCard } from "@/components/ui/CPCard";
 
 export const SessionListItem = () => {
 	const router = useRouter();
@@ -19,25 +11,7 @@ export const SessionListItem = () => {
 	};
 
 	return (
-		<Card
-			shadow="sm"
-			padding="lg"
-			radius="md"
-			withBorder
-			onClick={handleClick}
-			style={{
-				cursor: "pointer",
-				transition: "transform 0.1s ease, box-shadow 0.1s ease",
-			}}
-			styles={{
-				root: {
-					"&:hover": {
-						transform: "translateY(-2px)",
-						boxShadow: "var(--mantine-shadow-md)",
-					},
-				},
-			}}
-		>
+		<CPCard onClick={handleClick}>
 			<Group justify="space-between" mt="xs" mb="xs">
 				<div>
 					<Text fw={500}>田中太郎</Text>
@@ -70,6 +44,6 @@ export const SessionListItem = () => {
 					</Flex>
 				</Flex>
 			</Stack>
-		</Card>
+		</CPCard>
 	);
 };
