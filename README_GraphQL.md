@@ -4,9 +4,12 @@
 
 このプロジェクトでは、GraphQLサーバーとクライアントが以下のように設定されています：
 
-- **サーバー**: Apollo Server Micro (Node.js 12対応)
+- **サーバー**: GraphQL Yoga v5 (高性能・軽量GraphQLサーバー)
 - **クライアント**: urql (軽量GraphQLクライアント)
 - **データベース**: Prisma経由でSupabase PostgreSQL
+- **Node.js**: v22.15.1 (最新LTS対応)
+
+GraphQL Yogaは、Next.js App Routerとの統合が優れており、高いパフォーマンスと開発者体験を提供します。
 
 ## ファイル構成
 
@@ -36,7 +39,9 @@ src/
 開発サーバー起動後、以下のURLでGraphQLエンドポイントにアクセスできます：
 
 - **GraphQL Endpoint**: `http://localhost:3000/api/graphql`
-- **GraphQL Playground**: `http://localhost:3000/api/graphql` (ブラウザでアクセス)
+- **GraphiQL IDE**: `http://localhost:3000/api/graphql` (ブラウザでアクセス)
+  - GraphQL Yogaに内蔵された高機能なGraphQL IDE
+  - スキーマエクスプローラー、オートコンプリート、ドキュメント表示機能付き
 
 ### 2. クライアントでのクエリ実行
 
