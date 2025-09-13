@@ -7,6 +7,7 @@ import {
 	IconCalendar,
 	IconLayoutSidebar,
 	IconSettings,
+	IconUser,
 	IconUsers,
 } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
@@ -22,6 +23,11 @@ const navItems = [
 		label: "クライアント",
 		icon: IconUsers,
 		href: "/clients",
+	},
+	{
+		label: "トレーナー",
+		icon: IconUser,
+		href: "/trainers",
 	},
 	{
 		label: "教材一覧",
