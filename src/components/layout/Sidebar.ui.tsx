@@ -1,6 +1,7 @@
 "use client";
 
-import { ActionIcon, NavLink } from "@mantine/core";
+import { ActionIcon, Box, NavLink } from "@mantine/core";
+import Image from "next/image";
 import {
 	IconBook,
 	IconCalendar,
@@ -82,15 +83,15 @@ export const Sidebar = memo<Props>(({ onToggle }: Props) => {
 					marginBottom: "24px",
 				}}
 			>
-				<div
-					style={{
-						color: "#FF6000",
-						fontWeight: 700,
-						fontSize: "18px",
-					}}
-				>
-					COMPASS
-				</div>
+				<Box pl={10} pt={2}>
+					<Image
+						src="/COMPASS_Logo_BLACK_ORANGE.png"
+						alt="COMPASS"
+						width={150}
+						height={62}
+					/>
+				</Box>
+
 				<ActionIcon
 					variant="subtle"
 					onClick={onToggle}
