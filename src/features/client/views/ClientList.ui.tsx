@@ -48,12 +48,6 @@ export const ClientList = () => {
 	return (
 		<Stack gap="xl">
 			<Group justify="space-between" align="center">
-				<div>
-					<Title order={1} mb="sm">
-						クライアント一覧
-					</Title>
-					<Text c="dimmed">登録されているクライアントの管理</Text>
-				</div>
 				<CPButton onClick={handleNewClientClick}>新規クライアント登録</CPButton>
 			</Group>
 

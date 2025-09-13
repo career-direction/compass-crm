@@ -71,9 +71,6 @@ export const SessionList = () => {
 	return (
 		<>
 			<Group justify="space-between" align="center" my="md">
-				<Box>
-					<Title>セッション一覧</Title>
-				</Box>
 				<Space></Space>
 				<Group>
 					<CPButton onClick={handleFilterClick}>フィルター</CPButton>

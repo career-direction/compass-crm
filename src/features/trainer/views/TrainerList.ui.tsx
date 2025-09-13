@@ -67,23 +67,9 @@ export const TrainerList = () => {
 		console.log("新規トレーナー登録ボタンがクリックされました");
 	};
 
-	const handleDetailClick = () => {
-		console.log("詳細ボタンがクリックされました");
-	};
-
-	const handleEditClick = () => {
-		console.log("編集ボタンがクリックされました");
-	};
-
 	return (
 		<Stack gap="xl">
 			<Group justify="space-between" align="center">
-				<div>
-					<Title order={1} mb="sm">
-						トレーナー一覧
-					</Title>
-					<Text c="dimmed">登録されているトレーナーの管理</Text>
-				</div>
 				<CPButton onClick={handleNewTrainerClick}>新規トレーナー登録</CPButton>
 			</Group>
 

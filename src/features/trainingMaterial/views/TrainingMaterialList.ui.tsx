@@ -44,9 +44,6 @@ export const TrainingMaterialList = () => {
 	return (
 		<>
 			<Group justify="space-between" align="center" my="md">
-				<Box>
-					<Title>教材一覧</Title>
-				</Box>
 				<Group gap="sm">
 					<CPButton variant="light" size="sm" onClick={handleFilterClick}>
 						フィルター
