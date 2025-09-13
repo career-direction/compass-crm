@@ -15,7 +15,6 @@ export const CPCard = forwardRef<HTMLDivElement, Props>(
 				shadow="sm"
 				padding="lg"
 				radius="md"
-				withBorder
 				{...props}
 				onClick={onClick}
 			>
