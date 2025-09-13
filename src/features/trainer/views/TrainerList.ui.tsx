@@ -1,15 +1,6 @@
 "use client";
 
-import {
-	Avatar,
-	Flex,
-	Group,
-	SimpleGrid,
-	Stack,
-	Text,
-	Title,
-} from "@mantine/core";
-import { IconDots } from "@tabler/icons-react";
+import { Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
 import { TrainerCardContent } from "../components/TrainerCardContent.ui";
