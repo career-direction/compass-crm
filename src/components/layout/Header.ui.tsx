@@ -53,26 +53,6 @@ export const Header = memo<Props>(({ onToggle }: Props) => {
 
 			{/* 右側：検索、通知、ユーザーメニュー */}
 			<Group gap="md">
-				{/* 検索バー */}
-				<TextInput
-					placeholder="検索..."
-					leftSection={<IconSearch size={16} />}
-					variant="filled"
-					radius="md"
-					style={{ width: 250 }}
-					styles={{
-						input: {
-							backgroundColor: "#F8F9FA",
-							border: "1px solid #E9ECEF",
-							"&:focus": {
-								borderColor: "#FF6000",
-								backgroundColor: "white",
-							},
-						},
-					}}
-				/>
-
-				{/* ユーザーメニュー */}
 				<Menu shadow="md" width={200} position="bottom-end">
 					<Menu.Target>
 						<Group

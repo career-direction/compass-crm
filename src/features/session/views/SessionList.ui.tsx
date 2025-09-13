@@ -73,24 +73,9 @@ export const SessionList = () => {
 			<Group justify="space-between" align="center" my="md">
 				<Space></Space>
 				<Group>
-					<CPButton onClick={handleFilterClick}>フィルター</CPButton>
 					<CPButton onClick={open}>セッション追加</CPButton>
 				</Group>
 			</Group>
-
-			{/* フィルター条件 */}
-			<Group mb="md" align="start">
-				<Text>フィルター条件:</Text>
-				<SimpleGrid cols={5}>
-					<Chip defaultChecked>Awesome chip</Chip>
-					<Chip defaultChecked>Awesome chip</Chip>
-					<Chip defaultChecked>Awesome chip</Chip>
-					<Chip defaultChecked>Awesome chip</Chip>
-					<Chip defaultChecked>Awesome chip</Chip>
-					<Chip defaultChecked>Awesome chip</Chip>
-				</SimpleGrid>
-			</Group>
-
 			<Table.ScrollContainer
 				type="native"
 				maxHeight={MAX_TABLE_HEIGHT}
