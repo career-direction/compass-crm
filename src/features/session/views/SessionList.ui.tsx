@@ -70,8 +70,7 @@ export const SessionList = () => {
 
 	return (
 		<>
-			<Group justify="space-between" align="center" my="md">
-				<Space></Space>
+			<Group justify="space-between" align="center">
 				<Group>
 					<CPButton onClick={open}>セッション追加</CPButton>
 				</Group>
