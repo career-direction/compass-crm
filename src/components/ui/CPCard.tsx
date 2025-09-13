@@ -12,7 +12,7 @@ export const CPCard = forwardRef<HTMLDivElement, Props>(
 		return (
 			<Card
 				ref={ref}
-				shadow="sm"
+				shadow="md"
 				padding="lg"
 				radius="md"
 				{...props}
