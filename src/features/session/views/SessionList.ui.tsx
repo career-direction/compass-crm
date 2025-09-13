@@ -50,7 +50,7 @@ export const SessionList = () => {
 			style={{ cursor: "pointer" }}
 		>
 			<Table.Td>{element.name}</Table.Td>
-			<Table.Td>肩甲骨の外旋</Table.Td>
+			<Table.Td>肩甲骨</Table.Td>
 			<Table.Td>
 				<Flex align="center" gap="lg" justify="flex-start">
 					<Avatar color="cyan" radius="xl">
