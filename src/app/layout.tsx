@@ -29,7 +29,64 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<MantineProvider>{children}</MantineProvider>
+				<MantineProvider
+					theme={{
+						colors: {
+							brand: [
+								"#fff4e6", // 0: 最も薄い
+								"#ffe8cc", // 1:
+								"#ffd8a8", // 2:
+								"#ffc078", // 3:
+								"#ffa94d", // 4:
+								"#fd7e14", // 5:
+								"#FF6000", // 6: メインカラー (#FF6000)
+								"#e8590c", // 7:
+								"#d9480f", // 8:
+								"#bf400d", // 9: 最も濃い
+							],
+						},
+						primaryColor: "brand",
+						defaultRadius: "md",
+						components: {
+							Button: {
+								defaultProps: {
+									color: "brand",
+								},
+								styles: {
+									root: {
+										'&[dataVariant="filled"]': {
+											background: "linear-gradient(135deg, #ffa94d, #FF6000)",
+											border: "none",
+											"&:hover": {
+												background: "linear-gradient(135deg, #fd7e14, #e8590c)",
+												transform: "translateY(-1px)",
+											},
+											"&:active": {
+												transform: "translateY(0)",
+											},
+										},
+										'&[dataVariant="light"]': {
+											backgroundColor: "#fff4e6",
+											color: "#FF6000",
+											"&:hover": {
+												backgroundColor: "#ffe8cc",
+											},
+										},
+										'&[dataVariant="outline"]': {
+											borderColor: "#FF6000",
+											color: "#FF6000",
+											"&:hover": {
+												backgroundColor: "#fff4e6",
+											},
+										},
+									},
+								},
+							},
+						},
+					}}
+				>
+					{children}
+				</MantineProvider>
 			</body>
 		</html>
 	);

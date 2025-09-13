@@ -1,9 +1,11 @@
 "use client";
 
-import { AppShell, Burger } from "@mantine/core";
+import { AppShell } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import type { ReactNode } from "react";
+import { useCallback } from "react";
 import { Sidebar } from "@/components/layout/Sidebar.ui";
+import { Header } from "@/components/layout/Header.ui";
 
 type Props = {
 	children: ReactNode;
@@ -12,25 +14,35 @@ type Props = {
 export default function DashboardLayout({ children }: Props) {
 	const [opened, { toggle }] = useDisclosure(true);
 
+	const stableToggle = useCallback(() => {
+		toggle();
+	}, [toggle]);
+
 	return (
 		<AppShell
+			header={{ height: 70 }}
 			navbar={{
 				width: 250,
 				breakpoint: "sm",
 				collapsed: { mobile: !opened, desktop: !opened },
 			}}
-			padding="md"
+			padding="xl"
+			transitionDuration={300}
+			transitionTimingFunction="cubic-bezier(0.25, 0.46, 0.45, 0.94)"
 		>
-			<AppShell.Navbar>
-				<Sidebar onToggle={toggle} />
+			<AppShell.Header>
+				<Header onToggle={stableToggle} />
+			</AppShell.Header>
+
+			<AppShell.Navbar style={{ borderInlineEnd: "none" }}>
+				<Sidebar />
 			</AppShell.Navbar>
 
-			<AppShell.Main>
-				{!opened && (
-					<div style={{ position: "fixed", top: 16, left: 16, zIndex: 1000 }}>
-						<Burger opened={opened} onClick={toggle} size="sm" />
-					</div>
-				)}
+			<AppShell.Main
+				style={{
+					minHeight: "100vh",
+				}}
+			>
 				{children}
 			</AppShell.Main>
 		</AppShell>

@@ -1,13 +1,15 @@
 "use client";
 
-import { ActionIcon, Box, Group, NavLink, Stack, Text } from "@mantine/core";
+import { ActionIcon, Box, NavLink } from "@mantine/core";
 import {
+	IconBook,
 	IconCalendar,
-	IconSettings,
+	IconLayoutSidebar,
+	IconUser,
 	IconUsers,
-	IconX,
 } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
+import { memo, useMemo } from "react";
 
 const navItems = [
 	{
@@ -21,42 +23,54 @@ const navItems = [
 		href: "/clients",
 	},
 	{
-		label: "設定",
-		icon: IconSettings,
-		href: "/settings",
+		label: "トレーナー",
+		icon: IconUser,
+		href: "/trainers",
+	},
+	{
+		label: "教材一覧",
+		icon: IconBook,
+		href: "/trainingMaterial",
 	},
 ];
 
-type Props = {
-	onToggle: () => void;
+const navLinkStyles = {
+	root: {
+		backgroundColor: "transparent",
+		borderRadius: "8px",
+		'&[data-active="true"]': {
+			color: "white",
+		},
+		"&:hover": {
+			backgroundColor: "#fff4e6",
+		},
+	},
 };
 
-export const Sidebar = ({ onToggle }: Props) => {
+export const Sidebar = memo(() => {
 	const pathname = usePathname();
 
-	return (
-		<Stack gap="sm" p="md">
-			<Group justify="space-between" mb="lg">
-				<Text fw={700} size="lg" c="blue">
-					COMPASS
-				</Text>
-				<ActionIcon variant="subtle" onClick={onToggle} size="sm">
-					<IconX size={16} />
-				</ActionIcon>
-			</Group>
+	const renderedNavItems = useMemo(() => {
+		return navItems.map((item) => (
+			<NavLink
+				key={item.href}
+				href={item.href}
+				label={item.label}
+				leftSection={<item.icon size="1rem" />}
+				active={pathname.startsWith(item.href)}
+				styles={navLinkStyles}
+			/>
+		));
+	}, [pathname]);
 
-			<Stack gap="xs">
-				{navItems.map((item) => (
-					<NavLink
-						key={item.href}
-						href={item.href}
-						label={item.label}
-						leftSection={<item.icon size="1rem" />}
-						active={pathname.startsWith(item.href)}
-						variant="filled"
-					/>
-				))}
-			</Stack>
-		</Stack>
+	return (
+		<div style={{ padding: "16px" }}>
+			{/* ナビゲーション項目 */}
+			<div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+				{renderedNavItems}
+			</div>
+		</div>
 	);
-};
+});
+
+Sidebar.displayName = "Sidebar";
