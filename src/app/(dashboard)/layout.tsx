@@ -35,6 +35,7 @@ export default function DashboardLayout({ children }: Props) {
 
 			<AppShell.Main
 				style={{
+					backgroundColor: "#F9FAFC",
 					minHeight: "100vh",
 				}}
 			>
