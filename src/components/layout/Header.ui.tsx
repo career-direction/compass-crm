@@ -48,6 +48,7 @@ export const Header = memo<Props>(({ onToggle }: Props) => {
 					alt="COMPASS"
 					width={150}
 					height={70}
+					priority
 				/>
 			</Button>
 
@@ -60,8 +61,12 @@ export const Header = memo<Props>(({ onToggle }: Props) => {
 								cursor: "pointer",
 								padding: "8px 12px",
 								borderRadius: "8px",
-								"&:hover": {
-									backgroundColor: "#F8F9FA",
+							}}
+							styles={{
+								root: {
+									"&:hover": {
+										backgroundColor: "#F8F9FA",
+									},
 								},
 							}}
 						>
