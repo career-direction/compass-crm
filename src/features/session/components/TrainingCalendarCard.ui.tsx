@@ -228,15 +228,18 @@ export default function TrainingSetsCard({
 // Content Calendar UI
 // (MantineProvider 済みのプロダクトでそのまま使える)
 // =====================
-import { IconDotsVertical } from "@tabler/icons-react";
 
-export type CalendarPost = { time: string; title: string };
+export type ExerciseMenuItem = {
+	name: string;
+	volume: string;
+	note?: string;
+};
 
 export interface ContentCalendarProps {
-	dateLabel?: string; // 例: "14th January, 2025"
+	dateLabel?: string; // 例: "2025年1月14日 (火)"
 	selectedWeekdayIndex?: number; // 0:Sun - 6:Sat
-	scheduled: CalendarPost[];
-	assignments: CalendarPost[];
+	sessionMenu?: ExerciseMenuItem[];
+	homeworkMenu?: ExerciseMenuItem[];
 }
 
 const weekShort = ["S", "M", "T", "W", "T", "F", "S"];
@@ -284,51 +287,53 @@ function WeekStrip({ selected = 2 }: { selected?: number }) {
 	);
 }
 
-function PostRow({ post }: { post: CalendarPost }) {
+function ExerciseRow({ item }: { item: ExerciseMenuItem }) {
 	return (
-		<Group align="flex-start" justify="space-between" wrap="nowrap">
+		<Group align="flex-start" wrap="nowrap">
 			<Group gap="xs" wrap="nowrap" align="flex-start" style={{ flex: 1 }}>
 				<Stack gap={6} align="center">
 					<Box w={3} h={30} bg="gray.3" style={{ borderRadius: 2 }} />
 				</Stack>
-				<Stack gap={2} style={{ flex: 1 }}>
+				<Stack gap={4} style={{ flex: 1 }}>
+					<Text fw={600}>{item.name}</Text>
 					<Text size="sm" c="dimmed">
-						{post.time}
+						{item.volume}
 					</Text>
-					<Text fw={500}>{post.title}</Text>
+					{item.note && (
+						<Text size="sm" c="gray.6">
+							{item.note}
+						</Text>
+					)}
 				</Stack>
 			</Group>
-			<ActionIcon variant="subtle" aria-label="menu">
-				<IconDotsVertical size={18} />
-			</ActionIcon>
 		</Group>
 	);
 }
 
-function PostListCard({
+function ExerciseListCard({
 	title,
-	posts,
-	liveAt,
+	items,
+	highlight,
 }: {
 	title: string;
-	posts: CalendarPost[];
-	liveAt?: string;
+	items: ExerciseMenuItem[];
+	highlight?: string;
 }) {
 	return (
 		<Card withBorder radius="xl" p="lg">
 			<Stack gap="md">
 				<Group justify="space-between" align="center">
 					<Text c="dimmed">{title}</Text>
-					{liveAt && (
+					{highlight && (
 						<Group gap={8} align="center">
 							<Box w={8} h={8} bg="green" style={{ borderRadius: 8 }} />
-							<Text fw={600}>{liveAt}</Text>
+							<Text fw={600}>{highlight}</Text>
 						</Group>
 					)}
 				</Group>
 				<Stack gap="lg">
-					{posts.map((p, i) => (
-						<PostRow key={i} post={p} />
+					{items.map((exercise, i) => (
+						<ExerciseRow key={i} item={exercise} />
 					))}
 				</Stack>
 			</Stack>
@@ -337,17 +342,17 @@ function PostListCard({
 }
 
 export function ContentCalendarCard({
-	dateLabel = "14th January, 2025",
+	dateLabel = "2025年1月14日 (火)",
 	selectedWeekdayIndex = 2,
-	scheduled,
-	assignments,
+	sessionMenu = [],
+	homeworkMenu = [],
 }: ContentCalendarProps) {
 	return (
 		<Stack gap="lg">
 			{/* Header */}
 			<Group justify="space-between" align="baseline">
 				<Text size="xl" fw={700}>
-					Content calendar
+					エクササイズメニュー履歴
 				</Text>
 				<Text c="dimmed">{dateLabel}</Text>
 			</Group>
@@ -357,18 +362,11 @@ export function ContentCalendarCard({
 
 			{/* Lists */}
 			<Stack gap="xl">
-				<PostListCard
-					title="Scheduled posts for today"
-					posts={scheduled}
-					liveAt="08:00 am"
+				<ExerciseListCard
+					title="本日のセッション"
+					items={sessionMenu}
+					highlight="スタート 08:00"
 				/>
-				<Group justify="space-between">
-					<Text size="xl" fw={700}>
-						My assignments
-					</Text>
-					<Text c="dimmed">{assignments.length} Tasks</Text>
-				</Group>
-				<PostListCard title="" posts={assignments} />
 			</Stack>
 		</Stack>
 	);
@@ -376,26 +374,44 @@ export function ContentCalendarCard({
 
 // --- Demo (削除可能) ---
 export function DemoContentCalendar() {
-	const scheduled: CalendarPost[] = [
+	const sessionMenu: ExerciseMenuItem[] = [
 		{
-			time: "06:30 am",
-			title: "The Art of Balancing Aesthetics and Usability in Design",
+			name: "ダイナミックストレッチ",
+			volume: "10分",
+			note: "股関節まわりを中心に可動域を広げる",
 		},
 		{
-			time: "10:00 am",
-			title: "Why a Design-First Approach Is the Key to Creating Impa…",
+			name: "スクワット",
+			volume: "4セット × 10回",
+			note: "60kgから始めてセットごとに5kgずつ増やす",
 		},
 		{
-			time: "02:00 pm",
-			title: "Design Systems: The Secret Sauce for Scalable Product De…",
+			name: "ブルガリアンスクワット",
+			volume: "3セット × 12回",
+			note: "左右差を意識してフォームを確認",
 		},
 		{
-			time: "05:00 pm",
-			title: "From Bedroom Pop to Indie Rock: My Playlist for Productivity",
+			name: "プランク",
+			volume: "3セット × 45秒",
+			note: "腹圧を抜かず体幹を安定させる",
 		},
 	];
-	const assignments: CalendarPost[] = scheduled.slice(1);
+	const homeworkMenu: ExerciseMenuItem[] = [
+		{
+			name: "ヒップリフト",
+			volume: "3セット × 15回",
+			note: "就寝前に実施し、臀部の収縮を意識",
+		},
+		{
+			name: "ドローイン",
+			volume: "5分",
+			note: "朝晩で各5分ずつ腹横筋を活性化",
+		},
+	];
 	return (
-		<ContentCalendarCard scheduled={scheduled} assignments={assignments} />
+		<ContentCalendarCard
+			sessionMenu={sessionMenu}
+			homeworkMenu={homeworkMenu}
+		/>
 	);
 }

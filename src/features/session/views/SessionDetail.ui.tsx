@@ -22,28 +22,48 @@ import {
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 
 import React, { useEffect, useState } from "react";
-import { ContentCalendarCard } from "../components/TrainingCalendarCard.ui";
+import {
+	ContentCalendarCard,
+	type ExerciseMenuItem,
+} from "../components/TrainingCalendarCard.ui";
 
 type Props = {
 	sessionId: string;
 };
 
-const scheduled = [
+const sessionMenu: ExerciseMenuItem[] = [
 	{
-		time: "06:30 am",
-		title: "The Art of Balancing Aesthetics and Usability in Design",
+		name: "ダイナミックストレッチ",
+		volume: "10分",
+		note: "股関節と肩甲骨の可動域を意識",
 	},
 	{
-		time: "10:00 am",
-		title: "Why a Design-First Approach Is the Key to Creating Impa…",
+		name: "スクワット",
+		volume: "4セット × 10回 @60-70kg",
+		note: "膝が内側に入らないよう注意",
 	},
 	{
-		time: "02:00 pm",
-		title: "Design Systems: The Secret Sauce for Scalable Product De…",
+		name: "ブルガリアンスクワット",
+		volume: "3セット × 12回",
+		note: "左右差を確認しながら実施",
 	},
 	{
-		time: "05:00 pm",
-		title: "From Bedroom Pop to Indie Rock: My Playlist for Productivity",
+		name: "プランク",
+		volume: "3セット × 45秒",
+		note: "呼吸を止めず体幹を安定",
+	},
+];
+
+const homeworkMenu: ExerciseMenuItem[] = [
+	{
+		name: "ヒップリフト",
+		volume: "3セット × 15回",
+		note: "寝る前に臀部の収縮を意識",
+	},
+	{
+		name: "ドローイン",
+		volume: "5分",
+		note: "朝晩で各5分ずつ腹圧を高める",
 	},
 ];
 
@@ -143,10 +163,10 @@ export const SessionDetail = ({ sessionId }: Props) => {
 				<TrainingSetsCard title="スクワット" onChange={handleChange} />
 			</Stack>
 			<ContentCalendarCard
-				dateLabel="14th January, 2025"
+				dateLabel="2025年1月14日 (火)"
 				selectedWeekdayIndex={2} // 0:Sun … 6:Sat（画像は火曜=2）
-				scheduled={scheduled}
-				assignments={scheduled.slice(1)}
+				sessionMenu={sessionMenu}
+				homeworkMenu={homeworkMenu}
 			/>
 		</Flex>
 	);
