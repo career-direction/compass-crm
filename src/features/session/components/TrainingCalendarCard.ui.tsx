@@ -1,5 +1,4 @@
-"use client";
-
+import React, { useEffect, useState } from "react";
 import {
 	Card,
 	Grid,
@@ -14,143 +13,8 @@ import {
 	Badge,
 	ActionIcon,
 	Stack,
-	Container,
-	Title,
-	Flex,
-	Space,
 } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
-
-import React, { useEffect, useState } from "react";
-import { ContentCalendarCard } from "../components/TrainingCalendarCard.ui";
-
-type Props = {
-	sessionId: string;
-};
-
-const scheduled = [
-	{
-		time: "06:30 am",
-		title: "The Art of Balancing Aesthetics and Usability in Design",
-	},
-	{
-		time: "10:00 am",
-		title: "Why a Design-First Approach Is the Key to Creating Impa…",
-	},
-	{
-		time: "02:00 pm",
-		title: "Design Systems: The Secret Sauce for Scalable Product De…",
-	},
-	{
-		time: "05:00 pm",
-		title: "From Bedroom Pop to Indie Rock: My Playlist for Productivity",
-	},
-];
-
-export const SessionDetail = ({ sessionId }: Props) => {
-	const handleChange = (sets: SetItem[]) => {
-		// 保存やバリデーションなど
-		console.log(sets);
-	};
-	return (
-		<Flex>
-			<Stack>
-				<Box mb={8}>
-					<Title order={1} mb="sm">
-						田中太郎
-					</Title>
-					<Flex
-						gap="md"
-						justify="flex-start"
-						align="flex-start"
-						direction="row"
-						wrap="wrap"
-					>
-						<Flex align="center" justify={"center"}>
-							<Text fw={500} size="sm">
-								開始時間
-							</Text>
-							<Text fw={500}>14:00</Text>
-						</Flex>
-						<Flex align="center" justify={"center"}>
-							<Text fw={500} size="sm">
-								セッション時間
-							</Text>
-							<Text fw={500}>60分</Text>
-						</Flex>
-					</Flex>
-				</Box>
-
-				<Flex gap={24}>
-					<Flex direction={"column"}>
-						<Text>体重</Text>
-						<Flex align="center">
-							<Text>
-								<span
-									style={{ fontWeight: "bold", fontSize: 32, marginRight: 8 }}
-								>
-									65
-								</span>
-								kg
-							</Text>
-							<Space w="md" />
-							<Text c="green">-5kg</Text>
-						</Flex>
-					</Flex>
-					<Flex direction={"column"}>
-						<Text>BMI</Text>
-						<Flex align="center">
-							<span style={{ fontWeight: "bold", fontSize: 32 }}>20.0</span>
-							<Space w="md" />
-							<Text c="green">-5</Text>
-						</Flex>
-					</Flex>
-				</Flex>
-
-				<Flex gap={24}>
-					<Flex direction="column">
-						<Text size="lg" fw={700} mb={8}>
-							月次健康目標
-						</Text>
-						<Box bg="#FAFAFA" bdrs={12} p={24}>
-							<Text>体重を2kg減量し、スクワットの重量を10kg増やす</Text>
-						</Box>
-					</Flex>
-
-					<Flex direction="column">
-						<Text size="lg" fw={700} mb={8}>
-							中期健康目標
-						</Text>
-						<Box bg="#FAFAFA" bdrs={12} p={24}>
-							<Text>体重を2kg減量し、スクワットの重量を10kg増やす</Text>
-						</Box>
-					</Flex>
-				</Flex>
-
-				<Flex direction="column">
-					<Text size="lg" fw={700} mb={8}>
-						セッションテーマ
-					</Text>
-					<Box bg="#FAFAFA" bdrs={12} p={24}>
-						<Text>フォーム改善と筋力向上</Text>
-					</Box>
-				</Flex>
-
-				{/* エクササイズメニュー */}
-				<Text size="lg" fw={700} mb={8}>
-					エクササイズメニュー
-				</Text>
-				<TrainingSetsCard title="スクワット" onChange={handleChange} />
-			</Stack>
-			<ContentCalendarCard
-				dateLabel="14th January, 2025"
-				selectedWeekdayIndex={2} // 0:Sun … 6:Sat（画像は火曜=2）
-				scheduled={scheduled}
-				assignments={scheduled.slice(1)}
-			/>
-		</Flex>
-	);
-};
 
 // --- Types ---
 export type SetItem = {
@@ -187,7 +51,7 @@ function SetRow({
 	onRemove?: () => void;
 }) {
 	return (
-		<Card radius="md" shadow="xs" p="md">
+		<Card withBorder radius="md" shadow="xs" p="md">
 			<Grid align="center" gutter="md">
 				<Grid.Col span={{ base: 12, sm: 1 }}>
 					<Badge size="lg" radius="sm" variant="light">
@@ -306,8 +170,8 @@ export default function TrainingSetsCard({
 	};
 
 	return (
-		<Box bg="#FAFAFA" bdrs={12}>
-			<Box p="lg">
+		<Box>
+			<Card withBorder radius="lg" shadow="sm" p="lg">
 				<Stack gap="md">
 					<Text size="lg" fw={600}>
 						{title}
@@ -355,7 +219,183 @@ export default function TrainingSetsCard({
 						</Button>
 					</Group>
 				</Stack>
-			</Box>
+			</Card>
 		</Box>
+	);
+}
+
+// =====================
+// Content Calendar UI
+// (MantineProvider 済みのプロダクトでそのまま使える)
+// =====================
+import { IconDotsVertical } from "@tabler/icons-react";
+
+export type CalendarPost = { time: string; title: string };
+
+export interface ContentCalendarProps {
+	dateLabel?: string; // 例: "14th January, 2025"
+	selectedWeekdayIndex?: number; // 0:Sun - 6:Sat
+	scheduled: CalendarPost[];
+	assignments: CalendarPost[];
+}
+
+const weekShort = ["S", "M", "T", "W", "T", "F", "S"];
+
+function WeekStrip({ selected = 2 }: { selected?: number }) {
+	return (
+		<Group gap="md" align="stretch">
+			{weekShort.map((d, idx) => {
+				const active = idx === selected;
+				return (
+					<Card
+						key={idx}
+						radius="xl"
+						withBorder
+						p="xs"
+						style={{ width: 48, textAlign: "center" }}
+						bg={active ? "gray.0" : undefined}
+					>
+						<Stack align="center" gap={2}>
+							<Text size="sm" c="dimmed">
+								{d}
+							</Text>
+							<Card
+								radius="lg"
+								px="sm"
+								py={6}
+								withBorder={false}
+								bg={active ? "white" : "transparent"}
+							>
+								<Text fw={700}>{[11, 12, 13, 14, 15, 16, 17][idx]}</Text>
+							</Card>
+							{active && (
+								<Group gap={4} mt={2}>
+									<Box w={6} h={6} bg="gray.8" style={{ borderRadius: 6 }} />
+									<Box w={6} h={6} bg="gray.5" style={{ borderRadius: 6 }} />
+									<Box w={6} h={6} bg="gray.3" style={{ borderRadius: 6 }} />
+									<Box w={6} h={6} bg="gray.2" style={{ borderRadius: 6 }} />
+								</Group>
+							)}
+						</Stack>
+					</Card>
+				);
+			})}
+		</Group>
+	);
+}
+
+function PostRow({ post }: { post: CalendarPost }) {
+	return (
+		<Group align="flex-start" justify="space-between" wrap="nowrap">
+			<Group gap="xs" wrap="nowrap" align="flex-start" style={{ flex: 1 }}>
+				<Stack gap={6} align="center">
+					<Box w={3} h={30} bg="gray.3" style={{ borderRadius: 2 }} />
+				</Stack>
+				<Stack gap={2} style={{ flex: 1 }}>
+					<Text size="sm" c="dimmed">
+						{post.time}
+					</Text>
+					<Text fw={500}>{post.title}</Text>
+				</Stack>
+			</Group>
+			<ActionIcon variant="subtle" aria-label="menu">
+				<IconDotsVertical size={18} />
+			</ActionIcon>
+		</Group>
+	);
+}
+
+function PostListCard({
+	title,
+	posts,
+	liveAt,
+}: {
+	title: string;
+	posts: CalendarPost[];
+	liveAt?: string;
+}) {
+	return (
+		<Card withBorder radius="xl" p="lg">
+			<Stack gap="md">
+				<Group justify="space-between" align="center">
+					<Text c="dimmed">{title}</Text>
+					{liveAt && (
+						<Group gap={8} align="center">
+							<Box w={8} h={8} bg="green" style={{ borderRadius: 8 }} />
+							<Text fw={600}>{liveAt}</Text>
+						</Group>
+					)}
+				</Group>
+				<Stack gap="lg">
+					{posts.map((p, i) => (
+						<PostRow key={i} post={p} />
+					))}
+				</Stack>
+			</Stack>
+		</Card>
+	);
+}
+
+export function ContentCalendarCard({
+	dateLabel = "14th January, 2025",
+	selectedWeekdayIndex = 2,
+	scheduled,
+	assignments,
+}: ContentCalendarProps) {
+	return (
+		<Stack gap="lg">
+			{/* Header */}
+			<Group justify="space-between" align="baseline">
+				<Text size="xl" fw={700}>
+					Content calendar
+				</Text>
+				<Text c="dimmed">{dateLabel}</Text>
+			</Group>
+
+			{/* Week */}
+			<WeekStrip selected={selectedWeekdayIndex} />
+
+			{/* Lists */}
+			<Stack gap="xl">
+				<PostListCard
+					title="Scheduled posts for today"
+					posts={scheduled}
+					liveAt="08:00 am"
+				/>
+				<Group justify="space-between">
+					<Text size="xl" fw={700}>
+						My assignments
+					</Text>
+					<Text c="dimmed">{assignments.length} Tasks</Text>
+				</Group>
+				<PostListCard title="" posts={assignments} />
+			</Stack>
+		</Stack>
+	);
+}
+
+// --- Demo (削除可能) ---
+export function DemoContentCalendar() {
+	const scheduled: CalendarPost[] = [
+		{
+			time: "06:30 am",
+			title: "The Art of Balancing Aesthetics and Usability in Design",
+		},
+		{
+			time: "10:00 am",
+			title: "Why a Design-First Approach Is the Key to Creating Impa…",
+		},
+		{
+			time: "02:00 pm",
+			title: "Design Systems: The Secret Sauce for Scalable Product De…",
+		},
+		{
+			time: "05:00 pm",
+			title: "From Bedroom Pop to Indie Rock: My Playlist for Productivity",
+		},
+	];
+	const assignments: CalendarPost[] = scheduled.slice(1);
+	return (
+		<ContentCalendarCard scheduled={scheduled} assignments={assignments} />
 	);
 }
