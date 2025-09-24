@@ -73,77 +73,91 @@ export const SessionDetail = ({ sessionId }: Props) => {
 		console.log(sets);
 	};
 	return (
-		<Flex>
-			<Stack>
-				<Box mb={8}>
-					<Title order={1} mb="sm">
-						田中太郎
-					</Title>
-					<Flex
-						gap="md"
-						justify="flex-start"
-						align="flex-start"
-						direction="row"
-						wrap="wrap"
-					>
-						<Flex align="center" justify={"center"}>
-							<Text fw={500} size="sm">
-								開始時間
-							</Text>
-							<Text fw={500}>14:00</Text>
-						</Flex>
-						<Flex align="center" justify={"center"}>
-							<Text fw={500} size="sm">
-								セッション時間
-							</Text>
-							<Text fw={500}>60分</Text>
-						</Flex>
-					</Flex>
-				</Box>
-
-				<Flex gap={24}>
-					<Flex direction={"column"}>
-						<Text>体重</Text>
-						<Flex align="center">
-							<Text>
-								<span
-									style={{ fontWeight: "bold", fontSize: 32, marginRight: 8 }}
-								>
-									65
-								</span>
-								kg
-							</Text>
-							<Space w="md" />
-							<Text c="green">-5kg</Text>
-						</Flex>
-					</Flex>
-					<Flex direction={"column"}>
-						<Text>BMI</Text>
-						<Flex align="center">
-							<span style={{ fontWeight: "bold", fontSize: 32 }}>20.0</span>
-							<Space w="md" />
-							<Text c="green">-5</Text>
-						</Flex>
-					</Flex>
-				</Flex>
-
-				<Flex gap={24}>
+		<Flex
+			gap="xl"
+			align="flex-start"
+			direction={{ base: "column", lg: "row" }}
+			w="100%"
+		>
+			<Stack style={{ flex: 3, minWidth: 0 }}>
+				<Flex gap={36} align="stretch">
 					<Flex direction="column">
-						<Text size="lg" fw={700} mb={8}>
-							月次健康目標
-						</Text>
-						<Box bg="#FAFAFA" bdrs={12} p={24}>
-							<Text>体重を2kg減量し、スクワットの重量を10kg増やす</Text>
-						</Box>
-					</Flex>
+						<Title order={1} mb="sm">
+							田中太郎
+						</Title>
 
-					<Flex direction="column">
-						<Text size="lg" fw={700} mb={8}>
-							中期健康目標
-						</Text>
-						<Box bg="#FAFAFA" bdrs={12} p={24}>
-							<Text>体重を2kg減量し、スクワットの重量を10kg増やす</Text>
-						</Box>
+						<Flex
+							justify="flex-start"
+							align="flex-start"
+							direction="row"
+							wrap="wrap"
+						>
+							<Flex align="center" justify={"center"}>
+								<Text fw={500} size="sm">
+									開始時間
+								</Text>
+								<Text fw={500}>14:00</Text>
+							</Flex>
+							<Flex align="center" justify={"center"}>
+								<Text fw={500} size="sm">
+									セッション時間
+								</Text>
+								<Text fw={500}>60分</Text>
+							</Flex>
+						</Flex>
+
+						<Flex mt={24} gap={24}>
+							<Flex direction={"column"}>
+								<Text size="lg" fw={700} mb={8}>
+									体重
+								</Text>
+								<Flex align="center">
+									<Text>
+										<span
+											style={{
+												fontWeight: "bold",
+												fontSize: 32,
+												marginRight: 8,
+											}}
+										>
+											65
+										</span>
+										kg
+									</Text>
+									<Space w="md" />
+									<Text c="green">-5kg</Text>
+								</Flex>
+							</Flex>
+							<Flex direction={"column"}>
+								<Text size="lg" fw={700} mb={8}>
+									BMI
+								</Text>
+								<Flex align="center">
+									<span style={{ fontWeight: "bold", fontSize: 32 }}>20.0</span>
+									<Space w="md" />
+									<Text c="green">-5</Text>
+								</Flex>
+							</Flex>
+						</Flex>
+					</Flex>
+					<Flex gap={24} direction="column">
+						<Flex direction="column">
+							<Text size="lg" fw={700} mb={8}>
+								月次健康目標
+							</Text>
+							<Box bg="#FAFAFA" bdrs={12} p={24}>
+								<Text>体重を2kg減量し、スクワットの重量を10kg増やす</Text>
+							</Box>
+						</Flex>
+
+						<Flex direction="column">
+							<Text size="lg" fw={700} mb={8}>
+								中期健康目標
+							</Text>
+							<Box bg="#FAFAFA" bdrs={12} p={24}>
+								<Text>体重を2kg減量し、スクワットの重量を10kg増やす</Text>
+							</Box>
+						</Flex>
 					</Flex>
 				</Flex>
 
@@ -162,12 +176,14 @@ export const SessionDetail = ({ sessionId }: Props) => {
 				</Text>
 				<TrainingSetsCard title="スクワット" onChange={handleChange} />
 			</Stack>
-			<ContentCalendarCard
-				dateLabel="2025年1月14日 (火)"
-				selectedWeekdayIndex={2} // 0:Sun … 6:Sat（画像は火曜=2）
-				sessionMenu={sessionMenu}
-				homeworkMenu={homeworkMenu}
-			/>
+			<Box style={{ flex: 1, minWidth: 0 }}>
+				<ContentCalendarCard
+					dateLabel="2025年1月14日 (火)"
+					selectedWeekdayIndex={2} // 0:Sun … 6:Sat（画像は火曜=2）
+					sessionMenu={sessionMenu}
+					homeworkMenu={homeworkMenu}
+				/>
+			</Box>
 		</Flex>
 	);
 };
