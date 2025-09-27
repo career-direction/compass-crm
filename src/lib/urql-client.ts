@@ -1,4 +1,5 @@
-import { Client, cacheExchange, fetchExchange, errorExchange } from 'urql';
+import { Client, fetchExchange, errorExchange } from 'urql';
+import { cacheExchange } from '@urql/exchange-graphcache';
 
 const isServerSide = typeof window === 'undefined';
 
@@ -38,10 +39,10 @@ export const urqlClient = new Client({
       },
       // キーの生成戦略をカスタマイズ
       keys: {
-        User: (data) => data.id,
-        Client: (data) => data.id,
-        Trainer: (data) => data.id,
-        PTSession: (data) => data.id,
+        User: (data) => data.id as string,
+        Client: (data) => data.id as string,
+        Trainer: (data) => data.id as string,
+        PTSession: (data) => data.id as string,
       },
     }),
     fetchExchange,
