@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client';
+import { GraphQLResolveInfo } from 'graphql';
+import { getIncludeFields } from './utils';
 
 export interface Context {
   prisma: PrismaClient;
@@ -16,23 +18,45 @@ export const resolvers = {
       });
     },
 
-    clients: async (_parent: any, _args: any, context: Context) => {
-      return await context.prisma.client.findMany({
-        include: {
-          user: true,
-          profile: true,
-          sessions: true,
+    clients: async (_parent: any, _args: any, context: Context, info: GraphQLResolveInfo) => {
+      // 動的にincludeフィールドを決定してオーバーフェッチを防ぐ
+      const relationMap = {
+        user: true,
+        profile: true,
+        sessions: {
+          include: {
+            client: { include: { user: true } },
+            trainer: { include: { user: true } },
+            items: true,
+          },
         },
+      };
+      
+      const include = getIncludeFields(info, relationMap);
+      
+      return await context.prisma.client.findMany({
+        include: Object.keys(include).length > 0 ? include : undefined,
       });
     },
 
-    trainers: async (_parent: any, _args: any, context: Context) => {
-      return await context.prisma.trainer.findMany({
-        include: {
-          user: true,
-          profile: true,
-          sessions: true,
+    trainers: async (_parent: any, _args: any, context: Context, info: GraphQLResolveInfo) => {
+      // 動的にincludeフィールドを決定してオーバーフェッチを防ぐ
+      const relationMap = {
+        user: true,
+        profile: true,
+        sessions: {
+          include: {
+            client: { include: { user: true } },
+            trainer: { include: { user: true } },
+            items: true,
+          },
         },
+      };
+      
+      const include = getIncludeFields(info, relationMap);
+      
+      return await context.prisma.trainer.findMany({
+        include: Object.keys(include).length > 0 ? include : undefined,
       });
     },
 
