@@ -1,11 +1,9 @@
 "use client";
 
-import { AppShell } from "@mantine/core";
+import { AppShell, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import type { ReactNode } from "react";
-import { useCallback } from "react";
 import { Sidebar } from "@/components/layout/Sidebar.ui";
-import { Header } from "@/components/layout/Header.ui";
 
 type Props = {
 	children: ReactNode;
@@ -14,28 +12,19 @@ type Props = {
 export default function DashboardLayout({ children }: Props) {
 	const [opened, { toggle }] = useDisclosure(true);
 
-	const stableToggle = useCallback(() => {
-		toggle();
-	}, [toggle]);
-
 	return (
 		<AppShell
-			header={{ height: 70 }}
 			navbar={{
-				width: 250,
+				width: opened ? 250 : 56,
 				breakpoint: "sm",
-				collapsed: { mobile: !opened, desktop: !opened },
+				collapsed: { mobile: !opened },
 			}}
 			padding="xl"
 			transitionDuration={300}
 			transitionTimingFunction="cubic-bezier(0.25, 0.46, 0.45, 0.94)"
 		>
-			<AppShell.Header>
-				<Header onToggle={stableToggle} />
-			</AppShell.Header>
-
 			<AppShell.Navbar style={{ borderInlineEnd: "none" }}>
-				<Sidebar />
+				<Sidebar isOpen={opened} onToggle={toggle} />
 			</AppShell.Navbar>
 
 			<AppShell.Main
@@ -43,8 +32,14 @@ export default function DashboardLayout({ children }: Props) {
 					minHeight: "100vh",
 				}}
 			>
+				<Header />
 				{children}
 			</AppShell.Main>
 		</AppShell>
 	);
 }
+
+// TODO: Headerをいい感じにする
+const Header = () => {
+	return <Text>Session</Text>;
+};
