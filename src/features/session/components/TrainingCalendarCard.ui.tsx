@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
 	Card,
 	Grid,
@@ -14,7 +14,12 @@ import {
 	ActionIcon,
 	Stack,
 } from "@mantine/core";
-import { IconPlus, IconTrash } from "@tabler/icons-react";
+import {
+	IconChevronLeft,
+	IconChevronRight,
+	IconPlus,
+	IconTrash,
+} from "@tabler/icons-react";
 
 // --- Types ---
 export type SetItem = {
@@ -196,16 +201,19 @@ export default function TrainingSetsCard({
 					</Group>
 
 					<Grid gutter="sm">
-						{sets.map((s, i) => (
-							<Grid.Col key={i} span={12}>
-								<SetRow
-									index={i + 1}
-									value={s}
-									onChange={(next) => updateSet(i, next)}
-									onRemove={() => removeSet(i)}
-								/>
-							</Grid.Col>
-						))}
+						{sets.map((s, i) => {
+							const key = `${s.reps}-${s.weight}-${s.unit}-${s.note}-${i}`;
+							return (
+								<Grid.Col key={key} span={12}>
+									<SetRow
+										index={i + 1}
+										value={s}
+										onChange={(next) => updateSet(i, next)}
+										onRemove={() => removeSet(i)}
+									/>
+								</Grid.Col>
+							);
+						})}
 					</Grid>
 
 					<Group justify="center">
@@ -235,55 +243,59 @@ export type ExerciseMenuItem = {
 	note?: string;
 };
 
+export type DateCarouselItem = {
+	label: string;
+	weekdayIndex?: number;
+};
+
 export interface ContentCalendarProps {
 	dateLabel?: string; // 例: "2025年1月14日 (火)"
 	selectedWeekdayIndex?: number; // 0:Sun - 6:Sat
 	sessionMenu?: ExerciseMenuItem[];
 	homeworkMenu?: ExerciseMenuItem[];
+	dateItems?: DateCarouselItem[];
+	initialDateIndex?: number;
 }
 
-const weekShort = ["S", "M", "T", "W", "T", "F", "S"];
+function SessionDateCarousel({
+	items,
+	activeIndex,
+	onSelect,
+}: {
+	items: DateCarouselItem[];
+	activeIndex: number;
+	onSelect: (index: number) => void;
+}) {
+	if (items.length === 0) return null;
 
-function WeekStrip({ selected = 2 }: { selected?: number }) {
 	return (
-		<Group gap="md" align="stretch">
-			{weekShort.map((d, idx) => {
-				const active = idx === selected;
-				return (
-					<Card
-						key={idx}
-						radius="xl"
-						withBorder
-						p="xs"
-						style={{ width: 48, textAlign: "center" }}
-						bg={active ? "gray.0" : undefined}
-					>
-						<Stack align="center" gap={2}>
-							<Text size="sm" c="dimmed">
-								{d}
-							</Text>
-							<Card
-								radius="lg"
-								px="sm"
-								py={6}
-								withBorder={false}
-								bg={active ? "white" : "transparent"}
-							>
-								<Text fw={700}>{[11, 12, 13, 14, 15, 16, 17][idx]}</Text>
-							</Card>
-							{active && (
-								<Group gap={4} mt={2}>
-									<Box w={6} h={6} bg="gray.8" style={{ borderRadius: 6 }} />
-									<Box w={6} h={6} bg="gray.5" style={{ borderRadius: 6 }} />
-									<Box w={6} h={6} bg="gray.3" style={{ borderRadius: 6 }} />
-									<Box w={6} h={6} bg="gray.2" style={{ borderRadius: 6 }} />
-								</Group>
-							)}
-						</Stack>
-					</Card>
-				);
-			})}
-		</Group>
+		<Box style={{ overflowX: "auto" }}>
+			<Group gap="sm" wrap="nowrap" align="stretch">
+				{items.map((item, idx) => {
+					const active = idx === activeIndex;
+					return (
+						<Card
+							withBorder
+							radius="lg"
+							p="sm"
+							key={item.label}
+							bg={active ? "blue.6" : "white"}
+							style={{
+								cursor: "pointer",
+								minWidth: 180,
+							}}
+							onClick={() => onSelect(idx)}
+						>
+							<Stack gap={4}>
+								<Text size="sm" fw={600} c={active ? "white" : "dark.7"}>
+									{item.label}
+								</Text>
+							</Stack>
+						</Card>
+					);
+				})}
+			</Group>
+		</Box>
 	);
 }
 
@@ -331,11 +343,14 @@ function ExerciseListCard({
 						</Group>
 					)}
 				</Group>
-				<Stack gap="lg">
-					{items.map((exercise, i) => (
-						<ExerciseRow key={i} item={exercise} />
-					))}
-				</Stack>
+					<Stack gap="lg">
+						{items.map((exercise, i) => (
+							<ExerciseRow
+								key={`${exercise.name}-${exercise.volume}-${i}`}
+								item={exercise}
+							/>
+						))}
+					</Stack>
 			</Stack>
 		</Card>
 	);
@@ -346,19 +361,122 @@ export function ContentCalendarCard({
 	selectedWeekdayIndex = 2,
 	sessionMenu = [],
 	homeworkMenu = [],
+	dateItems,
+	initialDateIndex,
 }: ContentCalendarProps) {
+	const dateCarouselItems = useMemo(() => {
+		if (dateItems && dateItems.length > 0) return dateItems;
+		if (dateLabel) {
+			return [
+				{
+					label: dateLabel,
+					weekdayIndex: selectedWeekdayIndex,
+				},
+			];
+		}
+		return [];
+	}, [dateItems, dateLabel, selectedWeekdayIndex]);
+
+	const [activeDateIndex, setActiveDateIndex] = useState(() => {
+		if (dateCarouselItems.length === 0) return 0;
+		const initial = initialDateIndex ?? dateCarouselItems.length - 1;
+		return Math.min(Math.max(initial, 0), dateCarouselItems.length - 1);
+	});
+
+	useEffect(() => {
+		if (dateCarouselItems.length === 0) {
+			setActiveDateIndex(0);
+			return;
+		}
+
+		setActiveDateIndex((prev) => {
+			if (initialDateIndex !== undefined) {
+				const next = Math.min(
+					Math.max(initialDateIndex, 0),
+					dateCarouselItems.length - 1,
+				);
+				return next;
+			}
+			if (prev >= dateCarouselItems.length) {
+				return dateCarouselItems.length - 1;
+			}
+			if (prev < 0) return 0;
+			return prev;
+		});
+	}, [dateCarouselItems, initialDateIndex]);
+
+	const hasMultipleDates = dateCarouselItems.length > 1;
+	const currentDate = dateCarouselItems[activeDateIndex];
+
+	const handlePrevDate = () => {
+		if (dateCarouselItems.length === 0) return;
+		setActiveDateIndex((prev) => {
+			if (!hasMultipleDates) return prev;
+			return (prev - 1 + dateCarouselItems.length) % dateCarouselItems.length;
+		});
+	};
+
+	const handleNextDate = () => {
+		if (dateCarouselItems.length === 0) return;
+		setActiveDateIndex((prev) => {
+			if (!hasMultipleDates) return prev;
+			return (prev + 1) % dateCarouselItems.length;
+		});
+	};
+
+	const handleSelectDate = (index: number) => {
+		if (index < 0 || index >= dateCarouselItems.length) return;
+		setActiveDateIndex(index);
+	};
+
 	return (
 		<Stack gap="lg">
 			{/* Header */}
-			<Group justify="space-between" align="baseline">
+			<Group justify="space-between" align="center">
 				<Text size="xl" fw={700}>
 					エクササイズメニュー履歴
 				</Text>
-				<Text c="dimmed">{dateLabel}</Text>
+				{dateCarouselItems.length > 0 ? (
+					<Group gap="xs" align="center">
+						<ActionIcon
+							variant="subtle"
+							aria-label="日付を前に送る"
+							onClick={handlePrevDate}
+							disabled={!hasMultipleDates}
+						>
+							<IconChevronLeft size={18} />
+						</ActionIcon>
+						<Text c="dimmed" fw={600}>
+							{currentDate?.label}
+						</Text>
+						<ActionIcon
+							variant="subtle"
+							aria-label="日付を次に送る"
+							onClick={handleNextDate}
+							disabled={!hasMultipleDates}
+						>
+							<IconChevronRight size={18} />
+						</ActionIcon>
+					</Group>
+				) : (
+					<Text c="dimmed">日付情報なし</Text>
+				)}
 			</Group>
 
-			{/* Week */}
-			<WeekStrip selected={selectedWeekdayIndex} />
+			{/* Dates */}
+			{dateCarouselItems.length > 0 ? (
+				<SessionDateCarousel
+					items={dateCarouselItems}
+					activeIndex={activeDateIndex}
+					onSelect={handleSelectDate}
+				/>
+			) : (
+				<Card withBorder radius="lg" p="md">
+					<Text size="sm" c="dimmed">
+						日付情報がありません
+					</Text>
+				</Card>
+			)}
 
 			{/* Lists */}
 			<Stack gap="xl">
@@ -367,6 +485,12 @@ export function ContentCalendarCard({
 					items={sessionMenu}
 					highlight="スタート 08:00"
 				/>
+				{homeworkMenu.length > 0 && (
+					<ExerciseListCard
+						title="宿題メニュー"
+						items={homeworkMenu}
+					/>
+				)}
 			</Stack>
 		</Stack>
 	);

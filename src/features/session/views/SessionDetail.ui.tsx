@@ -14,17 +14,17 @@ import {
 	Badge,
 	ActionIcon,
 	Stack,
-	Container,
 	Title,
 	Flex,
 	Space,
 } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	ContentCalendarCard,
 	type ExerciseMenuItem,
+	type DateCarouselItem,
 } from "../components/TrainingCalendarCard.ui";
 
 type Props = {
@@ -67,7 +67,14 @@ const homeworkMenu: ExerciseMenuItem[] = [
 	},
 ];
 
-export const SessionDetail = ({ sessionId }: Props) => {
+const exerciseHistoryDates: DateCarouselItem[] = [
+	{ label: "2025年1月12日 (日)", weekdayIndex: 0 },
+	{ label: "2025年1月13日 (月)", weekdayIndex: 1 },
+	{ label: "2025年1月14日 (火)", weekdayIndex: 2 },
+	{ label: "2025年1月15日 (水)", weekdayIndex: 3 },
+];
+
+export const SessionDetail = ({ sessionId: _sessionId }: Props) => {
 	const handleChange = (sets: SetItem[]) => {
 		// 保存やバリデーションなど
 		console.log(sets);
@@ -178,8 +185,8 @@ export const SessionDetail = ({ sessionId }: Props) => {
 			</Stack>
 			<Box style={{ flex: 1, minWidth: 0 }}>
 				<ContentCalendarCard
-					dateLabel="2025年1月14日 (火)"
-					selectedWeekdayIndex={2} // 0:Sun … 6:Sat（画像は火曜=2）
+					dateItems={exerciseHistoryDates}
+					initialDateIndex={exerciseHistoryDates.length - 1}
 					sessionMenu={sessionMenu}
 					homeworkMenu={homeworkMenu}
 				/>
@@ -368,16 +375,19 @@ export default function TrainingSetsCard({
 					</Group>
 
 					<Grid gutter="sm">
-						{sets.map((s, i) => (
-							<Grid.Col key={i} span={12}>
-								<SetRow
-									index={i + 1}
-									value={s}
-									onChange={(next) => updateSet(i, next)}
-									onRemove={() => removeSet(i)}
-								/>
-							</Grid.Col>
-						))}
+						{sets.map((s, i) => {
+							const key = `${s.reps}-${s.weight}-${s.unit}-${s.note}-${i}`;
+							return (
+								<Grid.Col key={key} span={12}>
+									<SetRow
+										index={i + 1}
+										value={s}
+										onChange={(next) => updateSet(i, next)}
+										onRemove={() => removeSet(i)}
+									/>
+								</Grid.Col>
+							);
+						})}
 					</Grid>
 
 					<Group justify="center">
