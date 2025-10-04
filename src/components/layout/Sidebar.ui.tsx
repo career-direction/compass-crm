@@ -45,9 +45,6 @@ const navLinkStyles = {
 	root: {
 		borderRadius: "8px",
 	},
-	label: {
-		fontWeight: "bold",
-	},
 };
 
 export const Sidebar = memo(({ isOpen, onToggle }: SidebarProps) => {
@@ -75,9 +72,8 @@ export const Sidebar = memo(({ isOpen, onToggle }: SidebarProps) => {
 				padding: containerPadding,
 				display: "flex",
 				flexDirection: "column",
-				alignItems: isOpen ? "flex" : "flex-start",
 				height: "100%",
-				gap: isOpen ? "24px" : "0",
+				gap: isOpen ? "12px" : "0",
 				justifyContent: "flex-start",
 				backgroundColor: "#FAFAFA",
 			}}
@@ -91,7 +87,6 @@ export const Sidebar = memo(({ isOpen, onToggle }: SidebarProps) => {
 					display: "flex",
 					alignItems: "center",
 					justifyContent: isOpen ? "space-between" : "flex-start",
-					gap: isOpen ? "8px" : "0",
 					padding: "8px",
 					backgroundColor: "transparent",
 					border: "none",
