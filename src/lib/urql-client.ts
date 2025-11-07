@@ -19,19 +19,19 @@ export const urqlClient = new Client({
       // キャッシュの更新戦略を設定
       updates: {
         Mutation: {
-          createUser: (result, args, cache, info) => {
+          createUser: (_result, _args, cache, _info) => {
             // ユーザー作成後にusersクエリのキャッシュを無効化
             cache.invalidate('Query', 'users');
           },
-          createClient: (result, args, cache, info) => {
+          createClient: (_result, _args, cache, _info) => {
             // クライアント作成後にclientsクエリのキャッシュを無効化
             cache.invalidate('Query', 'clients');
           },
-          createTrainer: (result, args, cache, info) => {
+          createTrainer: (_result, _args, cache, _info) => {
             // トレーナー作成後にtrainersクエリのキャッシュを無効化
             cache.invalidate('Query', 'trainers');
           },
-          createSession: (result, args, cache, info) => {
+          createSession: (_result, _args, cache, _info) => {
             // セッション作成後にsessionsクエリのキャッシュを無効化
             cache.invalidate('Query', 'sessions');
           },
