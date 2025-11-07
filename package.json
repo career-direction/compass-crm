@@ -12,6 +12,8 @@
 		"test": "vitest run"
 	},
 	"dependencies": {
+		"@graphql-tools/schema": "^10.0.27",
+		"@graphql-tools/utils": "^10.10.1",
 		"@mantine/core": "^8.1.3",
 		"@mantine/dates": "^8.2.5",
 		"@mantine/form": "^8.1.3",
