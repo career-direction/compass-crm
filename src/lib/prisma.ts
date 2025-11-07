@@ -1,8 +1,8 @@
 import { createYoga } from 'graphql-yoga';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { PrismaClient } from '@prisma/client';
-import { typeDefs } from '../../../graphql/schema';
-import { resolvers } from '../../../graphql/resolvers';
+import { typeDefs } from '../graphql/schema';
+import { resolvers } from '../graphql/resolvers';
 
 // サーバーレス環境でのPrismaクライアント最適化
 // グローバルインスタンスを使用してコールドスタート時間を短縮
