@@ -1,0 +1,21 @@
+name: Deploy Migrations to Dev
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.SUPABASE_DEVELOPMENT_DB_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.15.1'
+          cache: npm
+      - run: npm ci
+      - run: npx prisma generate
+      - name: Deploy migrations
+        run: npx prisma migrate deploy
