@@ -67,8 +67,8 @@ describe("isValidEmail", () => {
 
 	it("メールアドレスが320文字を超える場合はfalseを返す", () => {
 		// Arrange
-		const longDomain = "a".repeat(250) + ".com";
-		const longEmail = "test@" + longDomain;
+		const longDomain = `${"a".repeat(250)}.com`;
+		const longEmail = `test@${longDomain}`;
 
 		// Act
 		const result = isValidEmail(longEmail);
@@ -80,7 +80,7 @@ describe("isValidEmail", () => {
 	it("ローカル部が64文字を超える場合はfalseを返す", () => {
 		// Arrange
 		const longLocalPart = "a".repeat(65);
-		const email = longLocalPart + "@example.com";
+		const email = `${longLocalPart}@example.com`;
 
 		// Act
 		const result = isValidEmail(email);
@@ -92,7 +92,7 @@ describe("isValidEmail", () => {
 	it("ローカル部が64文字ちょうどの場合はtrueを返す", () => {
 		// Arrange
 		const localPart = "a".repeat(64);
-		const email = localPart + "@example.com";
+		const email = `${localPart}@example.com`;
 
 		// Act
 		const result = isValidEmail(email);
