@@ -1,5 +1,5 @@
-import { GraphQLResolveInfo } from 'graphql';
-import { Context } from '../types';
+import type { GraphQLResolveInfo } from 'graphql';
+import type { Context } from '../types';
 
 export const trainerResolvers = {
   Query: {
