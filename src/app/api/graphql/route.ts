@@ -36,6 +36,20 @@ const { handleRequest } = createYoga({
     prisma,
   }),
   
+  // GraphQLエンドポイントのパスを明示的に指定
+  graphqlEndpoint: '/api/graphql',
+  
+  // GraphQL Playgroundを開発環境でのみ有効化
+  graphiql: isDevelopment,
+  
+  // CORS設定
+  cors: {
+    origin: isDevelopment 
+      ? ['http://localhost:3000'] 
+      : ['https://compass-crm.vercel.app'], // TODO: 本番環境のURLに変更
+    credentials: true,
+  },
+  
   // DoS攻撃対策: Query Depth制限
   plugins: [
     {
@@ -70,27 +84,6 @@ const { handleRequest } = createYoga({
       }
     }
   ],
-
-  // GraphQL Playgroundを本番環境では無効化
-  graphiql: isDevelopment ? {
-    title: 'Compass CRM GraphQL API',
-  } : false,
-  
-  // CORS設定
-  cors: {
-    origin: isDevelopment 
-      ? ['http://localhost:3000'] 
-      : ['https://your-production-domain.com'],
-    credentials: true,
-  },
-  
-  // ログ設定
-  logging: {
-    debug: (...args) => args.forEach(arg => console.debug(arg)),
-    info: (...args) => args.forEach(arg => console.info(arg)),
-    warn: (...args) => args.forEach(arg => console.warn(arg)),
-    error: (...args) => args.forEach(arg => console.error(arg)),
-  },
 })
 
 // Next.js Route Handlerとしてエクスポート
