@@ -122,7 +122,7 @@ async function createDummyClients() {
     try {
       const client = await prisma.client.create({
         data: {
-          user_id: user.key,
+          user_id: user.id,
           // 必要に応じて他のクライアント固有フィールドを追加
         }
       });
@@ -147,7 +147,7 @@ async function createDummyTrainers() {
     try {
       const trainer = await prisma.trainer.create({
         data: {
-          user_id: user.key,
+          user_id: user.id,
           // 必要に応じて他のトレーナー固有フィールドを追加
         }
       });
