@@ -1,0 +1,148 @@
+type Query {
+    hello: String
+    users(limit: Int, offset: Int): [User!]!
+    clients(limit: Int, offset: Int): [Client!]!
+    trainers(limit: Int, offset: Int): [Trainer!]!
+    sessions(limit: Int, offset: Int): [PTSession!]!
+}
+
+type Mutation {
+    createUser(input: CreateUserInput!): User!
+    createClient(input: CreateClientInput!): Client!
+    createTrainer(input: CreateTrainerInput!): Trainer!
+    createSession(input: CreateSessionInput!): PTSession!
+}
+
+type User {
+    id: Int!
+    key: String!
+    kind: Int!
+    first_name: String!
+    last_name: String!
+    first_name_kana: String!
+    last_name_kana: String!
+    birth_date: String!
+    gender: Int!
+    active_flag: Boolean!
+    credentials: UserCredentials
+    created_at: String!
+    updated_at: String!
+}
+
+type UserCredentials {
+    id: Int!
+    email: String!
+    reset_at: Boolean!
+    created_at: String!
+    updated_at: String!
+}
+
+type Client {
+    id: Int!
+    userId: String!
+    user: User!
+    profile: ClientProfile
+    sessions: [PTSession!]!
+}
+
+type ClientProfile {
+    id: Int!
+    clientId: String!
+    occupation: String!
+    hobby: String!
+    allowSnsPost: String!
+    exerciseHistory: String!
+}
+
+type Trainer {
+    id: Int!
+    userId: String!
+    user: User!
+    profile: TrainerProfile
+    sessions: [PTSession!]!
+}
+
+type TrainerProfile {
+    id: Int!
+    trainerId: String!
+    motivationStatement: String!
+    signatureMuscle: String!
+    specialization: String!
+    certifications: String!
+}
+
+type PTSession {
+    id: Int!
+    clientId: String!
+    trainerId: String!
+    client: Client!
+    trainer: Trainer!
+    scheduledAt: String!
+    duration: Int!
+    status: SessionStatus!
+    notes: String
+    items: [PTSessionItem!]!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type PTSessionItem {
+    id: Int!
+    sessionId: String!
+    exerciseName: String!
+    sets: Int
+    reps: Int
+    weight: Float
+    duration: Int
+    notes: String
+    createdAt: String!
+    updatedAt: String!
+}
+
+enum UserRole {
+    ADMIN
+    TRAINER
+    CLIENT
+}
+
+enum Gender {
+    MALE
+    FEMALE
+    OTHER
+    PREFER_NOT_TO_SAY
+}
+
+enum SessionStatus {
+    SCHEDULED
+    IN_PROGRESS
+    COMPLETED
+    CANCELLED
+}
+
+input CreateUserInput {
+    kind: Int!
+    first_name: String!
+    last_name: String!
+    first_name_kana: String!
+    last_name_kana: String!
+    birth_date: String!
+    gender: Int!
+    email: String!
+    password: String!
+}
+
+input CreateClientInput {
+    userId: String!
+}
+
+input CreateTrainerInput {
+    userId: String!
+}
+
+input CreateSessionInput {
+    clientId: String!
+    trainerId: String!
+    scheduledAt: String!
+    duration: Int!
+    notes: String
+}
