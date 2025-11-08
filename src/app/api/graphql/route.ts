@@ -5,6 +5,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema'
 import depthLimit from 'graphql-depth-limit'
 import { resolvers } from '@/graphql/resolvers'
 import { prisma } from '@/lib/prisma'
+import type { NextRequest } from 'next/server'
 
 // スキーマファイルを読み込む
 const typeDefs = readFileSync(
@@ -93,4 +94,10 @@ const { handleRequest } = createYoga({
 })
 
 // Next.js Route Handlerとしてエクスポート
-export { handleRequest as GET, handleRequest as POST }
+export async function GET(request: NextRequest) {
+  return handleRequest(request, {})
+}
+
+export async function POST(request: NextRequest) {
+  return handleRequest(request, {})
+}
