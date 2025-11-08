@@ -3,7 +3,11 @@ import type { Context } from '../types';
 
 export const clientResolvers = {
   Query: {
-    clients: async (_parent: any, _args: any, context: Context, info: GraphQLResolveInfo) => {
+    clients: async (_parent: any, args: any, context: Context, _info: GraphQLResolveInfo) => {
+      // ページネーション強制（大量データ取得防止）
+      const limit = Math.min(args.limit || 50, 100); // 最大100件
+      const offset = args.offset || 0;
+
       // 動的にincludeフィールドを決定してオーバーフェッチを防ぐ
       const relationMap = {
         user: true,
@@ -16,10 +20,19 @@ export const clientResolvers = {
           },
         },
       };
-      
-      return await context.prisma.client.findMany({
+
+      // クエリタイムアウト設定
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Query timeout: Operation took too long')), 30000);
+      });
+
+      const queryPromise = context.prisma.client.findMany({
+        take: limit,
+        skip: offset,
         include: relationMap,
       });
+
+      return Promise.race([queryPromise, timeoutPromise]);
     },
   },
 

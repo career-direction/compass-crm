@@ -4,12 +4,26 @@ export const userResolvers = {
   Query: {
     hello: () => 'Hello from GraphQL!',
     
-    users: async (_parent: any, _args: any, context: Context) => {
-      return await context.prisma.user.findMany({
+    users: async (_parent: any, args: any, context: Context) => {
+      // ページネーション強制（大量データ取得防止）
+      const limit = Math.min(args.limit || 50, 100); // 最大100件
+      const offset = args.offset || 0;
+
+      // クエリタイムアウト設定
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Query timeout: Operation took too long')), 30000); // 30秒
+      });
+
+      const queryPromise = context.prisma.user.findMany({
+        take: limit,
+        skip: offset,
         include: {
           credentials: true,
         },
       });
+
+      // タイムアウトとクエリのレース
+      return Promise.race([queryPromise, timeoutPromise]);
     },
   },
 
