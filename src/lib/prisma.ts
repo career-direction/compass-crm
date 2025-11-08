@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma';
 
 // サーバーレス環境でのPrismaクライアント最適化
 // グローバルインスタンスを使用してコールドスタート時間を短縮
