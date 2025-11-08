@@ -60,7 +60,8 @@ export default function RootLayout({
 												background: "linear-gradient(135deg, #ffa94d, #FF6000)",
 												border: "none",
 												"&:hover": {
-													background: "linear-gradient(135deg, #fd7e14, #e8590c)",
+													background:
+														"linear-gradient(135deg, #fd7e14, #e8590c)",
 													transform: "translateY(-1px)",
 												},
 												"&:active": {
