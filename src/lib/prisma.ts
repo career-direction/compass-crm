@@ -8,11 +8,13 @@ const globalForPrisma = globalThis as unknown as {
 
 const prisma = globalForPrisma.prisma ?? new PrismaClient({
   // コネクションプール設定でパフォーマンス向上
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL,
+  ...(process.env.DATABASE_URL && {
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
     },
-  },
+  }),
   // ログレベルを本番環境では最小限に
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
 });
