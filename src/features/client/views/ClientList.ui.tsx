@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Badge, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconMail, IconPhone, IconUser } from "@tabler/icons-react";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
