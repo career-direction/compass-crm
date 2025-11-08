@@ -1,9 +1,9 @@
 type Query {
     hello: String
-    users: [User!]!
-    clients: [Client!]!
-    trainers: [Trainer!]!
-    sessions: [PTSession!]!
+    users(limit: Int, offset: Int): [User!]!
+    clients(limit: Int, offset: Int): [Client!]!
+    trainers(limit: Int, offset: Int): [Trainer!]!
+    sessions(limit: Int, offset: Int): [PTSession!]!
 }
 
 type Mutation {
