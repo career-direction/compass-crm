@@ -13,13 +13,13 @@ export function middleware(request: NextRequest) {
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
     response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
     
-    // CSP (Content Security Policy) - GraphQL用に調整
+    // CSP (Content Security Policy) - GraphQL/GraphiQL用に調整
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // GraphiQL用
-      "style-src 'self' 'unsafe-inline'", // GraphiQL用
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com", // GraphiQL用CDN
+      "style-src 'self' 'unsafe-inline' https://unpkg.com", // GraphiQL用CDN
       "img-src 'self' data: https:",
-      "font-src 'self' data:",
+      "font-src 'self' data: https://unpkg.com", // GraphiQL用フォント
       "connect-src 'self'",
       "frame-ancestors 'none'",
       "base-uri 'self'",
