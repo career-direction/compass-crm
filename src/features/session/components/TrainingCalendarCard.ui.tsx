@@ -343,14 +343,14 @@ function ExerciseListCard({
 						</Group>
 					)}
 				</Group>
-					<Stack gap="lg">
-						{items.map((exercise, i) => (
-							<ExerciseRow
-								key={`${exercise.name}-${exercise.volume}-${i}`}
-								item={exercise}
-							/>
-						))}
-					</Stack>
+				<Stack gap="lg">
+					{items.map((exercise, i) => (
+						<ExerciseRow
+							key={`${exercise.name}-${exercise.volume}-${i}`}
+							item={exercise}
+						/>
+					))}
+				</Stack>
 			</Stack>
 		</Card>
 	);
@@ -486,10 +486,7 @@ export function ContentCalendarCard({
 					highlight="スタート 08:00"
 				/>
 				{homeworkMenu.length > 0 && (
-					<ExerciseListCard
-						title="宿題メニュー"
-						items={homeworkMenu}
-					/>
+					<ExerciseListCard title="宿題メニュー" items={homeworkMenu} />
 				)}
 			</Stack>
 		</Stack>
