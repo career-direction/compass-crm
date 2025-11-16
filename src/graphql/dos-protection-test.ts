@@ -1,6 +1,6 @@
 /**
  * DoS攻撃対策のテスト用クエリ
- * 
+ *
  * このファイルは開発時にDoS攻撃対策が正しく動作するかテストするためのものです。
  * 本番環境では使用しないでください。
  */
@@ -224,83 +224,86 @@ export const INTROSPECTION_QUERY = `
 
 // テスト実行用の関数
 export const testDoSProtection = async () => {
-  const endpoint = 'http://localhost:3000/api/graphql';
-  
-  console.log('🛡️ DoS攻撃対策テスト開始');
-  
-  // 1. 正常なクエリテスト
-  console.log('\n1. 正常なクエリテスト');
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: NORMAL_QUERY })
-    });
-    const result = await response.json();
-    console.log('✅ 正常なクエリ: 成功', result.data ? '(データ取得)' : '(エラー)');
-  } catch (error) {
-    console.log('❌ 正常なクエリ: 失敗', error);
-  }
+	const endpoint = "http://localhost:3000/api/graphql";
 
-  // 2. 深いネストクエリテスト
-  console.log('\n2. 深いネストクエリテスト（制限超過予定）');
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: DEEP_NESTED_QUERY })
-    });
-    const result = await response.json();
-    if (result.errors) {
-      console.log('✅ 深いネスト: 正しく制限された', result.errors[0].message);
-    } else {
-      console.log('❌ 深いネスト: 制限されなかった');
-    }
-  } catch (error) {
-    console.log('✅ 深いネスト: 制限された', error);
-  }
+	console.log("🛡️ DoS攻撃対策テスト開始");
 
-  // 3. 高複雑度クエリテスト
-  console.log('\n3. 高複雑度クエリテスト（制限超過予定）');
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: HIGH_COMPLEXITY_QUERY })
-    });
-    const result = await response.json();
-    if (result.errors) {
-      console.log('✅ 高複雑度: 正しく制限された', result.errors[0].message);
-    } else {
-      console.log('❌ 高複雑度: 制限されなかった');
-    }
-  } catch (error) {
-    console.log('✅ 高複雑度: 制限された', error);
-  }
+	// 1. 正常なクエリテスト
+	console.log("\n1. 正常なクエリテスト");
+	try {
+		const response = await fetch(endpoint, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ query: NORMAL_QUERY }),
+		});
+		const result = await response.json();
+		console.log(
+			"✅ 正常なクエリ: 成功",
+			result.data ? "(データ取得)" : "(エラー)",
+		);
+	} catch (error) {
+		console.log("❌ 正常なクエリ: 失敗", error);
+	}
 
-  // 4. レート制限テスト
-  console.log('\n4. レート制限テスト（連続リクエスト）');
-  const promises = Array.from({ length: 10 }, (_, i) => 
-    fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: NORMAL_QUERY })
-    }).then(res => ({ index: i, status: res.status }))
-  );
+	// 2. 深いネストクエリテスト
+	console.log("\n2. 深いネストクエリテスト（制限超過予定）");
+	try {
+		const response = await fetch(endpoint, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ query: DEEP_NESTED_QUERY }),
+		});
+		const result = await response.json();
+		if (result.errors) {
+			console.log("✅ 深いネスト: 正しく制限された", result.errors[0].message);
+		} else {
+			console.log("❌ 深いネスト: 制限されなかった");
+		}
+	} catch (error) {
+		console.log("✅ 深いネスト: 制限された", error);
+	}
 
-  try {
-    const results = await Promise.all(promises);
-    const blocked = results.filter(r => r.status === 429 || r.status >= 400);
-    console.log(`✅ レート制限: ${blocked.length}/10 リクエストが制限された`);
-  } catch (error) {
-    console.log('✅ レート制限: 制限された', error);
-  }
+	// 3. 高複雑度クエリテスト
+	console.log("\n3. 高複雑度クエリテスト（制限超過予定）");
+	try {
+		const response = await fetch(endpoint, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ query: HIGH_COMPLEXITY_QUERY }),
+		});
+		const result = await response.json();
+		if (result.errors) {
+			console.log("✅ 高複雑度: 正しく制限された", result.errors[0].message);
+		} else {
+			console.log("❌ 高複雑度: 制限されなかった");
+		}
+	} catch (error) {
+		console.log("✅ 高複雑度: 制限された", error);
+	}
 
-  console.log('\n🛡️ DoS攻撃対策テスト完了');
+	// 4. レート制限テスト
+	console.log("\n4. レート制限テスト（連続リクエスト）");
+	const promises = Array.from({ length: 10 }, (_, i) =>
+		fetch(endpoint, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ query: NORMAL_QUERY }),
+		}).then((res) => ({ index: i, status: res.status })),
+	);
+
+	try {
+		const results = await Promise.all(promises);
+		const blocked = results.filter((r) => r.status === 429 || r.status >= 400);
+		console.log(`✅ レート制限: ${blocked.length}/10 リクエストが制限された`);
+	} catch (error) {
+		console.log("✅ レート制限: 制限された", error);
+	}
+
+	console.log("\n🛡️ DoS攻撃対策テスト完了");
 };
 
 // 使用例:
 // npx tsx src/graphql/dos-protection-test.ts
 if (require.main === module) {
-  testDoSProtection().catch(console.error);
+	testDoSProtection().catch(console.error);
 }

@@ -1,27 +1,27 @@
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from "@prisma/client";
 
 export interface Context {
-  prisma: PrismaClient;
+	prisma: PrismaClient;
 }
 
 export interface CreateUserInput {
-  email: string;
-  name?: string;
-  role: string;
+	email: string;
+	name?: string;
+	role: string;
 }
 
 export interface CreateClientInput {
-  userId: string;
+	userId: string;
 }
 
 export interface CreateTrainerInput {
-  userId: string;
+	userId: string;
 }
 
 export interface CreateSessionInput {
-  clientId: string;
-  trainerId: string;
-  scheduledAt: string;
-  duration: number;
-  notes?: string;
+	clientId: string;
+	trainerId: string;
+	scheduledAt: string;
+	duration: number;
+	notes?: string;
 }
