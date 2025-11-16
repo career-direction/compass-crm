@@ -12,25 +12,19 @@ export const urqlClient = new Client({
 				console.error("GraphQL Error:", error);
 			},
 		}),
-		// キャッシュ設定の最適化
 		cacheExchange({
-			// キャッシュの更新戦略を設定
 			updates: {
 				Mutation: {
 					createUser: (_result, _args, cache, _info) => {
-						// ユーザー作成後にusersクエリのキャッシュを無効化
 						cache.invalidate("Query", "users");
 					},
 					createClient: (_result, _args, cache, _info) => {
-						// クライアント作成後にclientsクエリのキャッシュを無効化
 						cache.invalidate("Query", "clients");
 					},
 					createTrainer: (_result, _args, cache, _info) => {
-						// トレーナー作成後にtrainersクエリのキャッシュを無効化
 						cache.invalidate("Query", "trainers");
 					},
 					createSession: (_result, _args, cache, _info) => {
-						// セッション作成後にsessionsクエリのキャッシュを無効化
 						cache.invalidate("Query", "sessions");
 					},
 				},
@@ -47,9 +41,7 @@ export const urqlClient = new Client({
 	],
 	// SSRサポートのための設定
 	suspense: false,
-	// キャッシュファーストで高速化、必要に応じてネットワークから取得
 	requestPolicy: "cache-first",
-	// フェッチオプション（タイムアウト設定など）
 	fetchOptions: () => ({
 		headers: {
 			"Content-Type": "application/json",
