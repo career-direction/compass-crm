@@ -9,7 +9,9 @@
 		"lint": "npx @biomejs/biome lint --write src/",
 		"format": "npx @biomejs/biome format --write src/",
 		"check": "npx @biomejs/biome check --write src/",
-		"test": "vitest run"
+		"test": "vitest run",
+		"codegen": "graphql-codegen --config codegen.ts",
+		"codegen:watch": "graphql-codegen --watch"
 	},
 	"dependencies": {
 		"@graphql-tools/schema": "^10.0.27",
