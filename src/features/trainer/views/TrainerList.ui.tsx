@@ -1,9 +1,11 @@
 "use client";
 
-import { Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Group, SimpleGrid, Stack } from "@mantine/core";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
 import { TrainerCardContent } from "../components/TrainerCardContent.ui";
+import { useQuery } from "urql";
+import { allFilmsWithVariablesQueryDocument } from "../query";
 
 const trainers = [
 	{
@@ -63,6 +65,9 @@ const trainers = [
 ];
 
 export const TrainerList = () => {
+	const [{ data, fetching, error }] = useQuery({
+		query: allFilmsWithVariablesQueryDocument,
+	});
 	const handleNewTrainerClick = () => {
 		console.log("新規トレーナー登録ボタンがクリックされました");
 	};
