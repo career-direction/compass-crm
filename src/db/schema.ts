@@ -1,5 +1,6 @@
 import {
 	bigint,
+	bigserial,
 	boolean,
 	date,
 	integer,
@@ -14,7 +15,7 @@ import { sql } from "drizzle-orm";
 // Prismaスキーマ(prisma/schema.prisma)をDrizzle用に移植した定義
 
 export const users = pgTable("users", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	key: uuid("key").unique().default(sql`gen_random_uuid()`).notNull(),
 	kind: integer("kind").notNull(), // 0: 管理者, 1: トレーナー, 2: クライアント
 	firstName: varchar("first_name").notNull(),
@@ -34,7 +35,7 @@ export const users = pgTable("users", {
 });
 
 export const userCredentials = pgTable("user_credentials", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	userId: uuid("user_id").unique().notNull(),
 	email: varchar("email").unique().notNull(),
 	passwordDigest: varchar("password_digest").notNull(),
@@ -48,12 +49,12 @@ export const userCredentials = pgTable("user_credentials", {
 });
 
 export const clients = pgTable("clients", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	userId: bigint("user_id", { mode: "number" }).unique().notNull(),
 });
 
 export const clientProfiles = pgTable("client_profiles", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	clientId: bigint("client_id", { mode: "number" }).unique().notNull(),
 	occupation: varchar("occupation").notNull(),
 	hobby: varchar("hobby").notNull(),
@@ -62,12 +63,12 @@ export const clientProfiles = pgTable("client_profiles", {
 });
 
 export const trainers = pgTable("trainers", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	userId: bigint("user_id", { mode: "number" }).unique().notNull(),
 });
 
 export const trainerProfiles = pgTable("trainer_profiles", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	trainerId: bigint("trainer_id", { mode: "number" }).unique().notNull(),
 	motivationStatement: varchar("motivation_statement").notNull(),
 	signatureMuscle: varchar("signature_muscle").notNull(),
@@ -76,7 +77,7 @@ export const trainerProfiles = pgTable("trainer_profiles", {
 });
 
 export const ptSessions = pgTable("pt_sessions", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	clientId: bigint("client_id", { mode: "number" }).notNull(),
 	trainerId: bigint("trainer_id", { mode: "number" }).notNull(),
 	key: uuid("key").unique().default(sql`gen_random_uuid()`).notNull(),
@@ -96,7 +97,7 @@ export const ptSessions = pgTable("pt_sessions", {
 });
 
 export const ptSessionItems = pgTable("pt_session_items", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	ptSessionId: bigint("pt_session_id", { mode: "number" }).notNull(),
 	taskId: bigint("task_id", { mode: "number" }).notNull(),
 	taskType: varchar("task_type").notNull(),
@@ -111,7 +112,7 @@ export const ptSessionItems = pgTable("pt_session_items", {
 });
 
 export const bodyConditions = pgTable("body_conditions", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	clientId: bigint("client_id", { mode: "number" }).notNull(),
 	measuredAt: date("measured_at").notNull(),
 	weight: text("weight"), // Float扱いだがDrizzleではnumberかtext。必要に応じnumeric/real等に変更。
@@ -138,7 +139,7 @@ export const bodyConditions = pgTable("body_conditions", {
 });
 
 export const midtermHealthPurposes = pgTable("midterm_health_purposes", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	key: uuid("key").unique().default(sql`gen_random_uuid()`).notNull(),
 	clientId: bigint("client_id", { mode: "number" }).notNull(),
 	purpose: varchar("purpose").notNull(),
@@ -155,7 +156,7 @@ export const midtermHealthPurposes = pgTable("midterm_health_purposes", {
 });
 
 export const assignments = pgTable("assignments", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	key: uuid("key").unique().default(sql`gen_random_uuid()`).notNull(),
 	ptSessionId: bigint("pt_session_id", { mode: "number" }).notNull(),
 	dueDate: date("due_date").notNull(),
@@ -170,7 +171,7 @@ export const assignments = pgTable("assignments", {
 });
 
 export const learningMaterials = pgTable("learning_materials", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	ownerId: uuid("owner_id").notNull(),
 	key: uuid("key").unique().default(sql`gen_random_uuid()`).notNull(),
 	name: varchar("name").notNull(),
@@ -187,7 +188,7 @@ export const learningMaterials = pgTable("learning_materials", {
 });
 
 export const curriculumUnits = pgTable("curriculum_units", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	name: varchar("name").notNull(),
 	type: varchar("type").notNull(),
 	overview: text("overview").notNull(),
@@ -203,7 +204,7 @@ export const curriculumUnits = pgTable("curriculum_units", {
 });
 
 export const requiredFunctions = pgTable("required_functions", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	curriculumUnitId: bigint("curriculum_unit_id", { mode: "number" }).notNull(),
 	name: varchar("name").notNull(),
 	overview: text("overview").notNull(),
@@ -219,7 +220,7 @@ export const requiredFunctions = pgTable("required_functions", {
 });
 
 export const treatmentMenus = pgTable("treatment_menus", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	name: varchar("name").notNull(),
 	requiredFunctionId: bigint("required_function_id", { mode: "number" }).notNull(),
 	learningMaterialId: bigint("learning_material_id", { mode: "number" }).notNull(),
@@ -235,7 +236,7 @@ export const treatmentMenus = pgTable("treatment_menus", {
 });
 
 export const trainingMenus = pgTable("training_menus", {
-	id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+	id: bigserial("id", { mode: "number" }).primaryKey(),
 	name: varchar("name").notNull(),
 	requiredFunctionId: bigint("required_function_id", { mode: "number" }).notNull(),
 	learningMaterialId: bigint("learning_material_id", { mode: "number" }).notNull(),

@@ -1,12 +1,12 @@
-import type { PrismaClient } from "@prisma/client";
-import { prisma } from "../../lib/prisma";
+import type { DrizzleDb } from "@/lib/drizzle";
+import { db } from "@/lib/drizzle";
 
 export type GraphQLContext = {
-	prisma: PrismaClient;
+	db: DrizzleDb;
 };
 
 export async function createContext(): Promise<GraphQLContext> {
 	return {
-		prisma,
+		db,
 	};
 }

@@ -7,3 +7,4 @@ const pool = new Pool({
 });
 
 export const db = drizzle(pool);
+export type DrizzleDb = typeof db;

@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import depthLimit from "graphql-depth-limit";
 import { resolvers } from "@/graphql/resolvers";
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/drizzle";
 import type { NextRequest } from "next/server";
 
 // スキーマファイルを読み込む
@@ -33,7 +33,7 @@ const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 const { handleRequest } = createYoga({
 	schema,
 	context: () => ({
-		prisma,
+		db,
 	}),
 
 	// GraphQLエンドポイントのパスを明示的に指定

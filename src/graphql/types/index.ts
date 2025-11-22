@@ -1,7 +1,7 @@
-import type { PrismaClient } from "@prisma/client";
+import type { DrizzleDb } from "@/lib/drizzle";
 
 export interface Context {
-	prisma: PrismaClient;
+	db: DrizzleDb;
 }
 
 export interface CreateUserInput {
