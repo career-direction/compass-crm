@@ -6,11 +6,10 @@ import { CPCard } from "@/components/ui/CPCard";
 import { TrainerCardContent } from "../components/TrainerCardContent.ui";
 import { useQuery } from "urql";
 import { allFilmsWithVariablesQueryDocument } from "../query";
+import { useGetTrainersQuery } from "@/generated/gql/graphql";
 
 export const TrainerList = () => {
-	const [{ data, fetching, error }] = useQuery({
-		query: allFilmsWithVariablesQueryDocument,
-	});
+	const [{ data, fetching, error }] = useGetTrainersQuery();
 
 	const trainers = data?.trainers ?? [];
 	const skeletonItems = Array.from({ length: 6 });
@@ -31,7 +30,12 @@ export const TrainerList = () => {
 				{header}
 				<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="xl">
 					{skeletonItems.map((_, index) => (
-						<CPCard key={`skeleton-${index}`}>
+						<CPCard
+							key={`skeleton-${
+								// biome-ignore lint/suspicious/noArrayIndexKey: skelton
+								index
+							}`}
+						>
 							<Skeleton height={180} radius="md" />
 						</CPCard>
 					))}
