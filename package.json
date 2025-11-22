@@ -10,7 +10,9 @@
 		"format": "npx @biomejs/biome format --write src/",
 		"check": "npx @biomejs/biome check --write src/",
 		"test": "vitest run",
-		"codegen": "graphql-codegen --watch"
+		"codegen": "graphql-codegen --watch",
+		"drizzle:generate": "drizzle-kit generate",
+		"drizzle:migrate": "drizzle-kit migrate"
 	},
 	"dependencies": {
 		"@graphql-tools/schema": "^10.0.27",
@@ -25,12 +27,14 @@
 		"@urql/exchange-graphcache": "^8.1.0",
 		"@urql/next": "^2.0.0",
 		"dayjs": "^1.11.13",
+		"drizzle-orm": "^0.39.3",
 		"graphql": "^16.11.0",
 		"graphql-depth-limit": "^1.1.0",
 		"graphql-query-complexity": "^1.1.0",
 		"graphql-rate-limit": "^3.3.0",
 		"graphql-yoga": "^5.15.2",
 		"next": "15.3.3",
+		"pg": "^8.13.1",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
 		"urql": "^5.0.1"
@@ -50,6 +54,7 @@
 		"@types/node": "^20",
 		"@types/react": "^19",
 		"@types/react-dom": "^19",
+		"drizzle-kit": "^0.30.4",
 		"@vitejs/plugin-react": "^4.6.0",
 		"jsdom": "^26.1.0",
 		"prisma": "^7.0.0",
