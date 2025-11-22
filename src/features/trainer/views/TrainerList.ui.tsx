@@ -68,6 +68,7 @@ export const TrainerList = () => {
 	const [{ data, fetching, error }] = useQuery({
 		query: allFilmsWithVariablesQueryDocument,
 	});
+
 	const handleNewTrainerClick = () => {
 		console.log("新規トレーナー登録ボタンがクリックされました");
 	};
