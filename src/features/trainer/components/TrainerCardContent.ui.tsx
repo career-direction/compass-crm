@@ -1,7 +1,12 @@
 import { Avatar, Flex, Text } from "@mantine/core";
 import { IconDots } from "@tabler/icons-react";
 
-export const TrainerCardContent = () => {
+type Props = {
+	firstName: string;
+	lastName: string;
+};
+
+export const TrainerCardContent = ({ firstName, lastName }: Props) => {
 	return (
 		<>
 			<Flex justify="flex-end" direction="row">
@@ -13,7 +18,7 @@ export const TrainerCardContent = () => {
 				</Avatar>
 				<Flex direction="column" align="center" justify="center" m={10}>
 					<Text size="lg" fw={700}>
-						坂田航樹
+						{`${firstName}${lastName}`}
 					</Text>
 					<Text size="md" c="gray">
 						Koki Sakata
