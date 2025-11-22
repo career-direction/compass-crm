@@ -4,8 +4,6 @@ import { Group, SimpleGrid, Skeleton, Stack } from "@mantine/core";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
 import { TrainerCardContent } from "../components/TrainerCardContent.ui";
-import { useQuery } from "urql";
-import { allFilmsWithVariablesQueryDocument } from "../query";
 import { useGetTrainersQuery } from "@/generated/gql/graphql";
 
 export const TrainerList = () => {
