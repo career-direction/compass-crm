@@ -29,14 +29,14 @@ export type SetItem = {
 	note: string;
 };
 
-export interface TrainingSetsCardProps {
+export type TrainingSetsCardProps = {
 	/** 見出し（例: 種目名） */
 	title?: string;
 	/** セット配列の制御用（未指定なら内部 state） */
 	value?: SetItem[];
 	/** セット配列が更新されたら呼ばれる */
 	onChange?: (next: SetItem[]) => void;
-}
+};
 
 const unitOptions = [
 	{ value: "kg", label: "kg" },
@@ -248,14 +248,14 @@ export type DateCarouselItem = {
 	weekdayIndex?: number;
 };
 
-export interface ContentCalendarProps {
+export type ContentCalendarProps = {
 	dateLabel?: string; // 例: "2025年1月14日 (火)"
 	selectedWeekdayIndex?: number; // 0:Sun - 6:Sat
 	sessionMenu?: ExerciseMenuItem[];
 	homeworkMenu?: ExerciseMenuItem[];
 	dateItems?: DateCarouselItem[];
 	initialDateIndex?: number;
-}
+};
 
 function SessionDateCarousel({
 	items,

@@ -18,13 +18,13 @@ import {
 	validatePasswordConfirmation,
 } from "../utils/validation";
 
-interface RegisterFormData {
+type RegisterFormData = {
 	email: string;
 	password: string;
 	confirmPassword: string;
 	firstName: string;
 	lastName: string;
-}
+};
 
 export function RegisterForm() {
 	const [loading, setLoading] = useState(false);

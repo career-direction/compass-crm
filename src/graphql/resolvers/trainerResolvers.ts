@@ -1,66 +1,60 @@
-import type { GraphQLResolveInfo } from "graphql";
+import { eq } from "drizzle-orm";
+import { trainerProfiles, trainers, users } from "@/db/schema";
+import type {
+	MutationResolvers,
+	QueryResolvers,
+	Trainer,
+} from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
+import { mapTrainer } from "./mappers";
 
 export const trainerResolvers = {
 	Query: {
-		trainers: async (
-			_parent: any,
-			_args: any,
-			context: Context,
-			info: GraphQLResolveInfo,
-		) => {
-			// 動的にincludeフィールドを決定してオーバーフェッチを防ぐ
-			const relationMap = {
-				user: true,
-				profile: true,
-				ptSessions: {
-					include: {
-						client: { include: { user: true } },
-						trainer: { include: { user: true } },
-						items: true,
-					},
-				},
-			};
+		trainers: async (_parent, _args, context) => {
+			const rows = await context.db
+				.select({
+					trainer: trainers,
+					user: users,
+					profile: trainerProfiles,
+				})
+				.from(trainers)
+				.leftJoin(users, eq(trainers.userId, users.id))
+				.leftJoin(trainerProfiles, eq(trainers.id, trainerProfiles.trainerId));
 
-			return await context.prisma.trainer.findMany({
-				include: relationMap,
+			return rows.map(({ trainer, user, profile }) => {
+				if (!user) {
+					throw new Error("ユーザー情報が存在しません");
+				}
+
+				return mapTrainer(trainer, user, profile) as Trainer;
 			});
 		},
 	},
 
 	Mutation: {
-		createTrainer: async (
-			_parent: any,
-			args: { input: any },
-			context: Context,
-		) => {
+		createTrainer: async (_parent, args, context) => {
 			const { userId } = args.input;
-			return await context.prisma.trainer.create({
-				data: {
-					user_id: userId,
-				},
-				include: {
-					user: true,
-					profile: true,
-					ptSessions: true,
-				},
-			});
+			const [createdTrainer] = await context.db
+				.insert(trainers)
+				.values({
+					userId: Number(userId),
+				})
+				.returning();
+
+			const [user] = await context.db
+				.select()
+				.from(users)
+				.where(eq(users.id, Number(userId)))
+				.limit(1);
+
+			if (!user) {
+				throw new Error("ユーザー情報が存在しません");
+			}
+
+			return mapTrainer(createdTrainer, user);
 		},
 	},
-
-	Trainer: {
-		// BigIntをIntに変換
-		id: (parent: any) => Number(parent.id),
-		user: (parent: any) => parent.user,
-		profile: (parent: any) => parent.profile,
-		sessions: (parent: any) => parent.ptSessions,
-	},
-
-	TrainerProfile: {
-		// BigIntをIntに変換
-		id: (parent: any) => Number(parent.id),
-		// Prismaのフィールド名をGraphQLのフィールド名にマッピング
-		motivationStatement: (parent: any) => parent.motivation_statement,
-		signatureMuscle: (parent: any) => parent.signature_muscle,
-	},
+} satisfies {
+	Query: Pick<QueryResolvers<Context>, "trainers">;
+	Mutation: Pick<MutationResolvers<Context>, "createTrainer">;
 };

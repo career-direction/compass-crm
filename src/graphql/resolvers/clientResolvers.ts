@@ -1,30 +1,19 @@
-import type { GraphQLResolveInfo } from "graphql";
+import { eq } from "drizzle-orm";
+import { clientProfiles, clients, users } from "@/db/schema";
+import type {
+	Client,
+	MutationResolvers,
+	QueryResolvers,
+} from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
+import { mapClient } from "./mappers";
 
 export const clientResolvers = {
 	Query: {
-		clients: async (
-			_parent: any,
-			args: any,
-			context: Context,
-			_info: GraphQLResolveInfo,
-		) => {
+		clients: async (_parent, args, context) => {
 			// ページネーション強制（大量データ取得防止）
-			const limit = Math.min(args.limit || 50, 100); // 最大100件
-			const offset = args.offset || 0;
-
-			// 動的にincludeフィールドを決定してオーバーフェッチを防ぐ
-			const relationMap = {
-				user: true,
-				profile: true,
-				ptSessions: {
-					include: {
-						client: { include: { user: true } },
-						trainer: { include: { user: true } },
-						items: true,
-					},
-				},
-			};
+			const limit = Math.min(args.limit ?? 50, 100); // 最大100件
+			const offset = args.offset ?? 0;
 
 			// クエリタイムアウト設定
 			const timeoutPromise = new Promise<never>((_, reject) => {
@@ -34,49 +23,54 @@ export const clientResolvers = {
 				);
 			});
 
-			const queryPromise = context.prisma.client.findMany({
-				take: limit,
-				skip: offset,
-				include: relationMap,
-			});
+			const queryPromise = context.db
+				.select({
+					client: clients,
+					user: users,
+					profile: clientProfiles,
+				})
+				.from(clients)
+				.leftJoin(users, eq(clients.userId, users.id))
+				.leftJoin(clientProfiles, eq(clients.id, clientProfiles.clientId))
+				.limit(limit)
+				.offset(offset);
 
-			return Promise.race([queryPromise, timeoutPromise]);
+			const rows = await Promise.race([queryPromise, timeoutPromise]);
+
+			return rows.map(({ client, user, profile }) => {
+				if (!user) {
+					throw new Error("ユーザー情報が存在しません");
+				}
+
+				return mapClient(client, user, profile) as Client;
+			});
 		},
 	},
 
 	Mutation: {
-		createClient: async (
-			_parent: any,
-			args: { input: any },
-			context: Context,
-		) => {
+		createClient: async (_parent, args, context) => {
 			const { userId } = args.input;
-			return await context.prisma.client.create({
-				data: {
-					user_id: userId,
-				},
-				include: {
-					user: true,
-					profile: true,
-					ptSessions: true,
-				},
-			});
+			const [createdClient] = await context.db
+				.insert(clients)
+				.values({
+					userId: Number(userId),
+				})
+				.returning();
+
+			const [user] = await context.db
+				.select()
+				.from(users)
+				.where(eq(users.id, Number(userId)))
+				.limit(1);
+
+			if (!user) {
+				throw new Error("ユーザー情報が存在しません");
+			}
+
+			return mapClient(createdClient, user);
 		},
 	},
-
-	Client: {
-		// BigIntをIntに変換
-		id: (parent: any) => Number(parent.id),
-		user: (parent: any) => parent.user,
-		profile: (parent: any) => parent.profile,
-		sessions: (parent: any) => parent.ptSessions,
-	},
-
-	ClientProfile: {
-		// BigIntをIntに変換
-		id: (parent: any) => Number(parent.id),
-		// Prismaのフィールド名をGraphQLのフィールド名にマッピング
-		allowSnsPost: (parent: any) => parent.allow_sns_post,
-		exerciseHistory: (parent: any) => parent.exercise_history,
-	},
+} satisfies {
+	Query: Pick<QueryResolvers<Context>, "clients">;
+	Mutation: Pick<MutationResolvers<Context>, "createClient">;
 };

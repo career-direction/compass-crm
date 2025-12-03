@@ -4,45 +4,36 @@ import { join } from "node:path";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import depthLimit from "graphql-depth-limit";
 import { resolvers } from "@/graphql/resolvers";
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/drizzle";
 import type { NextRequest } from "next/server";
 
-// スキーマファイルを読み込む
 const typeDefs = readFileSync(
 	join(process.cwd(), "src/graphql/schema/schema.graphql"),
 	"utf-8",
 );
 
-// DoS攻撃対策の設定
 const isDevelopment = process.env.NODE_ENV === "development";
 
-// GraphQLスキーマ作成（DoS攻撃対策付き）
 const schema = makeExecutableSchema({
 	typeDefs,
 	resolvers,
 });
 
-// DoS攻撃対策: Query Depth制限
 const maxDepth = isDevelopment ? 15 : 8;
 const depthLimitRule = depthLimit(maxDepth);
 
-// レート制限用のメモリストア（本番環境ではRedisを使用推奨）
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
-// GraphQL Yogaインスタンス作成
 const { handleRequest } = createYoga({
 	schema,
 	context: () => ({
-		prisma,
+		db,
 	}),
 
-	// GraphQLエンドポイントのパスを明示的に指定
 	graphqlEndpoint: "/api/graphql",
 
-	// GraphQL Playgroundを開発環境でのみ有効化
 	graphiql: isDevelopment,
 
-	// CORS設定
 	cors: {
 		origin: isDevelopment
 			? ["http://localhost:3000"]
@@ -50,7 +41,6 @@ const { handleRequest } = createYoga({
 		credentials: true,
 	},
 
-	// DoS攻撃対策: Query Depth制限
 	plugins: [
 		{
 			onValidate: ({ addValidationRule }: any) => {
@@ -59,7 +49,6 @@ const { handleRequest } = createYoga({
 		},
 		{
 			onRequest: async ({ request }: any) => {
-				// レート制限の実装
 				const ip =
 					request.headers.get("x-forwarded-for") ||
 					request.headers.get("x-real-ip") ||
