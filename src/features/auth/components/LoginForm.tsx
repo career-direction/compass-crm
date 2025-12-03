@@ -13,10 +13,10 @@ import { useState } from "react";
 import { CPButton } from "@/components/ui/CPButton";
 import { validateEmail } from "../utils/validation";
 
-interface LoginFormData {
+type LoginFormData = {
 	email: string;
 	password: string;
-}
+};
 
 export function LoginForm() {
 	const [loading, setLoading] = useState(false);

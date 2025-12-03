@@ -1,5 +1,11 @@
 import type { GraphQLResolveInfo } from "graphql";
+import { eq } from "drizzle-orm";
 import type { Context } from "../types";
+import {
+	clientProfiles,
+	clients,
+	users,
+} from "@/db/schema";
 
 export const clientResolvers = {
 	Query: {
@@ -34,13 +40,47 @@ export const clientResolvers = {
 				);
 			});
 
-			const queryPromise = context.prisma.client.findMany({
-				take: limit,
-				skip: offset,
-				include: relationMap,
-			});
+			const queryPromise = context.db
+				.select({
+					client: clients,
+					user: users,
+					profile: clientProfiles,
+				})
+				.from(clients)
+				.leftJoin(users, eq(clients.userId, users.id))
+				.leftJoin(clientProfiles, eq(clients.id, clientProfiles.clientId))
+				.limit(limit)
+				.offset(offset);
 
-			return Promise.race([queryPromise, timeoutPromise]);
+			const rows = await Promise.race([queryPromise, timeoutPromise]);
+
+			return rows.map(({ client, user, profile }) => ({
+				id: Number(client.id),
+				userId: client.userId?.toString() ?? "",
+				user: user && {
+					id: Number(user.id),
+					key: user.key,
+					kind: user.kind ?? 0,
+					first_name: user.firstName,
+					last_name: user.lastName,
+					first_name_kana: user.firstNameKana,
+					last_name_kana: user.lastNameKana,
+					birth_date: user.birthDate,
+					gender: user.gender ?? 0,
+					active_flag: user.activeFlag ?? true,
+					created_at: user.createdAt,
+					updated_at: user.updatedAt,
+				},
+				profile: profile && {
+					id: Number(profile.id),
+					client_id: profile.clientId?.toString(),
+					occupation: profile.occupation,
+					hobby: profile.hobby,
+					allow_sns_post: profile.allowSnsPost,
+					exercise_history: profile.exerciseHistory,
+				},
+				ptSessions: [],
+			}));
 		},
 	},
 
@@ -51,16 +91,39 @@ export const clientResolvers = {
 			context: Context,
 		) => {
 			const { userId } = args.input;
-			return await context.prisma.client.create({
-				data: {
-					user_id: userId,
+			const [createdClient] = await context.db
+				.insert(clients)
+				.values({
+					userId: Number(userId),
+				})
+				.returning();
+
+			const [user] = await context.db
+				.select()
+				.from(users)
+				.where(eq(users.id, Number(userId)))
+				.limit(1);
+
+			return {
+				id: Number(createdClient.id),
+				userId: createdClient.userId?.toString() ?? "",
+				user: user && {
+					id: Number(user.id),
+					key: user.key,
+					kind: user.kind ?? 0,
+					first_name: user.firstName,
+					last_name: user.lastName,
+					first_name_kana: user.firstNameKana,
+					last_name_kana: user.lastNameKana,
+					birth_date: user.birthDate,
+					gender: user.gender ?? 0,
+					active_flag: user.activeFlag ?? true,
+					created_at: user.createdAt,
+					updated_at: user.updatedAt,
 				},
-				include: {
-					user: true,
-					profile: true,
-					ptSessions: true,
-				},
-			});
+				profile: null,
+				ptSessions: [],
+			};
 		},
 	},
 
