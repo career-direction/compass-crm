@@ -7,7 +7,17 @@ const config: CodegenConfig = {
 	generates: {
 		"./src/generated/gql/": {
 			preset: "client",
-			plugins: ["typescript", "typescript-operations", "typescript-urql"],
+		},
+		"./src/generated/gql/urql.ts": {
+			plugins: [
+				{
+					"typescript-urql": {
+						documentMode: "external",
+						importDocumentNodeExternallyFrom: "./graphql",
+						importOperationTypesFrom: "Operations",
+					},
+				},
+			],
 		},
 	},
 };

@@ -1,7 +1,7 @@
-import type { DrizzleDb } from "@/lib/drizzle";
+import type { DrizzleDB } from "@/lib/drizzle";
 
 export interface Context {
-	db: DrizzleDb;
+	db: DrizzleDB;
 }
 
 export interface CreateUserInput {

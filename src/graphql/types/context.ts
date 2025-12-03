@@ -1,8 +1,8 @@
-import type { DrizzleDb } from "@/lib/drizzle";
+import type { DrizzleDB } from "@/lib/drizzle";
 import { db } from "@/lib/drizzle";
 
 export type GraphQLContext = {
-	db: DrizzleDb;
+	db: DrizzleDB;
 };
 
 export async function createContext(): Promise<GraphQLContext> {
