@@ -1,36 +1,19 @@
-import type { GraphQLResolveInfo } from "graphql";
 import { eq } from "drizzle-orm";
+import { clientProfiles, clients, users } from "@/db/schema";
+import type {
+	Client,
+	MutationResolvers,
+	QueryResolvers,
+} from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
-import {
-	clientProfiles,
-	clients,
-	users,
-} from "@/db/schema";
+import { mapClient } from "./mappers";
 
 export const clientResolvers = {
 	Query: {
-		clients: async (
-			_parent: any,
-			args: any,
-			context: Context,
-			_info: GraphQLResolveInfo,
-		) => {
+		clients: async (_parent, args, context) => {
 			// ページネーション強制（大量データ取得防止）
-			const limit = Math.min(args.limit || 50, 100); // 最大100件
-			const offset = args.offset || 0;
-
-			// 動的にincludeフィールドを決定してオーバーフェッチを防ぐ
-			const relationMap = {
-				user: true,
-				profile: true,
-				ptSessions: {
-					include: {
-						client: { include: { user: true } },
-						trainer: { include: { user: true } },
-						items: true,
-					},
-				},
-			};
+			const limit = Math.min(args.limit ?? 50, 100); // 最大100件
+			const offset = args.offset ?? 0;
 
 			// クエリタイムアウト設定
 			const timeoutPromise = new Promise<never>((_, reject) => {
@@ -54,42 +37,18 @@ export const clientResolvers = {
 
 			const rows = await Promise.race([queryPromise, timeoutPromise]);
 
-			return rows.map(({ client, user, profile }) => ({
-				id: Number(client.id),
-				userId: client.userId?.toString() ?? "",
-				user: user && {
-					id: Number(user.id),
-					key: user.key,
-					kind: user.kind ?? 0,
-					first_name: user.firstName,
-					last_name: user.lastName,
-					first_name_kana: user.firstNameKana,
-					last_name_kana: user.lastNameKana,
-					birth_date: user.birthDate,
-					gender: user.gender ?? 0,
-					active_flag: user.activeFlag ?? true,
-					created_at: user.createdAt,
-					updated_at: user.updatedAt,
-				},
-				profile: profile && {
-					id: Number(profile.id),
-					client_id: profile.clientId?.toString(),
-					occupation: profile.occupation,
-					hobby: profile.hobby,
-					allow_sns_post: profile.allowSnsPost,
-					exercise_history: profile.exerciseHistory,
-				},
-				ptSessions: [],
-			}));
+			return rows.map(({ client, user, profile }) => {
+				if (!user) {
+					throw new Error("ユーザー情報が存在しません");
+				}
+
+				return mapClient(client, user, profile) as Client;
+			});
 		},
 	},
 
 	Mutation: {
-		createClient: async (
-			_parent: any,
-			args: { input: any },
-			context: Context,
-		) => {
+		createClient: async (_parent, args, context) => {
 			const { userId } = args.input;
 			const [createdClient] = await context.db
 				.insert(clients)
@@ -104,42 +63,14 @@ export const clientResolvers = {
 				.where(eq(users.id, Number(userId)))
 				.limit(1);
 
-			return {
-				id: Number(createdClient.id),
-				userId: createdClient.userId?.toString() ?? "",
-				user: user && {
-					id: Number(user.id),
-					key: user.key,
-					kind: user.kind ?? 0,
-					first_name: user.firstName,
-					last_name: user.lastName,
-					first_name_kana: user.firstNameKana,
-					last_name_kana: user.lastNameKana,
-					birth_date: user.birthDate,
-					gender: user.gender ?? 0,
-					active_flag: user.activeFlag ?? true,
-					created_at: user.createdAt,
-					updated_at: user.updatedAt,
-				},
-				profile: null,
-				ptSessions: [],
-			};
+			if (!user) {
+				throw new Error("ユーザー情報が存在しません");
+			}
+
+			return mapClient(createdClient, user);
 		},
 	},
-
-	Client: {
-		// BigIntをIntに変換
-		id: (parent: any) => Number(parent.id),
-		user: (parent: any) => parent.user,
-		profile: (parent: any) => parent.profile,
-		sessions: (parent: any) => parent.ptSessions,
-	},
-
-	ClientProfile: {
-		// BigIntをIntに変換
-		id: (parent: any) => Number(parent.id),
-		// Prismaのフィールド名をGraphQLのフィールド名にマッピング
-		allowSnsPost: (parent: any) => parent.allow_sns_post,
-		exerciseHistory: (parent: any) => parent.exercise_history,
-	},
+} satisfies {
+	Query: Pick<QueryResolvers<Context>, "clients">;
+	Mutation: Pick<MutationResolvers<Context>, "createClient">;
 };

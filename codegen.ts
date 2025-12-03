@@ -5,6 +5,7 @@ const config: CodegenConfig = {
 	documents: ["src/**/*.{ts,tsx,graphql}", "!src/generated/**"],
 	ignoreNoDocuments: true, // for better experience with the watcher
 	generates: {
+		// 以下、クライアント用の型定義出力用の設定
 		"./src/generated/gql/": {
 			preset: "client",
 		},
@@ -18,6 +19,14 @@ const config: CodegenConfig = {
 					},
 				},
 			],
+		},
+		// 以下、サーバー側Resolver型生成用の設定
+		"./src/generated/graphql-resolvers.ts": {
+			plugins: ["typescript", "typescript-resolvers"],
+			config: {
+				contextType: "@/graphql/types#Context",
+				avoidOptionals: true,
+			},
 		},
 	},
 };

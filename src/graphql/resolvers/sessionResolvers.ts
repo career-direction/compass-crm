@@ -1,6 +1,5 @@
-import { alias } from "drizzle-orm/pg-core";
 import { eq, inArray } from "drizzle-orm";
-import type { Context } from "../types";
+import { alias } from "drizzle-orm/pg-core";
 import {
 	clients,
 	ptSessionItems,
@@ -8,10 +7,19 @@ import {
 	trainers,
 	users,
 } from "@/db/schema";
+import type {
+	MutationResolvers,
+	PtSession,
+	PtSessionItem,
+	QueryResolvers,
+	SessionStatus,
+} from "@/generated/graphql-resolvers";
+import type { Context } from "../types";
+import { formatDateString, mapClient, mapTrainer } from "./mappers";
 
 export const sessionResolvers = {
 	Query: {
-		sessions: async (_parent: any, _args: any, context: Context) => {
+		sessions: async (_parent, _args, context) => {
 			const clientUser = alias(users, "client_user");
 			const trainerUser = alias(users, "trainer_user");
 
@@ -42,7 +50,7 @@ export const sessionResolvers = {
 						.where(inArray(ptSessionItems.ptSessionId, sessionIds))
 				: [];
 
-			const itemsBySession = new Map<number, any[]>();
+			const itemsBySession = new Map<number, PtSessionItem[]>();
 			for (const { item } of itemRows) {
 				const sessionId = item.ptSessionId;
 				const list = itemsBySession.get(sessionId) ?? [];
@@ -55,79 +63,48 @@ export const sessionResolvers = {
 					weight: null,
 					duration: null,
 					notes: item.trainerAdvice ?? item.memo ?? null,
-					created_at: item.createdAt,
-					updated_at: item.updatedAt,
+					createdAt: formatDateString(item.createdAt),
+					updatedAt: formatDateString(item.updatedAt),
 				});
 				itemsBySession.set(sessionId, list);
 			}
 
-			return rows.map(({ session, client, trainer, clientUser, trainerUser }) => ({
-				id: Number(session.id),
-				clientId: client?.id?.toString() ?? "",
-				trainerId: trainer?.id?.toString() ?? "",
-				client:
-					client && clientUser
-						? {
-								id: Number(client.id),
-								userId: client.userId?.toString() ?? "",
-								user: {
-									id: Number(clientUser.id),
-									key: clientUser.key,
-									kind: clientUser.kind ?? 0,
-									first_name: clientUser.firstName,
-									last_name: clientUser.lastName,
-									first_name_kana: clientUser.firstNameKana,
-									last_name_kana: clientUser.lastNameKana,
-									birth_date: clientUser.birthDate,
-									gender: clientUser.gender ?? 0,
-									active_flag: clientUser.activeFlag ?? true,
-									created_at: clientUser.createdAt,
-									updated_at: clientUser.updatedAt,
-								},
-								profile: null,
-								ptSessions: [],
-							}
-						: null,
-				trainer:
-					trainer && trainerUser
-						? {
-								id: Number(trainer.id),
-								userId: trainer.userId?.toString() ?? "",
-								user: {
-									id: Number(trainerUser.id),
-									key: trainerUser.key,
-									kind: trainerUser.kind ?? 0,
-									first_name: trainerUser.firstName,
-									last_name: trainerUser.lastName,
-									first_name_kana: trainerUser.firstNameKana,
-									last_name_kana: trainerUser.lastNameKana,
-									birth_date: trainerUser.birthDate,
-									gender: trainerUser.gender ?? 0,
-									active_flag: trainerUser.activeFlag ?? true,
-									created_at: trainerUser.createdAt,
-									updated_at: trainerUser.updatedAt,
-								},
-								profile: null,
-								ptSessions: [],
-							}
-						: null,
-				items: itemsBySession.get(Number(session.id)) ?? [],
-				scheduled_at: session.performedAt ?? session.createdAt ?? new Date(),
-				created_at: session.createdAt ?? new Date(),
-				updated_at: session.updatedAt ?? new Date(),
-				status: session.kind ?? "SCHEDULED",
-				notes: session.memo ?? session.trainerComment ?? null,
-				duration: 0,
-			}));
+			return rows.map(({ session, client, trainer, clientUser, trainerUser }) => {
+				if (!client || !clientUser) {
+					throw new Error("セッションのクライアント情報が不足しています");
+				}
+
+				if (!trainer || !trainerUser) {
+					throw new Error("セッションのトレーナー情報が不足しています");
+				}
+
+				const scheduleBase =
+					session.performedAt ?? session.createdAt ?? new Date();
+
+				const mappedSession: PtSession = {
+					id: Number(session.id),
+					clientId: client.id?.toString() ?? "",
+					trainerId: trainer.id?.toString() ?? "",
+					client: mapClient(client, clientUser),
+					trainer: mapTrainer(trainer, trainerUser),
+					items: itemsBySession.get(Number(session.id)) ?? [],
+					scheduledAt: formatDateString(scheduleBase),
+					createdAt: formatDateString(session.createdAt),
+					updatedAt: formatDateString(session.updatedAt),
+					status:
+						((session.kind?.toUpperCase() as SessionStatus) ??
+							"SCHEDULED") as SessionStatus,
+					notes: session.memo ?? session.trainerComment ?? null,
+					duration: 0,
+				};
+
+				return mappedSession;
+			});
 		},
 	},
 
 	Mutation: {
-		createSession: async (
-			_parent: any,
-			args: { input: any },
-			context: Context,
-		) => {
+		createSession: async (_parent, args, context) => {
 			const { clientId, trainerId, scheduledAt, duration, notes } = args.input;
 			const performedAt = scheduledAt ? new Date(scheduledAt) : new Date();
 			const [session] = await context.db
@@ -143,40 +120,60 @@ export const sessionResolvers = {
 				})
 				.returning();
 
-			return {
+			const clientUser = alias(users, "client_user_mutation");
+			const trainerUser = alias(users, "trainer_user_mutation");
+
+			const [clientRow] = await context.db
+				.select({
+					client: clients,
+					user: clientUser,
+				})
+				.from(clients)
+				.leftJoin(clientUser, eq(clients.userId, clientUser.id))
+				.where(eq(clients.id, Number(clientId)))
+				.limit(1);
+
+			if (!clientRow?.client || !clientRow?.user) {
+				throw new Error("クライアント情報が見つかりません");
+			}
+
+			const [trainerRow] = await context.db
+				.select({
+					trainer: trainers,
+					user: trainerUser,
+				})
+				.from(trainers)
+				.leftJoin(trainerUser, eq(trainers.userId, trainerUser.id))
+				.where(eq(trainers.id, Number(trainerId)))
+				.limit(1);
+
+			if (!trainerRow?.trainer || !trainerRow?.user) {
+				throw new Error("トレーナー情報が見つかりません");
+			}
+
+			const baseScheduledAt = session.performedAt ?? performedAt;
+
+			const mappedSession: PtSession = {
 				id: Number(session.id),
 				clientId: session.clientId?.toString() ?? "",
 				trainerId: session.trainerId?.toString() ?? "",
-				client: null,
-				trainer: null,
+				client: mapClient(clientRow.client, clientRow.user),
+				trainer: mapTrainer(trainerRow.trainer, trainerRow.user),
 				items: [],
-				scheduled_at: session.performedAt ?? performedAt,
-				created_at: session.createdAt ?? new Date(),
-				updated_at: session.updatedAt ?? new Date(),
-				status: session.kind ?? "SCHEDULED",
+				scheduledAt: formatDateString(baseScheduledAt),
+				createdAt: formatDateString(session.createdAt),
+				updatedAt: formatDateString(session.updatedAt),
+				status:
+					((session.kind?.toUpperCase() as SessionStatus) ??
+						"SCHEDULED") as SessionStatus,
 				notes: notes ?? null,
 				duration: duration ?? 0,
 			};
+
+			return mappedSession;
 		},
 	},
-
-	PTSession: {
-		// BigIntをIntに変換
-		id: (parent: any) => Number(parent.id),
-		client: (parent: any) => parent.client,
-		trainer: (parent: any) => parent.trainer,
-		items: (parent: any) => parent.items,
-		// Prismaのフィールド名をGraphQLのフィールド名にマッピング
-		scheduledAt: (parent: any) => parent.scheduled_at?.toISOString(),
-		createdAt: (parent: any) => parent.created_at?.toISOString(),
-		updatedAt: (parent: any) => parent.updated_at?.toISOString(),
-	},
-
-	PTSessionItem: {
-		// BigIntをIntに変換
-		id: (parent: any) => Number(parent.id),
-		// Prismaのフィールド名をGraphQLのフィールド名にマッピング
-		createdAt: (parent: any) => parent.created_at?.toISOString(),
-		updatedAt: (parent: any) => parent.updated_at?.toISOString(),
-	},
+} satisfies {
+	Query: Pick<QueryResolvers<Context>, "sessions">;
+	Mutation: Pick<MutationResolvers<Context>, "createSession">;
 };

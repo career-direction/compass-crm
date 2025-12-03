@@ -45,6 +45,7 @@
 		"@graphql-codegen/cli": "^6.0.2",
 		"@graphql-codegen/typescript": "^5.0.5",
 		"@graphql-codegen/typescript-operations": "^5.0.5",
+		"@graphql-codegen/typescript-resolvers": "^5.1.4",
 		"@graphql-codegen/typescript-urql": "^4.0.1",
 		"@parcel/watcher": "^2.5.1",
 		"@tailwindcss/postcss": "^4",

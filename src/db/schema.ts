@@ -12,8 +12,6 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
-// Prismaスキーマ(prisma/schema.prisma)をDrizzle用に移植した定義
-
 export const users = pgTable("users", {
 	id: bigserial("id", { mode: "number" }).primaryKey(),
 	key: uuid("key").unique().default(sql`gen_random_uuid()`).notNull(),
@@ -222,8 +220,12 @@ export const requiredFunctions = pgTable("required_functions", {
 export const treatmentMenus = pgTable("treatment_menus", {
 	id: bigserial("id", { mode: "number" }).primaryKey(),
 	name: varchar("name").notNull(),
-	requiredFunctionId: bigint("required_function_id", { mode: "number" }).notNull(),
-	learningMaterialId: bigint("learning_material_id", { mode: "number" }).notNull(),
+	requiredFunctionId: bigint("required_function_id", {
+		mode: "number",
+	}).notNull(),
+	learningMaterialId: bigint("learning_material_id", {
+		mode: "number",
+	}).notNull(),
 	tips: text("tips").notNull(),
 	commonErrors: text("common_errors").array().notNull(),
 	targetMuscles: text("target_muscles").array().notNull(),
@@ -238,8 +240,12 @@ export const treatmentMenus = pgTable("treatment_menus", {
 export const trainingMenus = pgTable("training_menus", {
 	id: bigserial("id", { mode: "number" }).primaryKey(),
 	name: varchar("name").notNull(),
-	requiredFunctionId: bigint("required_function_id", { mode: "number" }).notNull(),
-	learningMaterialId: bigint("learning_material_id", { mode: "number" }).notNull(),
+	requiredFunctionId: bigint("required_function_id", {
+		mode: "number",
+	}).notNull(),
+	learningMaterialId: bigint("learning_material_id", {
+		mode: "number",
+	}).notNull(),
 	tips: text("tips").notNull(),
 	commonErrors: text("common_errors").array().notNull(),
 	targetMuscles: text("target_muscles").array().notNull(),
