@@ -1,27 +1,27 @@
-import type { PrismaClient } from "@prisma/client";
+import type { DrizzleDB } from "@/lib/drizzle";
 
-export interface Context {
-	prisma: PrismaClient;
-}
+export type Context = {
+	db: DrizzleDB;
+};
 
-export interface CreateUserInput {
+export type CreateUserInput = {
 	email: string;
 	name?: string;
 	role: string;
-}
+};
 
-export interface CreateClientInput {
+export type CreateClientInput = {
 	userId: string;
-}
+};
 
-export interface CreateTrainerInput {
+export type CreateTrainerInput = {
 	userId: string;
-}
+};
 
-export interface CreateSessionInput {
+export type CreateSessionInput = {
 	clientId: string;
 	trainerId: string;
 	scheduledAt: string;
 	duration: number;
 	notes?: string;
-}
+};
