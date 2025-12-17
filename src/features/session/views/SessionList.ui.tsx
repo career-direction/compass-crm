@@ -3,16 +3,11 @@
 import {
 	Avatar,
 	Badge,
-	Box,
-	Chip,
 	Flex,
 	Group,
 	Modal,
-	SimpleGrid,
-	Space,
 	Table,
 	Text,
-	Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { CPButton } from "@/components/ui/CPButton";
@@ -30,7 +25,7 @@ const elements = [
 export const SessionList = () => {
 	const [opened, { open, close }] = useDisclosure(false);
 
-	const handleFilterClick = () => {
+	const _handleFilterClick = () => {
 		console.log("フィルターボタンがクリックされました");
 	};
 
