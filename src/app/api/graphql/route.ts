@@ -5,7 +5,9 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import depthLimit from "graphql-depth-limit";
 import { resolvers } from "@/graphql/resolvers";
 import { db } from "@/lib/drizzle";
+import { extractToken, verifyToken } from "@/lib/auth";
 import type { NextRequest } from "next/server";
+import type { Context } from "@/graphql/types";
 
 const typeDefs = readFileSync(
 	join(process.cwd(), "src/graphql/schema/schema.graphql"),
@@ -24,11 +26,27 @@ const depthLimitRule = depthLimit(maxDepth);
 
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
-const { handleRequest } = createYoga({
+const { handleRequest } = createYoga<Record<string, unknown>, Context>({
 	schema,
-	context: () => ({
-		db,
-	}),
+	context: async ({ request }) => {
+		// Authorizationヘッダーからトークンを取得
+		const authHeader = request.headers.get("authorization");
+		const token = extractToken(authHeader);
+
+		let user = null;
+
+		if (token) {
+			const result = await verifyToken(token);
+			if (result.success) {
+				user = result.user;
+			}
+		}
+
+		return {
+			db,
+			user,
+		};
+	},
 
 	graphqlEndpoint: "/api/graphql",
 
