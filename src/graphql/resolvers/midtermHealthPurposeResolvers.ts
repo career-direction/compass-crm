@@ -7,6 +7,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
 import { formatDateString } from "./mappers";
+import { requireAuth, requireTrainer } from "../utils/auth";
 
 const mapMidtermHealthPurpose = (
 	row: typeof midtermHealthPurposes.$inferSelect,
@@ -26,6 +27,9 @@ const mapMidtermHealthPurpose = (
 export const midtermHealthPurposeResolvers = {
 	Query: {
 		midtermHealthPurposes: async (_parent, args, context) => {
+			// 認証チェック
+			requireAuth(context.user);
+
 			const limit = Math.min(args.limit ?? 50, 100);
 			const offset = args.offset ?? 0;
 
@@ -42,6 +46,9 @@ export const midtermHealthPurposeResolvers = {
 
 	Mutation: {
 		createMidtermHealthPurpose: async (_parent, args, context) => {
+			// トレーナー以上の権限が必要
+			requireTrainer(context.user);
+
 			const { clientId, purpose, months, settingDate, startDate, memo } =
 				args.input;
 

@@ -7,6 +7,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
 import { formatDateString } from "./mappers";
+import { requireAuth, requireTrainer } from "../utils/auth";
 
 const mapLearningMaterial = (
 	row: typeof learningMaterials.$inferSelect,
@@ -26,6 +27,9 @@ const mapLearningMaterial = (
 export const learningMaterialResolvers = {
 	Query: {
 		learningMaterials: async (_parent, args, context) => {
+			// 認証チェック
+			requireAuth(context.user);
+
 			const limit = Math.min(args.limit ?? 50, 100);
 			const offset = args.offset ?? 0;
 
@@ -43,6 +47,9 @@ export const learningMaterialResolvers = {
 
 	Mutation: {
 		createLearningMaterial: async (_parent, args, context) => {
+			// トレーナー以上の権限が必要
+			requireTrainer(context.user);
+
 			const { ownerId, name, status, sourceUrl, contentType, contentId } =
 				args.input;
 

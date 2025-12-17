@@ -13,6 +13,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
 import { formatDateString } from "./mappers";
+import { requireAdmin, requireAuth } from "../utils/auth";
 
 const mapTreatmentMenu = (
 	row: typeof treatmentMenus.$inferSelect,
@@ -64,6 +65,9 @@ const mapRequiredFunction = (
 export const requiredFunctionResolvers = {
 	Query: {
 		requiredFunctions: async (_parent, args, context) => {
+			// 認証チェック
+			requireAuth(context.user);
+
 			const limit = Math.min(args.limit ?? 50, 100);
 			const offset = args.offset ?? 0;
 
@@ -119,6 +123,9 @@ export const requiredFunctionResolvers = {
 
 	Mutation: {
 		createRequiredFunction: async (_parent, args, context) => {
+			// 管理者のみ必須機能作成可能
+			requireAdmin(context.user);
+
 			const {
 				curriculumUnitId,
 				name,

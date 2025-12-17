@@ -7,6 +7,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
 import { formatDateString, mapUser } from "./mappers";
+import { requireAdmin } from "../utils/auth";
 
 export const userResolvers = {
 	Query: {
@@ -53,6 +54,9 @@ export const userResolvers = {
 
 	Mutation: {
 		createUser: async (_parent, args, context) => {
+			// 管理者のみユーザー作成可能
+			requireAdmin(context.user);
+
 			const {
 				kind,
 				first_name,

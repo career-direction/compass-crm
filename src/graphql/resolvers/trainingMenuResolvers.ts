@@ -7,6 +7,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
 import { formatDateString } from "./mappers";
+import { requireAdmin, requireAuth } from "../utils/auth";
 
 const mapTrainingMenu = (
 	row: typeof trainingMenus.$inferSelect,
@@ -26,6 +27,9 @@ const mapTrainingMenu = (
 export const trainingMenuResolvers = {
 	Query: {
 		trainingMenus: async (_parent, args, context) => {
+			// 認証チェック
+			requireAuth(context.user);
+
 			const limit = Math.min(args.limit ?? 50, 100);
 			const offset = args.offset ?? 0;
 
@@ -45,6 +49,9 @@ export const trainingMenuResolvers = {
 
 	Mutation: {
 		createTrainingMenu: async (_parent, args, context) => {
+			// 管理者のみトレーニングメニュー作成可能
+			requireAdmin(context.user);
+
 			const {
 				name,
 				requiredFunctionId,

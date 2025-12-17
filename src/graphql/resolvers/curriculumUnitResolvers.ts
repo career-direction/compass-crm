@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { curriculumUnits, requiredFunctions } from "@/db/schema";
 import type {
 	CurriculumUnit,
@@ -8,6 +8,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
 import { formatDateString } from "./mappers";
+import { requireAdmin, requireAuth } from "../utils/auth";
 
 const mapRequiredFunction = (
 	row: typeof requiredFunctions.$inferSelect,
@@ -44,6 +45,9 @@ const mapCurriculumUnit = (
 export const curriculumUnitResolvers = {
 	Query: {
 		curriculumUnits: async (_parent, args, context) => {
+			// 認証チェック
+			requireAuth(context.user);
+
 			const limit = Math.min(args.limit ?? 50, 100);
 			const offset = args.offset ?? 0;
 
@@ -59,15 +63,11 @@ export const curriculumUnitResolvers = {
 				return [];
 			}
 
+			// N+1問題を解決: inArrayで一括取得
 			const functions = await context.db
 				.select()
 				.from(requiredFunctions)
-				.where(
-					eq(
-						requiredFunctions.curriculumUnitId,
-						unitIds[0], // 簡易実装。本来はinArrayを使用
-					),
-				);
+				.where(inArray(requiredFunctions.curriculumUnitId, unitIds));
 
 			const functionsByUnit = new Map<number, RequiredFunction[]>();
 			for (const fn of functions) {
@@ -85,6 +85,9 @@ export const curriculumUnitResolvers = {
 
 	Mutation: {
 		createCurriculumUnit: async (_parent, args, context) => {
+			// 管理者のみカリキュラム作成可能
+			requireAdmin(context.user);
+
 			const {
 				name,
 				type,

@@ -16,10 +16,14 @@ import type {
 } from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
 import { formatDateString, mapClient, mapTrainer } from "./mappers";
+import { requireAuth, requireTrainer } from "../utils/auth";
 
 export const sessionResolvers = {
 	Query: {
 		sessions: async (_parent, _args, context) => {
+			// 認証チェック
+			requireAuth(context.user);
+
 			const clientUser = alias(users, "client_user");
 			const trainerUser = alias(users, "trainer_user");
 
@@ -105,6 +109,9 @@ export const sessionResolvers = {
 
 	Mutation: {
 		createSession: async (_parent, args, context) => {
+			// トレーナー以上の権限が必要
+			requireTrainer(context.user);
+
 			const { clientId, trainerId, scheduledAt, duration, notes } = args.input;
 			const performedAt = scheduledAt ? new Date(scheduledAt) : new Date();
 			const [session] = await context.db

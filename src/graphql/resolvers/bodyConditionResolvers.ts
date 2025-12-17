@@ -6,6 +6,7 @@ import type {
 	QueryResolvers,
 } from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
+import { requireAuth, requireTrainer } from "../utils/auth";
 
 const parseFloat = (value: string | null): number | null => {
 	if (value === null) return null;
@@ -45,6 +46,9 @@ const mapBodyCondition = (
 export const bodyConditionResolvers = {
 	Query: {
 		bodyConditions: async (_parent, args, context) => {
+			// 認証チェック
+			requireAuth(context.user);
+
 			const limit = Math.min(args.limit ?? 50, 100);
 			const offset = args.offset ?? 0;
 
@@ -61,6 +65,9 @@ export const bodyConditionResolvers = {
 
 	Mutation: {
 		createBodyCondition: async (_parent, args, context) => {
+			// トレーナー以上の権限が必要
+			requireTrainer(context.user);
+
 			const { clientId, measuredAt, ...rest } = args.input;
 
 			const values: Record<string, unknown> = {

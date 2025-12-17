@@ -7,10 +7,14 @@ import type {
 } from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
 import { mapTrainer } from "./mappers";
+import { requireAdmin, requireAuth } from "../utils/auth";
 
 export const trainerResolvers = {
 	Query: {
 		trainers: async (_parent, _args, context) => {
+			// 認証チェック
+			requireAuth(context.user);
+
 			const rows = await context.db
 				.select({
 					trainer: trainers,
@@ -33,6 +37,9 @@ export const trainerResolvers = {
 
 	Mutation: {
 		createTrainer: async (_parent, args, context) => {
+			// 管理者のみトレーナー作成可能
+			requireAdmin(context.user);
+
 			const { userId } = args.input;
 			const [createdTrainer] = await context.db
 				.insert(trainers)

@@ -7,6 +7,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
 import { formatDateString } from "./mappers";
+import { requireAuth, requireTrainer } from "../utils/auth";
 
 const mapAssignment = (row: typeof assignments.$inferSelect): Assignment => ({
 	id: Number(row.id),
@@ -22,6 +23,9 @@ const mapAssignment = (row: typeof assignments.$inferSelect): Assignment => ({
 export const assignmentResolvers = {
 	Query: {
 		assignments: async (_parent, args, context) => {
+			// 認証チェック
+			requireAuth(context.user);
+
 			const limit = Math.min(args.limit ?? 50, 100);
 			const offset = args.offset ?? 0;
 
@@ -38,6 +42,9 @@ export const assignmentResolvers = {
 
 	Mutation: {
 		createAssignment: async (_parent, args, context) => {
+			// トレーナー以上の権限が必要
+			requireTrainer(context.user);
+
 			const { ptSessionId, dueDate, taskType, taskId } = args.input;
 
 			const [created] = await context.db
