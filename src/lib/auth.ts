@@ -32,7 +32,7 @@ export const extractToken = (authHeader: string | null): string | null => {
 
 /**
  * トークンからユーザー情報を取得
- * 
+ *
  * 注意: 現在は簡易実装（トークン = ユーザーのkey）
  * 本番環境ではJWTやセッションベースの認証に置き換えてください
  */
@@ -107,4 +107,3 @@ export const isTrainer = (user: AuthUser | null): boolean => {
 export const isClient = (user: AuthUser | null): boolean => {
 	return checkPermission(user, [0, 1, 2]); // 全員がクライアントデータにアクセス可能
 };
-
