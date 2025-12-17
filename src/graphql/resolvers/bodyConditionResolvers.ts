@@ -8,7 +8,7 @@ import type {
 import type { Context } from "../types";
 import { requireAuth, requireTrainer } from "../utils/auth";
 
-const parseFloat = (value: string | null): number | null => {
+const parseFloatOrNull = (value: string | null): number | null => {
 	if (value === null) return null;
 	const parsed = Number.parseFloat(value);
 	return Number.isNaN(parsed) ? null : parsed;
@@ -20,26 +20,26 @@ const mapBodyCondition = (
 	id: Number(row.id),
 	clientId: Number(row.clientId),
 	measuredAt: row.measuredAt,
-	weight: parseFloat(row.weight),
-	bodyFat: parseFloat(row.bodyFat),
-	muscleMass: parseFloat(row.muscleMass),
-	skeletalMuscleRate: parseFloat(row.skeletalMuscleRate),
-	bmi: parseFloat(row.bmi),
-	bmr: parseFloat(row.bmr),
-	avgSleepTime: parseFloat(row.avgSleepTime),
-	avgRespirationRate: parseFloat(row.avgRespirationRate),
-	sympathetic: parseFloat(row.sympathetic),
-	parasympathetic: parseFloat(row.parasympathetic),
-	bust: parseFloat(row.bust),
-	underbust: parseFloat(row.underbust),
-	waist: parseFloat(row.waist),
-	hip: parseFloat(row.hip),
-	armCircumference: parseFloat(row.armCircumference),
-	buttockHeight: parseFloat(row.buttockHeight),
-	thighCircumference: parseFloat(row.thighCircumference),
-	calfCircumference: parseFloat(row.calfCircumference),
-	ffd: parseFloat(row.ffd),
-	hwd: parseFloat(row.hwd),
+	weight: parseFloatOrNull(row.weight),
+	bodyFat: parseFloatOrNull(row.bodyFat),
+	muscleMass: parseFloatOrNull(row.muscleMass),
+	skeletalMuscleRate: parseFloatOrNull(row.skeletalMuscleRate),
+	bmi: parseFloatOrNull(row.bmi),
+	bmr: parseFloatOrNull(row.bmr),
+	avgSleepTime: parseFloatOrNull(row.avgSleepTime),
+	avgRespirationRate: parseFloatOrNull(row.avgRespirationRate),
+	sympathetic: parseFloatOrNull(row.sympathetic),
+	parasympathetic: parseFloatOrNull(row.parasympathetic),
+	bust: parseFloatOrNull(row.bust),
+	underbust: parseFloatOrNull(row.underbust),
+	waist: parseFloatOrNull(row.waist),
+	hip: parseFloatOrNull(row.hip),
+	armCircumference: parseFloatOrNull(row.armCircumference),
+	buttockHeight: parseFloatOrNull(row.buttockHeight),
+	thighCircumference: parseFloatOrNull(row.thighCircumference),
+	calfCircumference: parseFloatOrNull(row.calfCircumference),
+	ffd: parseFloatOrNull(row.ffd),
+	hwd: parseFloatOrNull(row.hwd),
 	memo: row.memo,
 });
 

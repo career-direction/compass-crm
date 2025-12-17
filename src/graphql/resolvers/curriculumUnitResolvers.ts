@@ -1,4 +1,4 @@
-import { eq, inArray } from "drizzle-orm";
+import { inArray } from "drizzle-orm";
 import { curriculumUnits, requiredFunctions } from "@/db/schema";
 import type {
 	CurriculumUnit,

@@ -6,7 +6,7 @@ import type {
 	User,
 	PtSession,
 } from "@/generated/graphql-resolvers";
-import {
+import type {
 	clientProfiles,
 	clients,
 	trainerProfiles,
