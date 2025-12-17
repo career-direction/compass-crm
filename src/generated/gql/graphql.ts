@@ -16,6 +16,46 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Assignment = {
+  __typename?: 'Assignment';
+  createdAt: Scalars['String']['output'];
+  dueDate: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  key: Scalars['String']['output'];
+  ptSessionId: Scalars['Int']['output'];
+  taskId: Scalars['Int']['output'];
+  taskType: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
+export type BodyCondition = {
+  __typename?: 'BodyCondition';
+  armCircumference?: Maybe<Scalars['Float']['output']>;
+  avgRespirationRate?: Maybe<Scalars['Float']['output']>;
+  avgSleepTime?: Maybe<Scalars['Float']['output']>;
+  bmi?: Maybe<Scalars['Float']['output']>;
+  bmr?: Maybe<Scalars['Float']['output']>;
+  bodyFat?: Maybe<Scalars['Float']['output']>;
+  bust?: Maybe<Scalars['Float']['output']>;
+  buttockHeight?: Maybe<Scalars['Float']['output']>;
+  calfCircumference?: Maybe<Scalars['Float']['output']>;
+  clientId: Scalars['Int']['output'];
+  ffd?: Maybe<Scalars['Float']['output']>;
+  hip?: Maybe<Scalars['Float']['output']>;
+  hwd?: Maybe<Scalars['Float']['output']>;
+  id: Scalars['Int']['output'];
+  measuredAt: Scalars['String']['output'];
+  memo?: Maybe<Scalars['String']['output']>;
+  muscleMass?: Maybe<Scalars['Float']['output']>;
+  parasympathetic?: Maybe<Scalars['Float']['output']>;
+  skeletalMuscleRate?: Maybe<Scalars['Float']['output']>;
+  sympathetic?: Maybe<Scalars['Float']['output']>;
+  thighCircumference?: Maybe<Scalars['Float']['output']>;
+  underbust?: Maybe<Scalars['Float']['output']>;
+  waist?: Maybe<Scalars['Float']['output']>;
+  weight?: Maybe<Scalars['Float']['output']>;
+};
+
 export type Client = {
   __typename?: 'Client';
   id: Scalars['Int']['output'];
@@ -35,8 +75,77 @@ export type ClientProfile = {
   occupation: Scalars['String']['output'];
 };
 
+export type CreateAssignmentInput = {
+  dueDate: Scalars['String']['input'];
+  ptSessionId: Scalars['Int']['input'];
+  taskId: Scalars['Int']['input'];
+  taskType: Scalars['String']['input'];
+};
+
+export type CreateBodyConditionInput = {
+  armCircumference?: InputMaybe<Scalars['Float']['input']>;
+  avgRespirationRate?: InputMaybe<Scalars['Float']['input']>;
+  avgSleepTime?: InputMaybe<Scalars['Float']['input']>;
+  bmi?: InputMaybe<Scalars['Float']['input']>;
+  bmr?: InputMaybe<Scalars['Float']['input']>;
+  bodyFat?: InputMaybe<Scalars['Float']['input']>;
+  bust?: InputMaybe<Scalars['Float']['input']>;
+  buttockHeight?: InputMaybe<Scalars['Float']['input']>;
+  calfCircumference?: InputMaybe<Scalars['Float']['input']>;
+  clientId: Scalars['Int']['input'];
+  ffd?: InputMaybe<Scalars['Float']['input']>;
+  hip?: InputMaybe<Scalars['Float']['input']>;
+  hwd?: InputMaybe<Scalars['Float']['input']>;
+  measuredAt: Scalars['String']['input'];
+  memo?: InputMaybe<Scalars['String']['input']>;
+  muscleMass?: InputMaybe<Scalars['Float']['input']>;
+  parasympathetic?: InputMaybe<Scalars['Float']['input']>;
+  skeletalMuscleRate?: InputMaybe<Scalars['Float']['input']>;
+  sympathetic?: InputMaybe<Scalars['Float']['input']>;
+  thighCircumference?: InputMaybe<Scalars['Float']['input']>;
+  underbust?: InputMaybe<Scalars['Float']['input']>;
+  waist?: InputMaybe<Scalars['Float']['input']>;
+  weight?: InputMaybe<Scalars['Float']['input']>;
+};
+
 export type CreateClientInput = {
   userId: Scalars['String']['input'];
+};
+
+export type CreateCurriculumUnitInput = {
+  evaluationCriteria: Scalars['String']['input'];
+  evaluationCriteriaUrl: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  overview: Scalars['String']['input'];
+  overviewUrl: Scalars['String']['input'];
+  type: Scalars['String']['input'];
+};
+
+export type CreateLearningMaterialInput = {
+  contentId: Scalars['Int']['input'];
+  contentType: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  ownerId: Scalars['String']['input'];
+  sourceUrl: Scalars['String']['input'];
+  status: Scalars['String']['input'];
+};
+
+export type CreateMidtermHealthPurposeInput = {
+  clientId: Scalars['Int']['input'];
+  memo?: InputMaybe<Scalars['String']['input']>;
+  months: Scalars['Int']['input'];
+  purpose: Scalars['String']['input'];
+  settingDate: Scalars['String']['input'];
+  startDate: Scalars['String']['input'];
+};
+
+export type CreateRequiredFunctionInput = {
+  curriculumUnitId: Scalars['Int']['input'];
+  evaluationCriteria: Scalars['String']['input'];
+  evaluationCriteriaUrl: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  overview: Scalars['String']['input'];
+  overviewUrl: Scalars['String']['input'];
 };
 
 export type CreateSessionInput = {
@@ -51,6 +160,25 @@ export type CreateTrainerInput = {
   userId: Scalars['String']['input'];
 };
 
+export type CreateTrainingMenuInput = {
+  commonErrors: Array<Scalars['String']['input']>;
+  learningMaterialId: Scalars['Int']['input'];
+  level: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+  requiredFunctionId: Scalars['Int']['input'];
+  targetMuscles: Array<Scalars['String']['input']>;
+  tips: Scalars['String']['input'];
+};
+
+export type CreateTreatmentMenuInput = {
+  commonErrors: Array<Scalars['String']['input']>;
+  learningMaterialId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+  requiredFunctionId: Scalars['Int']['input'];
+  targetMuscles: Array<Scalars['String']['input']>;
+  tips: Scalars['String']['input'];
+};
+
 export type CreateUserInput = {
   birth_date: Scalars['String']['input'];
   email: Scalars['String']['input'];
@@ -63,6 +191,20 @@ export type CreateUserInput = {
   password: Scalars['String']['input'];
 };
 
+export type CurriculumUnit = {
+  __typename?: 'CurriculumUnit';
+  createdAt: Scalars['String']['output'];
+  evaluationCriteria: Scalars['String']['output'];
+  evaluationCriteriaUrl: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  overview: Scalars['String']['output'];
+  overviewUrl: Scalars['String']['output'];
+  requiredFunctions: Array<RequiredFunction>;
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
 export enum Gender {
   Female = 'FEMALE',
   Male = 'MALE',
@@ -70,17 +212,83 @@ export enum Gender {
   PreferNotToSay = 'PREFER_NOT_TO_SAY'
 }
 
+export type LearningMaterial = {
+  __typename?: 'LearningMaterial';
+  contentId: Scalars['Int']['output'];
+  contentType: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  key: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  ownerId: Scalars['String']['output'];
+  sourceUrl: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
+export type MidtermHealthPurpose = {
+  __typename?: 'MidtermHealthPurpose';
+  clientId: Scalars['Int']['output'];
+  createdAt: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  key: Scalars['String']['output'];
+  memo?: Maybe<Scalars['String']['output']>;
+  months: Scalars['Int']['output'];
+  purpose: Scalars['String']['output'];
+  settingDate: Scalars['String']['output'];
+  startDate: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createAssignment: Assignment;
+  createBodyCondition: BodyCondition;
   createClient: Client;
+  createCurriculumUnit: CurriculumUnit;
+  createLearningMaterial: LearningMaterial;
+  createMidtermHealthPurpose: MidtermHealthPurpose;
+  createRequiredFunction: RequiredFunction;
   createSession: PtSession;
   createTrainer: Trainer;
+  createTrainingMenu: TrainingMenu;
+  createTreatmentMenu: TreatmentMenu;
   createUser: User;
+};
+
+
+export type MutationCreateAssignmentArgs = {
+  input: CreateAssignmentInput;
+};
+
+
+export type MutationCreateBodyConditionArgs = {
+  input: CreateBodyConditionInput;
 };
 
 
 export type MutationCreateClientArgs = {
   input: CreateClientInput;
+};
+
+
+export type MutationCreateCurriculumUnitArgs = {
+  input: CreateCurriculumUnitInput;
+};
+
+
+export type MutationCreateLearningMaterialArgs = {
+  input: CreateLearningMaterialInput;
+};
+
+
+export type MutationCreateMidtermHealthPurposeArgs = {
+  input: CreateMidtermHealthPurposeInput;
+};
+
+
+export type MutationCreateRequiredFunctionArgs = {
+  input: CreateRequiredFunctionInput;
 };
 
 
@@ -91,6 +299,16 @@ export type MutationCreateSessionArgs = {
 
 export type MutationCreateTrainerArgs = {
   input: CreateTrainerInput;
+};
+
+
+export type MutationCreateTrainingMenuArgs = {
+  input: CreateTrainingMenuInput;
+};
+
+
+export type MutationCreateTreatmentMenuArgs = {
+  input: CreateTreatmentMenuInput;
 };
 
 
@@ -130,15 +348,64 @@ export type PtSessionItem = {
 
 export type Query = {
   __typename?: 'Query';
+  assignments: Array<Assignment>;
+  bodyConditions: Array<BodyCondition>;
   clients: Array<Client>;
+  curriculumUnits: Array<CurriculumUnit>;
   hello?: Maybe<Scalars['String']['output']>;
+  learningMaterials: Array<LearningMaterial>;
+  midtermHealthPurposes: Array<MidtermHealthPurpose>;
+  requiredFunctions: Array<RequiredFunction>;
   sessions: Array<PtSession>;
   trainers: Array<Trainer>;
+  trainingMenus: Array<TrainingMenu>;
+  treatmentMenus: Array<TreatmentMenu>;
   users: Array<User>;
 };
 
 
+export type QueryAssignmentsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sessionId: Scalars['Int']['input'];
+};
+
+
+export type QueryBodyConditionsArgs = {
+  clientId: Scalars['Int']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryClientsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryCurriculumUnitsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryLearningMaterialsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  ownerId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryMidtermHealthPurposesArgs = {
+  clientId: Scalars['Int']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryRequiredFunctionsArgs = {
+  curriculumUnitId: Scalars['Int']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -156,9 +423,38 @@ export type QueryTrainersArgs = {
 };
 
 
+export type QueryTrainingMenusArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  requiredFunctionId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryTreatmentMenusArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  requiredFunctionId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryUsersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type RequiredFunction = {
+  __typename?: 'RequiredFunction';
+  createdAt: Scalars['String']['output'];
+  curriculumUnitId: Scalars['Int']['output'];
+  evaluationCriteria: Scalars['String']['output'];
+  evaluationCriteriaUrl: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  overview: Scalars['String']['output'];
+  overviewUrl: Scalars['String']['output'];
+  trainingMenus: Array<TrainingMenu>;
+  treatmentMenus: Array<TreatmentMenu>;
+  updatedAt: Scalars['String']['output'];
 };
 
 export enum SessionStatus {
@@ -185,6 +481,33 @@ export type TrainerProfile = {
   signatureMuscle: Scalars['String']['output'];
   specialization: Scalars['String']['output'];
   trainerId: Scalars['String']['output'];
+};
+
+export type TrainingMenu = {
+  __typename?: 'TrainingMenu';
+  commonErrors: Array<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  learningMaterialId: Scalars['Int']['output'];
+  level: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  requiredFunctionId: Scalars['Int']['output'];
+  targetMuscles: Array<Scalars['String']['output']>;
+  tips: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
+export type TreatmentMenu = {
+  __typename?: 'TreatmentMenu';
+  commonErrors: Array<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  learningMaterialId: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  requiredFunctionId: Scalars['Int']['output'];
+  targetMuscles: Array<Scalars['String']['output']>;
+  tips: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
 };
 
 export type User = {
