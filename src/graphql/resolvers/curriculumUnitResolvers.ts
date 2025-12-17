@@ -8,7 +8,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 import type { Context } from "../types";
 import { formatDateString } from "./mappers";
-import { requireAdmin, requireAuth } from "../utils/auth";
+import { requireAuth, requireTrainer } from "../utils/auth";
 
 const mapRequiredFunction = (
 	row: typeof requiredFunctions.$inferSelect,
@@ -85,8 +85,8 @@ export const curriculumUnitResolvers = {
 
 	Mutation: {
 		createCurriculumUnit: async (_parent, args, context) => {
-			// 管理者のみカリキュラム作成可能
-			requireAdmin(context.user);
+			// トレーナー以上の権限が必要
+			requireTrainer(context.user);
 
 			const {
 				name,
