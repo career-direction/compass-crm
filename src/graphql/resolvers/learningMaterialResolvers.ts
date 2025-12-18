@@ -1,13 +1,15 @@
 import { eq } from "drizzle-orm";
+
 import { learningMaterials } from "@/db/schema";
 import type {
 	LearningMaterial,
 	MutationResolvers,
 	QueryResolvers,
 } from "@/generated/graphql-resolvers";
+
 import type { Context } from "../types";
-import { formatDateString } from "./mappers";
 import { requireAuth, requireTrainer } from "../utils/auth";
+import { formatDateString } from "./mappers";
 
 const mapLearningMaterial = (
 	row: typeof learningMaterials.$inferSelect,
