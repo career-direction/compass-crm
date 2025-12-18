@@ -1,18 +1,18 @@
 import type {
-	Client,
-	ClientProfile as GqlClientProfile,
-	Trainer,
-	TrainerProfile as GqlTrainerProfile,
-	User,
-	PtSession,
-} from "@/generated/graphql-resolvers";
-import type {
 	clientProfiles,
 	clients,
 	trainerProfiles,
 	trainers,
 	users,
 } from "@/db/schema";
+import type {
+	Client,
+	ClientProfile as GqlClientProfile,
+	PtSession,
+	Trainer,
+	TrainerProfile as GqlTrainerProfile,
+	User,
+} from "@/generated/graphql-resolvers";
 
 type DbUser = typeof users.$inferSelect;
 type DbClient = typeof clients.$inferSelect;
