@@ -1,13 +1,15 @@
 import { eq } from "drizzle-orm";
+
 import { trainerProfiles, trainers, users } from "@/db/schema";
 import type {
 	MutationResolvers,
 	QueryResolvers,
 	Trainer,
 } from "@/generated/graphql-resolvers";
+
 import type { Context } from "../types";
-import { mapTrainer } from "./mappers";
 import { requireAdmin, requireAuth } from "../utils/auth";
+import { mapTrainer } from "./mappers";
 
 export const trainerResolvers = {
 	Query: {
