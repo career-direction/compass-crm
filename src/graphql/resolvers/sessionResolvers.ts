@@ -1,5 +1,6 @@
 import { eq, inArray } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
+
 import {
 	clients,
 	ptSessionItems,
@@ -14,9 +15,10 @@ import type {
 	QueryResolvers,
 	SessionStatus,
 } from "@/generated/graphql-resolvers";
+
 import type { Context } from "../types";
-import { formatDateString, mapClient, mapTrainer } from "./mappers";
 import { requireAuth, requireTrainer } from "../utils/auth";
+import { formatDateString, mapClient, mapTrainer } from "./mappers";
 
 export const sessionResolvers = {
 	Query: {
