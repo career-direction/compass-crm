@@ -1,13 +1,15 @@
 import { eq } from "drizzle-orm";
+
 import { trainingMenus } from "@/db/schema";
 import type {
 	MutationResolvers,
 	QueryResolvers,
 	TrainingMenu,
 } from "@/generated/graphql-resolvers";
+
 import type { Context } from "../types";
-import { formatDateString } from "./mappers";
 import { requireAuth, requireTrainer } from "../utils/auth";
+import { formatDateString } from "./mappers";
 
 const mapTrainingMenu = (
 	row: typeof trainingMenus.$inferSelect,
@@ -82,4 +84,3 @@ export const trainingMenuResolvers = {
 	Query: Pick<QueryResolvers<Context>, "trainingMenus">;
 	Mutation: Pick<MutationResolvers<Context>, "createTrainingMenu">;
 };
-

@@ -1,13 +1,15 @@
 import { eq } from "drizzle-orm";
+
 import { treatmentMenus } from "@/db/schema";
 import type {
 	MutationResolvers,
 	QueryResolvers,
 	TreatmentMenu,
 } from "@/generated/graphql-resolvers";
+
 import type { Context } from "../types";
-import { formatDateString } from "./mappers";
 import { requireAuth, requireTrainer } from "../utils/auth";
+import { formatDateString } from "./mappers";
 
 const mapTreatmentMenu = (
 	row: typeof treatmentMenus.$inferSelect,
@@ -79,4 +81,3 @@ export const treatmentMenuResolvers = {
 	Query: Pick<QueryResolvers<Context>, "treatmentMenus">;
 	Mutation: Pick<MutationResolvers<Context>, "createTreatmentMenu">;
 };
-
