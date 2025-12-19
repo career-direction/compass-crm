@@ -1,4 +1,5 @@
 import { inArray } from "drizzle-orm";
+
 import { curriculumUnits, requiredFunctions } from "@/db/schema";
 import type {
 	CurriculumUnit,
@@ -6,9 +7,10 @@ import type {
 	QueryResolvers,
 	RequiredFunction,
 } from "@/generated/graphql-resolvers";
+
 import type { Context } from "../types";
-import { formatDateString } from "./mappers";
 import { requireAuth, requireTrainer } from "../utils/auth";
+import { formatDateString } from "./mappers";
 
 const mapRequiredFunction = (
 	row: typeof requiredFunctions.$inferSelect,

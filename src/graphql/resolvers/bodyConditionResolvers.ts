@@ -1,10 +1,12 @@
 import { eq } from "drizzle-orm";
+
 import { bodyConditions } from "@/db/schema";
 import type {
 	BodyCondition,
 	MutationResolvers,
 	QueryResolvers,
 } from "@/generated/graphql-resolvers";
+
 import type { Context } from "../types";
 import { requireAuth, requireTrainer } from "../utils/auth";
 

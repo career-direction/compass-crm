@@ -1,9 +1,6 @@
 import { eq, inArray } from "drizzle-orm";
-import {
-	requiredFunctions,
-	trainingMenus,
-	treatmentMenus,
-} from "@/db/schema";
+
+import { requiredFunctions, trainingMenus, treatmentMenus } from "@/db/schema";
 import type {
 	MutationResolvers,
 	QueryResolvers,
@@ -11,9 +8,10 @@ import type {
 	TrainingMenu,
 	TreatmentMenu,
 } from "@/generated/graphql-resolvers";
+
 import type { Context } from "../types";
-import { formatDateString } from "./mappers";
 import { requireAuth, requireTrainer } from "../utils/auth";
+import { formatDateString } from "./mappers";
 
 const mapTreatmentMenu = (
 	row: typeof treatmentMenus.$inferSelect,
@@ -154,4 +152,3 @@ export const requiredFunctionResolvers = {
 	Query: Pick<QueryResolvers<Context>, "requiredFunctions">;
 	Mutation: Pick<MutationResolvers<Context>, "createRequiredFunction">;
 };
-

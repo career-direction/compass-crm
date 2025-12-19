@@ -1,13 +1,15 @@
 import { eq } from "drizzle-orm";
+
 import { assignments } from "@/db/schema";
 import type {
 	Assignment,
 	MutationResolvers,
 	QueryResolvers,
 } from "@/generated/graphql-resolvers";
+
 import type { Context } from "../types";
-import { formatDateString } from "./mappers";
 import { requireAuth, requireTrainer } from "../utils/auth";
+import { formatDateString } from "./mappers";
 
 const mapAssignment = (row: typeof assignments.$inferSelect): Assignment => ({
 	id: Number(row.id),
