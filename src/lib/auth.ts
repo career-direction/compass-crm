@@ -72,9 +72,6 @@ export const verifyToken = async (token: string): Promise<AuthResult> => {
 	}
 };
 
-/**
- * ユーザーの権限をチェック
- */
 export const checkPermission = (
 	user: AuthUser | null,
 	requiredKind: number | number[],
@@ -87,23 +84,14 @@ export const checkPermission = (
 	return kinds.includes(user.kind);
 };
 
-/**
- * 管理者かどうかをチェック
- */
 export const isAdmin = (user: AuthUser | null): boolean => {
 	return checkPermission(user, 0);
 };
 
-/**
- * トレーナーかどうかをチェック
- */
 export const isTrainer = (user: AuthUser | null): boolean => {
 	return checkPermission(user, [0, 1]); // 管理者もトレーナー権限を持つ
 };
 
-/**
- * クライアントかどうかをチェック
- */
 export const isClient = (user: AuthUser | null): boolean => {
 	return checkPermission(user, [0, 1, 2]); // 全員がクライアントデータにアクセス可能
 };

@@ -1,8 +1,5 @@
 import type { AuthUser } from "@/lib/auth";
 
-/**
- * 認証エラーをスロー
- */
 export const requireAuth = (user: AuthUser | null): AuthUser => {
 	if (!user) {
 		throw new Error("認証が必要です。ログインしてください。");
@@ -10,9 +7,6 @@ export const requireAuth = (user: AuthUser | null): AuthUser => {
 	return user;
 };
 
-/**
- * 管理者権限を要求
- */
 export const requireAdmin = (user: AuthUser | null): AuthUser => {
 	const authUser = requireAuth(user);
 	if (authUser.kind !== 0) {
@@ -46,12 +40,8 @@ export const requireSelfOrAdmin = (
 	return authUser;
 };
 
-/**
- * ユーザー種別の定数
- */
 export const UserKind = {
 	ADMIN: 0,
 	TRAINER: 1,
 	CLIENT: 2,
 } as const;
-

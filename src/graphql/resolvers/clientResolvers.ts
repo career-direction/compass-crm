@@ -12,14 +12,11 @@ import { requireAdmin, requireAuth } from "../utils/auth";
 export const clientResolvers = {
 	Query: {
 		clients: async (_parent, args, context) => {
-			// 認証チェック
 			requireAuth(context.user);
 
-			// ページネーション強制（大量データ取得防止）
 			const limit = Math.min(args.limit ?? 50, 100); // 最大100件
 			const offset = args.offset ?? 0;
 
-			// クエリタイムアウト設定
 			const timeoutPromise = new Promise<never>((_, reject) => {
 				setTimeout(
 					() => reject(new Error("Query timeout: Operation took too long")),
@@ -53,7 +50,6 @@ export const clientResolvers = {
 
 	Mutation: {
 		createClient: async (_parent, args, context) => {
-			// 管理者のみクライアント作成可能
 			requireAdmin(context.user);
 
 			const { userId } = args.input;
