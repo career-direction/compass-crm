@@ -88,46 +88,6 @@ npm run dev
 
 [http://localhost:3000](http://localhost:3000) でアプリケーションが起動します。
 
-## 主なコマンド
-
-```bash
-# 開発サーバーの起動
-npm run dev
-
-# ビルド
-npm run build
-
-# プロダクションサーバーの起動
-npm run start
-
-# コードフォーマット
-npm run format
-
-# リント
-npm run lint
-
-# テスト
-npm run test
-
-# GraphQL Code Generation
-npm run codegen
-
-# データベースマイグレーション
-npm run drizzle:migrate
-
-# Supabaseローカル環境の起動
-npm run supabase:start
-
-# Supabaseローカル環境の停止
-npm run supabase:stop
-
-# Supabaseステータス確認
-npm run supabase:status
-
-# Supabaseデータベースのリセット
-npm run supabase:reset
-```
-
 ## プロジェクト構成
 
 ```
