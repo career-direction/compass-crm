@@ -1,0 +1,7 @@
+[tools]
+node = "22.15.1"
+supabase = "2.67.1"
+
+[env]
+# Node.jsのメモリ設定（必要に応じて調整）
+NODE_OPTIONS = "--max-old-space-size=4096"

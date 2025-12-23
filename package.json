@@ -12,7 +12,11 @@
 		"test": "vitest run",
 		"codegen": "graphql-codegen --watch",
 		"drizzle:generate": "drizzle-kit generate",
-		"drizzle:migrate": "drizzle-kit migrate"
+		"drizzle:migrate": "drizzle-kit migrate",
+		"supabase:start": "supabase start",
+		"supabase:stop": "supabase stop",
+		"supabase:status": "supabase status",
+		"supabase:reset": "supabase db reset"
 	},
 	"dependencies": {
 		"@graphql-tools/schema": "^10.0.27",
