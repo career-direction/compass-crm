@@ -1,18 +1,10 @@
 "use client";
 
-import {
-	Avatar,
-	Badge,
-	Flex,
-	Group,
-	Modal,
-	Table,
-	Text,
-} from "@mantine/core";
+import { Avatar, Badge, Flex, Group, Modal, Table, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { useRouter } from "next/navigation";
 import { CPButton } from "@/components/ui/CPButton";
 import { NewSessionModal } from "../components/NewSessionModal.ui";
-import { useRouter } from "next/navigation";
 
 const elements = [
 	{ position: 6, mass: 12.011, symbol: "C", name: "Carbon" },
