@@ -1,6 +1,4 @@
-import { eq } from "drizzle-orm";
-import { userCredentials, users } from "@/db/schema";
-import { db } from "./drizzle";
+import { verifyJWT } from "./jwt";
 
 export type AuthUser = {
 	id: number;
@@ -31,45 +29,28 @@ export const extractToken = (authHeader: string | null): string | null => {
 };
 
 /**
- * トークンからユーザー情報を取得
- *
- * 注意: 現在は簡易実装（トークン = ユーザーのkey）
- * 本番環境ではJWTやセッションベースの認証に置き換えてください
+ * JWTトークンを検証してユーザー情報を取得
  */
 export const verifyToken = async (token: string): Promise<AuthResult> => {
-	try {
-		// トークンをユーザーのkeyとして検証（簡易実装）
-		const [credential] = await db
-			.select({
-				credential: userCredentials,
-				user: users,
-			})
-			.from(userCredentials)
-			.leftJoin(users, eq(userCredentials.userId, users.key))
-			.where(eq(userCredentials.userId, token))
-			.limit(1);
+	const result = await verifyJWT(token);
 
-		if (!credential?.user) {
-			return { success: false, error: "無効なトークンです" };
-		}
-
-		const { user } = credential;
-
-		return {
-			success: true,
-			user: {
-				id: user.id,
-				key: user.key,
-				kind: user.kind,
-				firstName: user.firstName,
-				lastName: user.lastName,
-				email: credential.credential.email,
-			},
-		};
-	} catch (error) {
-		console.error("Token verification error:", error);
-		return { success: false, error: "認証エラーが発生しました" };
+	if (!result.success) {
+		return { success: false, error: result.error };
 	}
+
+	const { payload } = result;
+
+	return {
+		success: true,
+		user: {
+			id: payload.userId,
+			key: payload.userKey,
+			kind: payload.kind,
+			firstName: payload.firstName,
+			lastName: payload.lastName,
+			email: payload.email,
+		},
+	};
 };
 
 /**
