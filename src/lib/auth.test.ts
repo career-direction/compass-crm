@@ -1,4 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+/**
+ * @vitest-environment node
+ */
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { AuthUser } from "./auth";
 
 // DBモジュールをモック
@@ -377,57 +380,25 @@ describe("isClient", () => {
 /**
  * verifyToken のテスト
  *
- * 古典学派のアプローチ：
- * - DBアクセスはプロセス外依存なので、モックで置き換える
- * - モックはできるだけシンプルに保ち、実際のDB構造に近い形でデータを返す
+ * JWTベースの認証に変更後のテスト
+ * - generateTokenで実際のJWTを生成してテスト
+ * - DBモックは不要（JWTからユーザー情報を取得するため）
  */
 describe("verifyToken", () => {
-	let verifyToken: typeof import("./auth").verifyToken;
-	let mockDb: { select: ReturnType<typeof vi.fn> };
-
-	beforeEach(async () => {
-		vi.resetModules();
-
-		// モックDBのセットアップ
-		mockDb = {
-			select: vi.fn(),
-		};
-
-		vi.doMock("./drizzle", () => ({
-			db: mockDb,
-		}));
-
-		const authModule = await import("./auth");
-		verifyToken = authModule.verifyToken;
-	});
-
-	afterEach(() => {
-		vi.restoreAllMocks();
-	});
-
-	it("有効なトークンの場合、ユーザー情報を返す", async () => {
+	it("有効なJWTトークンの場合、ユーザー情報を返す", async () => {
 		// Arrange
-		const token = "valid-user-key-12345";
-		const mockUserData = {
-			credential: {
-				userId: token,
-				email: "user@example.com",
-			},
-			user: {
-				id: 1,
-				key: token,
-				kind: 1,
-				firstName: "太郎",
-				lastName: "山田",
-			},
-		};
+		const { generateToken } = await import("./jwt");
+		const { verifyToken } = await import("./auth");
 
-		// メソッドチェーンをモック
-		const mockLimit = vi.fn().mockResolvedValue([mockUserData]);
-		const mockWhere = vi.fn().mockReturnValue({ limit: mockLimit });
-		const mockLeftJoin = vi.fn().mockReturnValue({ where: mockWhere });
-		const mockFrom = vi.fn().mockReturnValue({ leftJoin: mockLeftJoin });
-		mockDb.select.mockReturnValue({ from: mockFrom });
+		const payload = {
+			userId: 1,
+			userKey: "valid-user-key-12345",
+			kind: 1,
+			email: "user@example.com",
+			firstName: "太郎",
+			lastName: "山田",
+		};
+		const token = await generateToken(payload);
 
 		// Act
 		const result = await verifyToken(token);
@@ -436,7 +407,7 @@ describe("verifyToken", () => {
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.user.id).toBe(1);
-			expect(result.user.key).toBe(token);
+			expect(result.user.key).toBe("valid-user-key-12345");
 			expect(result.user.kind).toBe(1);
 			expect(result.user.firstName).toBe("太郎");
 			expect(result.user.lastName).toBe("山田");
@@ -444,108 +415,35 @@ describe("verifyToken", () => {
 		}
 	});
 
-	it("無効なトークン（ユーザーが見つからない）の場合、エラーを返す", async () => {
+	it("無効なトークンの場合、エラーを返す", async () => {
 		// Arrange
-		const token = "invalid-token";
-
-		// 空の結果を返す
-		const mockLimit = vi.fn().mockResolvedValue([]);
-		const mockWhere = vi.fn().mockReturnValue({ limit: mockLimit });
-		const mockLeftJoin = vi.fn().mockReturnValue({ where: mockWhere });
-		const mockFrom = vi.fn().mockReturnValue({ leftJoin: mockLeftJoin });
-		mockDb.select.mockReturnValue({ from: mockFrom });
+		const { verifyToken } = await import("./auth");
+		const invalidToken = "invalid-token-string";
 
 		// Act
-		const result = await verifyToken(token);
+		const result = await verifyToken(invalidToken);
 
 		// Assert
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			expect(result.error).toBe("無効なトークンです");
 		}
-	});
-
-	it("ユーザー情報がnullの場合、エラーを返す", async () => {
-		// Arrange
-		const token = "token-with-null-user";
-		const mockDataWithNullUser = {
-			credential: {
-				userId: token,
-				email: "user@example.com",
-			},
-			user: null, // ユーザー情報がnull
-		};
-
-		const mockLimit = vi.fn().mockResolvedValue([mockDataWithNullUser]);
-		const mockWhere = vi.fn().mockReturnValue({ limit: mockLimit });
-		const mockLeftJoin = vi.fn().mockReturnValue({ where: mockWhere });
-		const mockFrom = vi.fn().mockReturnValue({ leftJoin: mockLeftJoin });
-		mockDb.select.mockReturnValue({ from: mockFrom });
-
-		// Act
-		const result = await verifyToken(token);
-
-		// Assert
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			expect(result.error).toBe("無効なトークンです");
-		}
-	});
-
-	it("DBエラーが発生した場合、認証エラーを返す", async () => {
-		// Arrange
-		const token = "any-token";
-		const dbError = new Error("Database connection failed");
-
-		// DBクエリでエラーをスロー
-		const mockLimit = vi.fn().mockRejectedValue(dbError);
-		const mockWhere = vi.fn().mockReturnValue({ limit: mockLimit });
-		const mockLeftJoin = vi.fn().mockReturnValue({ where: mockWhere });
-		const mockFrom = vi.fn().mockReturnValue({ leftJoin: mockLeftJoin });
-		mockDb.select.mockReturnValue({ from: mockFrom });
-
-		// console.errorをモック（エラーログを抑制）
-		const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
-		// Act
-		const result = await verifyToken(token);
-
-		// Assert
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			expect(result.error).toBe("認証エラーが発生しました");
-		}
-		expect(consoleSpy).toHaveBeenCalledWith(
-			"Token verification error:",
-			dbError,
-		);
-
-		// クリーンアップ
-		consoleSpy.mockRestore();
 	});
 
 	it("管理者ユーザーのトークンを正しく検証できる", async () => {
 		// Arrange
-		const token = "admin-user-key";
-		const mockAdminData = {
-			credential: {
-				userId: token,
-				email: "admin@example.com",
-			},
-			user: {
-				id: 100,
-				key: token,
-				kind: 0, // 管理者
-				firstName: "管理者",
-				lastName: "システム",
-			},
-		};
+		const { generateToken } = await import("./jwt");
+		const { verifyToken } = await import("./auth");
 
-		const mockLimit = vi.fn().mockResolvedValue([mockAdminData]);
-		const mockWhere = vi.fn().mockReturnValue({ limit: mockLimit });
-		const mockLeftJoin = vi.fn().mockReturnValue({ where: mockWhere });
-		const mockFrom = vi.fn().mockReturnValue({ leftJoin: mockLeftJoin });
-		mockDb.select.mockReturnValue({ from: mockFrom });
+		const payload = {
+			userId: 100,
+			userKey: "admin-user-key",
+			kind: 0, // 管理者
+			email: "admin@example.com",
+			firstName: "管理者",
+			lastName: "システム",
+		};
+		const token = await generateToken(payload);
 
 		// Act
 		const result = await verifyToken(token);
@@ -555,6 +453,58 @@ describe("verifyToken", () => {
 		if (result.success) {
 			expect(result.user.kind).toBe(0);
 			expect(result.user.email).toBe("admin@example.com");
+		}
+	});
+
+	it("トレーナーユーザーのトークンを正しく検証できる", async () => {
+		// Arrange
+		const { generateToken } = await import("./jwt");
+		const { verifyToken } = await import("./auth");
+
+		const payload = {
+			userId: 50,
+			userKey: "trainer-user-key",
+			kind: 1, // トレーナー
+			email: "trainer@example.com",
+			firstName: "トレーナー",
+			lastName: "田中",
+		};
+		const token = await generateToken(payload);
+
+		// Act
+		const result = await verifyToken(token);
+
+		// Assert
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.user.kind).toBe(1);
+			expect(result.user.firstName).toBe("トレーナー");
+		}
+	});
+
+	it("クライアントユーザーのトークンを正しく検証できる", async () => {
+		// Arrange
+		const { generateToken } = await import("./jwt");
+		const { verifyToken } = await import("./auth");
+
+		const payload = {
+			userId: 200,
+			userKey: "client-user-key",
+			kind: 2, // クライアント
+			email: "client@example.com",
+			firstName: "クライアント",
+			lastName: "佐藤",
+		};
+		const token = await generateToken(payload);
+
+		// Act
+		const result = await verifyToken(token);
+
+		// Assert
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.user.kind).toBe(2);
+			expect(result.user.lastName).toBe("佐藤");
 		}
 	});
 });
