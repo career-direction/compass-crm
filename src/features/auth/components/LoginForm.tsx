@@ -92,7 +92,7 @@ export function LoginForm() {
 						{...form.getInputProps("password")}
 					/>
 
-					<CPButton fullWidth mt="xl" loading={loading}>
+					<CPButton type="submit" fullWidth mt="xl" loading={loading}>
 						ログイン
 					</CPButton>
 				</Stack>
