@@ -8,7 +8,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 
 import type { Context } from "../types";
-import { requireAdmin } from "../utils/auth";
+import { requireAdmin } from "@/lib/auth";
 import { mapTrainer } from "./mappers";
 
 export const trainerResolvers = {

@@ -1,9 +1,20 @@
 import { verifyJWT } from "./jwt";
 
+/**
+ * ユーザー種別
+ */
+export const UserKind = {
+	ADMIN: 0,
+	TRAINER: 1,
+	CLIENT: 2,
+} as const;
+
+export type UserKindType = (typeof UserKind)[keyof typeof UserKind];
+
 export type AuthUser = {
 	id: number;
 	key: string;
-	kind: number; // 0: 管理者, 1: トレーナー, 2: クライアント
+	kind: UserKindType;
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -45,7 +56,7 @@ export const verifyToken = async (token: string): Promise<AuthResult> => {
 		user: {
 			id: payload.userId,
 			key: payload.userKey,
-			kind: payload.kind,
+			kind: payload.kind as UserKindType,
 			firstName: payload.firstName,
 			lastName: payload.lastName,
 			email: payload.email,
@@ -54,37 +65,34 @@ export const verifyToken = async (token: string): Promise<AuthResult> => {
 };
 
 /**
- * ユーザーの権限をチェック
+ * 管理者権限を要求
  */
-export const checkPermission = (
-	user: AuthUser | null,
-	requiredKind: number | number[],
-): boolean => {
-	if (!user) {
-		return false;
+export const requireAdmin = (user: AuthUser): AuthUser => {
+	if (user.kind !== UserKind.ADMIN) {
+		throw new Error("この操作には管理者権限が必要です。");
 	}
-
-	const kinds = Array.isArray(requiredKind) ? requiredKind : [requiredKind];
-	return kinds.includes(user.kind);
+	return user;
 };
 
 /**
- * 管理者かどうかをチェック
+ * トレーナー以上の権限を要求（管理者 or トレーナー）
  */
-export const isAdmin = (user: AuthUser | null): boolean => {
-	return checkPermission(user, 0);
+export const requireTrainer = (user: AuthUser): AuthUser => {
+	if (user.kind !== UserKind.ADMIN && user.kind !== UserKind.TRAINER) {
+		throw new Error("この操作にはトレーナー権限が必要です。");
+	}
+	return user;
 };
 
 /**
- * トレーナーかどうかをチェック
+ * 特定のユーザー自身または管理者であることを要求
  */
-export const isTrainer = (user: AuthUser | null): boolean => {
-	return checkPermission(user, [0, 1]); // 管理者もトレーナー権限を持つ
-};
-
-/**
- * クライアントかどうかをチェック
- */
-export const isClient = (user: AuthUser | null): boolean => {
-	return checkPermission(user, [0, 1, 2]); // 全員がクライアントデータにアクセス可能
+export const requireSelfOrAdmin = (
+	user: AuthUser,
+	targetUserId: number,
+): AuthUser => {
+	if (user.kind !== UserKind.ADMIN && user.id !== targetUserId) {
+		throw new Error("この操作は自分自身のデータのみ可能です。");
+	}
+	return user;
 };

@@ -1,24 +1,16 @@
 /**
  * @vitest-environment node
  */
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { AuthUser } from "./auth";
-
-// DBモジュールをモック
-vi.mock("./drizzle", () => ({
-	db: {
-		select: vi.fn(),
-	},
-}));
-
-/**
- * auth.ts のユニットテスト
- *
- * テスト方針（古典学派）:
- * - 純粋関数（extractToken, checkPermission, isAdmin, isTrainer, isClient）は
- *   そのままテスト可能
- * - verifyToken はDBアクセス（プロセス外依存）があるため、DBモジュールをモック
- */
+import { describe, expect, it } from "vitest";
+import {
+	type AuthUser,
+	UserKind,
+	extractToken,
+	requireAdmin,
+	requireSelfOrAdmin,
+	requireTrainer,
+	verifyToken,
+} from "./auth";
 
 /**
  * テスト用のモックユーザーを作成するヘルパー関数
@@ -26,7 +18,7 @@ vi.mock("./drizzle", () => ({
 const createMockUser = (overrides: Partial<AuthUser> = {}): AuthUser => ({
 	id: 1,
 	key: "test-user-key",
-	kind: 2, // デフォルトはクライアント
+	kind: UserKind.CLIENT, // デフォルトはクライアント
 	firstName: "太郎",
 	lastName: "テスト",
 	email: "test@example.com",
@@ -34,18 +26,6 @@ const createMockUser = (overrides: Partial<AuthUser> = {}): AuthUser => ({
 });
 
 describe("extractToken", () => {
-	// extractTokenは純粋関数なので、モックなしでテスト可能
-	let extractToken: typeof import("./auth").extractToken;
-
-	beforeEach(async () => {
-		// DBモジュールをモックしてからインポート
-		vi.doMock("./drizzle", () => ({
-			db: {},
-		}));
-		const authModule = await import("./auth");
-		extractToken = authModule.extractToken;
-	});
-
 	it("nullが渡された場合、nullを返す", () => {
 		// Arrange
 		const authHeader = null;
@@ -137,258 +117,153 @@ describe("extractToken", () => {
 	});
 });
 
-describe("checkPermission", () => {
-	let checkPermission: typeof import("./auth").checkPermission;
-
-	beforeEach(async () => {
-		vi.doMock("./drizzle", () => ({
-			db: {},
-		}));
-		const authModule = await import("./auth");
-		checkPermission = authModule.checkPermission;
-	});
-
-	it("ユーザーがnullの場合、falseを返す", () => {
+describe("requireAdmin", () => {
+	it("管理者ユーザーの場合、そのユーザーを返す", () => {
 		// Arrange
-		const user = null;
-		const requiredKind = 0;
+		const adminUser = createMockUser({ kind: UserKind.ADMIN });
 
 		// Act
-		const result = checkPermission(user, requiredKind);
+		const result = requireAdmin(adminUser);
 
 		// Assert
-		expect(result).toBe(false);
+		expect(result).toBe(adminUser);
 	});
 
-	it("ユーザーのkindが要求されたkindと一致する場合、trueを返す", () => {
+	it("トレーナーユーザーの場合、権限エラーをスローする", () => {
 		// Arrange
-		const user = createMockUser({ kind: 1 }); // トレーナー
-		const requiredKind = 1;
+		const trainerUser = createMockUser({ kind: UserKind.TRAINER });
 
-		// Act
-		const result = checkPermission(user, requiredKind);
-
-		// Assert
-		expect(result).toBe(true);
+		// Act & Assert
+		expect(() => requireAdmin(trainerUser)).toThrow(
+			"この操作には管理者権限が必要です。",
+		);
 	});
 
-	it("ユーザーのkindが要求されたkindと一致しない場合、falseを返す", () => {
+	it("クライアントユーザーの場合、権限エラーをスローする", () => {
 		// Arrange
-		const user = createMockUser({ kind: 2 }); // クライアント
-		const requiredKind = 0; // 管理者を要求
+		const clientUser = createMockUser({ kind: UserKind.CLIENT });
 
-		// Act
-		const result = checkPermission(user, requiredKind);
-
-		// Assert
-		expect(result).toBe(false);
-	});
-
-	it("配列で複数のkindを指定した場合、いずれかに一致すればtrueを返す", () => {
-		// Arrange
-		const user = createMockUser({ kind: 1 }); // トレーナー
-		const requiredKinds = [0, 1]; // 管理者またはトレーナー
-
-		// Act
-		const result = checkPermission(user, requiredKinds);
-
-		// Assert
-		expect(result).toBe(true);
-	});
-
-	it("配列で複数のkindを指定した場合、いずれにも一致しなければfalseを返す", () => {
-		// Arrange
-		const user = createMockUser({ kind: 2 }); // クライアント
-		const requiredKinds = [0, 1]; // 管理者またはトレーナーを要求
-
-		// Act
-		const result = checkPermission(user, requiredKinds);
-
-		// Assert
-		expect(result).toBe(false);
+		// Act & Assert
+		expect(() => requireAdmin(clientUser)).toThrow(
+			"この操作には管理者権限が必要です。",
+		);
 	});
 });
 
-describe("isAdmin", () => {
-	let isAdmin: typeof import("./auth").isAdmin;
-
-	beforeEach(async () => {
-		vi.doMock("./drizzle", () => ({
-			db: {},
-		}));
-		const authModule = await import("./auth");
-		isAdmin = authModule.isAdmin;
-	});
-
-	it("管理者（kind: 0）の場合、trueを返す", () => {
+describe("requireTrainer", () => {
+	it("管理者ユーザーの場合、そのユーザーを返す", () => {
 		// Arrange
-		const user = createMockUser({ kind: 0 });
+		// 管理者はトレーナー権限も持つ（上位互換）
+		const adminUser = createMockUser({ kind: UserKind.ADMIN });
 
 		// Act
-		const result = isAdmin(user);
+		const result = requireTrainer(adminUser);
 
 		// Assert
-		expect(result).toBe(true);
+		expect(result).toBe(adminUser);
 	});
 
-	it("トレーナー（kind: 1）の場合、falseを返す", () => {
+	it("トレーナーユーザーの場合、そのユーザーを返す", () => {
 		// Arrange
-		const user = createMockUser({ kind: 1 });
+		const trainerUser = createMockUser({ kind: UserKind.TRAINER });
 
 		// Act
-		const result = isAdmin(user);
+		const result = requireTrainer(trainerUser);
 
 		// Assert
-		expect(result).toBe(false);
+		expect(result).toBe(trainerUser);
 	});
 
-	it("クライアント（kind: 2）の場合、falseを返す", () => {
+	it("クライアントユーザーの場合、権限エラーをスローする", () => {
 		// Arrange
-		const user = createMockUser({ kind: 2 });
+		const clientUser = createMockUser({ kind: UserKind.CLIENT });
 
-		// Act
-		const result = isAdmin(user);
-
-		// Assert
-		expect(result).toBe(false);
-	});
-
-	it("ユーザーがnullの場合、falseを返す", () => {
-		// Arrange
-		const user = null;
-
-		// Act
-		const result = isAdmin(user);
-
-		// Assert
-		expect(result).toBe(false);
+		// Act & Assert
+		expect(() => requireTrainer(clientUser)).toThrow(
+			"この操作にはトレーナー権限が必要です。",
+		);
 	});
 });
 
-describe("isTrainer", () => {
-	let isTrainer: typeof import("./auth").isTrainer;
-
-	beforeEach(async () => {
-		vi.doMock("./drizzle", () => ({
-			db: {},
-		}));
-		const authModule = await import("./auth");
-		isTrainer = authModule.isTrainer;
-	});
-
-	it("管理者（kind: 0）の場合、trueを返す（管理者はトレーナー権限も持つ）", () => {
+describe("requireSelfOrAdmin", () => {
+	it("管理者ユーザーが他人のデータにアクセスする場合、ユーザーを返す", () => {
 		// Arrange
-		const user = createMockUser({ kind: 0 });
+		const adminUser = createMockUser({ id: 1, kind: UserKind.ADMIN });
+		const targetUserId = 999; // 別のユーザーのID
 
 		// Act
-		const result = isTrainer(user);
+		const result = requireSelfOrAdmin(adminUser, targetUserId);
 
 		// Assert
-		expect(result).toBe(true);
+		expect(result).toBe(adminUser);
 	});
 
-	it("トレーナー（kind: 1）の場合、trueを返す", () => {
+	it("一般ユーザーが自分自身のデータにアクセスする場合、ユーザーを返す", () => {
 		// Arrange
-		const user = createMockUser({ kind: 1 });
+		const user = createMockUser({ id: 42, kind: UserKind.CLIENT });
+		const targetUserId = 42; // 同じユーザーのID
 
 		// Act
-		const result = isTrainer(user);
+		const result = requireSelfOrAdmin(user, targetUserId);
 
 		// Assert
-		expect(result).toBe(true);
+		expect(result).toBe(user);
 	});
 
-	it("クライアント（kind: 2）の場合、falseを返す", () => {
+	it("トレーナーが自分自身のデータにアクセスする場合、ユーザーを返す", () => {
 		// Arrange
-		const user = createMockUser({ kind: 2 });
+		const trainerUser = createMockUser({ id: 10, kind: UserKind.TRAINER });
+		const targetUserId = 10;
 
 		// Act
-		const result = isTrainer(user);
+		const result = requireSelfOrAdmin(trainerUser, targetUserId);
 
 		// Assert
-		expect(result).toBe(false);
+		expect(result).toBe(trainerUser);
 	});
 
-	it("ユーザーがnullの場合、falseを返す", () => {
+	it("一般ユーザーが他人のデータにアクセスしようとした場合、権限エラーをスローする", () => {
 		// Arrange
-		const user = null;
+		const user = createMockUser({ id: 42, kind: UserKind.CLIENT });
+		const targetUserId = 999; // 別のユーザーのID
 
-		// Act
-		const result = isTrainer(user);
+		// Act & Assert
+		expect(() => requireSelfOrAdmin(user, targetUserId)).toThrow(
+			"この操作は自分自身のデータのみ可能です。",
+		);
+	});
 
-		// Assert
-		expect(result).toBe(false);
+	it("トレーナーが他人のデータにアクセスしようとした場合、権限エラーをスローする", () => {
+		// Arrange
+		const trainerUser = createMockUser({ id: 10, kind: UserKind.TRAINER });
+		const targetUserId = 999;
+
+		// Act & Assert
+		expect(() => requireSelfOrAdmin(trainerUser, targetUserId)).toThrow(
+			"この操作は自分自身のデータのみ可能です。",
+		);
 	});
 });
 
-describe("isClient", () => {
-	let isClient: typeof import("./auth").isClient;
-
-	beforeEach(async () => {
-		vi.doMock("./drizzle", () => ({
-			db: {},
-		}));
-		const authModule = await import("./auth");
-		isClient = authModule.isClient;
-	});
-
-	it("管理者（kind: 0）の場合、trueを返す（全員がクライアントデータにアクセス可能）", () => {
-		// Arrange
-		const user = createMockUser({ kind: 0 });
-
-		// Act
-		const result = isClient(user);
-
+describe("UserKind定数", () => {
+	it("ADMIN, TRAINER, CLIENTが正しい値を持つ", () => {
 		// Assert
-		expect(result).toBe(true);
-	});
-
-	it("トレーナー（kind: 1）の場合、trueを返す", () => {
-		// Arrange
-		const user = createMockUser({ kind: 1 });
-
-		// Act
-		const result = isClient(user);
-
-		// Assert
-		expect(result).toBe(true);
-	});
-
-	it("クライアント（kind: 2）の場合、trueを返す", () => {
-		// Arrange
-		const user = createMockUser({ kind: 2 });
-
-		// Act
-		const result = isClient(user);
-
-		// Assert
-		expect(result).toBe(true);
-	});
-
-	it("ユーザーがnullの場合、falseを返す", () => {
-		// Arrange
-		const user = null;
-
-		// Act
-		const result = isClient(user);
-
-		// Assert
-		expect(result).toBe(false);
+		expect(UserKind.ADMIN).toBe(0);
+		expect(UserKind.TRAINER).toBe(1);
+		expect(UserKind.CLIENT).toBe(2);
 	});
 });
 
 /**
  * verifyToken のテスト
  *
- * JWTベースの認証に変更後のテスト
+ * JWTベースの認証のテスト
  * - generateTokenで実際のJWTを生成してテスト
- * - DBモックは不要（JWTからユーザー情報を取得するため）
  */
 describe("verifyToken", () => {
 	it("有効なJWTトークンの場合、ユーザー情報を返す", async () => {
 		// Arrange
 		const { generateToken } = await import("./jwt");
-		const { verifyToken } = await import("./auth");
 
 		const payload = {
 			userId: 1,
@@ -417,7 +292,6 @@ describe("verifyToken", () => {
 
 	it("無効なトークンの場合、エラーを返す", async () => {
 		// Arrange
-		const { verifyToken } = await import("./auth");
 		const invalidToken = "invalid-token-string";
 
 		// Act
@@ -433,7 +307,6 @@ describe("verifyToken", () => {
 	it("管理者ユーザーのトークンを正しく検証できる", async () => {
 		// Arrange
 		const { generateToken } = await import("./jwt");
-		const { verifyToken } = await import("./auth");
 
 		const payload = {
 			userId: 100,
@@ -459,7 +332,6 @@ describe("verifyToken", () => {
 	it("トレーナーユーザーのトークンを正しく検証できる", async () => {
 		// Arrange
 		const { generateToken } = await import("./jwt");
-		const { verifyToken } = await import("./auth");
 
 		const payload = {
 			userId: 50,
@@ -485,7 +357,6 @@ describe("verifyToken", () => {
 	it("クライアントユーザーのトークンを正しく検証できる", async () => {
 		// Arrange
 		const { generateToken } = await import("./jwt");
-		const { verifyToken } = await import("./auth");
 
 		const payload = {
 			userId: 200,

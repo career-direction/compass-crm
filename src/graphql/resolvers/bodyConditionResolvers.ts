@@ -8,7 +8,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 
 import type { Context } from "../types";
-import { requireTrainer } from "../utils/auth";
+import { requireTrainer } from "@/lib/auth";
 
 const parseFloatOrNull = (value: string | null): number | null => {
 	if (value === null) return null;
