@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
 		const passwordDigest = await bcrypt.hash(password, 10);
 
 		// ユーザーを作成
+		const now = new Date();
 		const [newUser] = await db
 			.insert(users)
 			.values({
@@ -54,6 +55,8 @@ export async function POST(request: NextRequest) {
 				lastNameKana: "",
 				birthDate: "2000-01-01", // TODO: 生年月日入力を追加
 				gender: 2, // その他
+				createdAt: now,
+				updatedAt: now,
 			})
 			.returning();
 
@@ -62,6 +65,8 @@ export async function POST(request: NextRequest) {
 			userId: newUser.key,
 			email,
 			passwordDigest,
+			createdAt: now,
+			updatedAt: now,
 		});
 
 		// JWTトークンを生成
