@@ -8,7 +8,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 
 import type { Context } from "../types";
-import { requireAuth, requireTrainer } from "../utils/auth";
+import { requireTrainer } from "../utils/auth";
 import { formatDateString } from "./mappers";
 
 const mapMidtermHealthPurpose = (
@@ -29,9 +29,6 @@ const mapMidtermHealthPurpose = (
 export const midtermHealthPurposeResolvers = {
 	Query: {
 		midtermHealthPurposes: async (_parent, args, context) => {
-			// 認証チェック
-			requireAuth(context.user);
-
 			const limit = Math.min(args.limit ?? 50, 100);
 			const offset = args.offset ?? 0;
 

@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import type { AuthUser } from "@/lib/auth";
 import {
 	requireAdmin,
-	requireAuth,
 	requireSelfOrAdmin,
 	requireTrainer,
 	UserKind,
@@ -23,29 +22,6 @@ const createMockUser = (overrides: Partial<AuthUser> = {}): AuthUser => ({
 	lastName: "テスト",
 	email: "test@example.com",
 	...overrides,
-});
-
-describe("requireAuth", () => {
-	it("ユーザーが存在する場合、そのユーザーを返す", () => {
-		// Arrange
-		const user = createMockUser();
-
-		// Act
-		const result = requireAuth(user);
-
-		// Assert
-		expect(result).toBe(user);
-	});
-
-	it("ユーザーがnullの場合、認証エラーをスローする", () => {
-		// Arrange
-		const user = null;
-
-		// Act & Assert
-		expect(() => requireAuth(user)).toThrow(
-			"認証が必要です。ログインしてください。",
-		);
-	});
 });
 
 describe("requireAdmin", () => {
@@ -80,16 +56,6 @@ describe("requireAdmin", () => {
 		);
 	});
 
-	it("ユーザーがnullの場合、認証エラーをスローする", () => {
-		// Arrange
-		const user = null;
-
-		// Act & Assert
-		// 注意: requireAdminは内部でrequireAuthを呼ぶので、認証エラーが先に発生
-		expect(() => requireAdmin(user)).toThrow(
-			"認証が必要です。ログインしてください。",
-		);
-	});
 });
 
 describe("requireTrainer", () => {
@@ -123,16 +89,6 @@ describe("requireTrainer", () => {
 		// Act & Assert
 		expect(() => requireTrainer(clientUser)).toThrow(
 			"この操作にはトレーナー権限が必要です。",
-		);
-	});
-
-	it("ユーザーがnullの場合、認証エラーをスローする", () => {
-		// Arrange
-		const user = null;
-
-		// Act & Assert
-		expect(() => requireTrainer(user)).toThrow(
-			"認証が必要です。ログインしてください。",
 		);
 	});
 });
@@ -193,17 +149,6 @@ describe("requireSelfOrAdmin", () => {
 		// Act & Assert
 		expect(() => requireSelfOrAdmin(trainerUser, targetUserId)).toThrow(
 			"この操作は自分自身のデータのみ可能です。",
-		);
-	});
-
-	it("ユーザーがnullの場合、認証エラーをスローする", () => {
-		// Arrange
-		const user = null;
-		const targetUserId = 1;
-
-		// Act & Assert
-		expect(() => requireSelfOrAdmin(user, targetUserId)).toThrow(
-			"認証が必要です。ログインしてください。",
 		);
 	});
 });

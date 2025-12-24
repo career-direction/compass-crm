@@ -17,15 +17,12 @@ import type {
 } from "@/generated/graphql-resolvers";
 
 import type { Context } from "../types";
-import { requireAuth, requireTrainer } from "../utils/auth";
+import { requireTrainer } from "../utils/auth";
 import { formatDateString, mapClient, mapTrainer } from "./mappers";
 
 export const sessionResolvers = {
 	Query: {
 		sessions: async (_parent, _args, context) => {
-			// 認証チェック
-			requireAuth(context.user);
-
 			const clientUser = alias(users, "client_user");
 			const trainerUser = alias(users, "trainer_user");
 

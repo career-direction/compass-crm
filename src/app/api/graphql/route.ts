@@ -61,18 +61,18 @@ const { handleRequest } = createYoga<Record<string, unknown>, Context>({
 			}
 		}
 
-		let user = null;
+		if (!token) {
+			throw new Error("認証が必要です");
+		}
 
-		if (token) {
-			const result = await verifyToken(token);
-			if (result.success) {
-				user = result.user;
-			}
+		const result = await verifyToken(token);
+		if (!result.success) {
+			throw new Error("認証に失敗しました");
 		}
 
 		return {
 			db,
-			user,
+			user: result.user,
 		};
 	},
 
