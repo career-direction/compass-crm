@@ -118,4 +118,3 @@ export const curriculumUnitResolvers = {
 	Query: Pick<QueryResolvers<Context>, "curriculumUnits">;
 	Mutation: Pick<MutationResolvers<Context>, "createCurriculumUnit">;
 };
-

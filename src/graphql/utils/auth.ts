@@ -54,4 +54,3 @@ export const UserKind = {
 	TRAINER: 1,
 	CLIENT: 2,
 } as const;
-

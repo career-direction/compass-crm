@@ -66,4 +66,3 @@ export const assignmentResolvers = {
 	Query: Pick<QueryResolvers<Context>, "assignments">;
 	Mutation: Pick<MutationResolvers<Context>, "createAssignment">;
 };
-

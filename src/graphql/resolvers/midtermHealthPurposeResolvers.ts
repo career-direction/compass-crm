@@ -73,4 +73,3 @@ export const midtermHealthPurposeResolvers = {
 	Query: Pick<QueryResolvers<Context>, "midtermHealthPurposes">;
 	Mutation: Pick<MutationResolvers<Context>, "createMidtermHealthPurpose">;
 };
-

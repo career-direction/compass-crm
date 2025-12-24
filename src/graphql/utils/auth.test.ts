@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { AuthUser } from "@/lib/auth";
 import {
-	requireAuth,
 	requireAdmin,
-	requireTrainer,
+	requireAuth,
 	requireSelfOrAdmin,
+	requireTrainer,
 	UserKind,
 } from "./auth";
 
@@ -216,4 +216,3 @@ describe("UserKind定数", () => {
 		expect(UserKind.CLIENT).toBe(2);
 	});
 });
-

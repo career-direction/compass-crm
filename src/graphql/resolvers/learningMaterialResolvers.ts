@@ -38,7 +38,9 @@ export const learningMaterialResolvers = {
 			let query = context.db.select().from(learningMaterials);
 
 			if (args.ownerId) {
-				query = query.where(eq(learningMaterials.ownerId, args.ownerId)) as typeof query;
+				query = query.where(
+					eq(learningMaterials.ownerId, args.ownerId),
+				) as typeof query;
 			}
 
 			const rows = await query.limit(limit).offset(offset);
@@ -74,4 +76,3 @@ export const learningMaterialResolvers = {
 	Query: Pick<QueryResolvers<Context>, "learningMaterials">;
 	Mutation: Pick<MutationResolvers<Context>, "createLearningMaterial">;
 };
-

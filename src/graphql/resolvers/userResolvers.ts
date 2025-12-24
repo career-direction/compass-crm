@@ -113,4 +113,3 @@ export const userResolvers = {
 	Query: Pick<QueryResolvers<Context>, "hello" | "users">;
 	Mutation: Pick<MutationResolvers<Context>, "createUser">;
 };
-

@@ -96,4 +96,3 @@ export const bodyConditionResolvers = {
 	Query: Pick<QueryResolvers<Context>, "bodyConditions">;
 	Mutation: Pick<MutationResolvers<Context>, "createBodyCondition">;
 };
-
