@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { userCredentials, users } from "@/db/schema";
 import { db } from "@/lib/drizzle";
+import { generateToken } from "@/lib/jwt";
 
 type LoginRequest = {
 	email: string;
@@ -55,8 +56,15 @@ export async function POST(request: NextRequest) {
 
 		const { user } = credential;
 
-		// トークンとしてユーザーのkeyを使用（本番ではJWTに置き換え推奨）
-		const token = user.key;
+		// JWTトークンを生成
+		const token = await generateToken({
+			userId: user.id,
+			userKey: user.key,
+			kind: user.kind,
+			email: credential.credential.email,
+			firstName: user.firstName,
+			lastName: user.lastName,
+		});
 
 		// レスポンスを作成
 		const response = NextResponse.json({

@@ -1,8 +1,6 @@
-import { eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { userCredentials, users } from "@/db/schema";
-import { db } from "@/lib/drizzle";
+import { verifyJWT } from "@/lib/jwt";
 
 export async function GET(request: NextRequest) {
 	try {
@@ -12,31 +10,32 @@ export async function GET(request: NextRequest) {
 			return NextResponse.json({ user: null });
 		}
 
-		// トークン（ユーザーのkey）からユーザー情報を取得
-		const [credential] = await db
-			.select({
-				credential: userCredentials,
-				user: users,
-			})
-			.from(userCredentials)
-			.leftJoin(users, eq(userCredentials.userId, users.key))
-			.where(eq(userCredentials.userId, token))
-			.limit(1);
+		// JWTトークンを検証してユーザー情報を取得
+		const result = await verifyJWT(token);
 
-		if (!credential?.user) {
-			return NextResponse.json({ user: null });
+		if (!result.success) {
+			// トークンが無効な場合はCookieを削除
+			const response = NextResponse.json({ user: null });
+			response.cookies.set("auth-token", "", {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === "production",
+				sameSite: "lax",
+				maxAge: 0,
+				path: "/",
+			});
+			return response;
 		}
 
-		const { user } = credential;
+		const { payload } = result;
 
 		return NextResponse.json({
 			user: {
-				id: user.id,
-				key: user.key,
-				kind: user.kind,
-				firstName: user.firstName,
-				lastName: user.lastName,
-				email: credential.credential.email,
+				id: payload.userId,
+				key: payload.userKey,
+				kind: payload.kind,
+				firstName: payload.firstName,
+				lastName: payload.lastName,
+				email: payload.email,
 			},
 		});
 	} catch (error) {
