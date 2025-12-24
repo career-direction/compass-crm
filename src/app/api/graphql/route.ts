@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { makeExecutableSchema } from "@graphql-tools/schema";
+import type { ValidationRule } from "graphql";
 import depthLimit from "graphql-depth-limit";
 import { createYoga } from "graphql-yoga";
 import type { NextRequest } from "next/server";
@@ -8,6 +9,15 @@ import { resolvers } from "@/graphql/resolvers";
 import type { Context } from "@/graphql/types";
 import { extractToken, verifyToken } from "@/lib/auth";
 import { db } from "@/lib/drizzle";
+
+// graphql-yogaプラグインの型定義（このファイルでのみ使用）
+type OnValidateParams = {
+	addValidationRule: (rule: ValidationRule) => void;
+};
+
+type OnRequestParams = {
+	request: Request;
+};
 
 const typeDefs = readFileSync(
 	join(process.cwd(), "src/graphql/schema/schema.graphql"),
@@ -79,12 +89,12 @@ const { handleRequest } = createYoga<Record<string, unknown>, Context>({
 
 	plugins: [
 		{
-			onValidate: ({ addValidationRule }: any) => {
+			onValidate: ({ addValidationRule }: OnValidateParams) => {
 				addValidationRule(depthLimitRule);
 			},
 		},
 		{
-			onRequest: async ({ request }: any) => {
+			onRequest: async ({ request }: OnRequestParams) => {
 				const ip =
 					request.headers.get("x-forwarded-for") ||
 					request.headers.get("x-real-ip") ||
