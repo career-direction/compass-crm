@@ -1,5 +1,5 @@
-import { Client, fetchExchange, errorExchange } from "urql";
 import { cacheExchange } from "@urql/exchange-graphcache";
+import { Client, errorExchange, fetchExchange } from "urql";
 
 const isServerSide = typeof window === "undefined";
 
@@ -43,6 +43,7 @@ export const urqlClient = new Client({
 	suspense: false,
 	requestPolicy: "cache-first",
 	fetchOptions: () => ({
+		credentials: "include" as const,
 		headers: {
 			"Content-Type": "application/json",
 		},
