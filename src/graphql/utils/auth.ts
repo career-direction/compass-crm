@@ -1,43 +1,33 @@
 import type { AuthUser } from "@/lib/auth";
 
-export const requireAuth = (user: AuthUser | null): AuthUser => {
-	if (!user) {
-		throw new Error("認証が必要です。ログインしてください。");
-	}
-	return user;
-};
-
-export const requireAdmin = (user: AuthUser | null): AuthUser => {
-	const authUser = requireAuth(user);
-	if (authUser.kind !== 0) {
+export const requireAdmin = (user: AuthUser): AuthUser => {
+	if (user.kind !== 0) {
 		throw new Error("この操作には管理者権限が必要です。");
 	}
-	return authUser;
+	return user;
 };
 
 /**
  * トレーナー以上の権限を要求（管理者 or トレーナー）
  */
-export const requireTrainer = (user: AuthUser | null): AuthUser => {
-	const authUser = requireAuth(user);
-	if (authUser.kind !== 0 && authUser.kind !== 1) {
+export const requireTrainer = (user: AuthUser): AuthUser => {
+	if (user.kind !== 0 && user.kind !== 1) {
 		throw new Error("この操作にはトレーナー権限が必要です。");
 	}
-	return authUser;
+	return user;
 };
 
 /**
  * 特定のユーザー自身または管理者であることを要求
  */
 export const requireSelfOrAdmin = (
-	user: AuthUser | null,
+	user: AuthUser,
 	targetUserId: number,
 ): AuthUser => {
-	const authUser = requireAuth(user);
-	if (authUser.kind !== 0 && authUser.id !== targetUserId) {
+	if (user.kind !== 0 && user.id !== targetUserId) {
 		throw new Error("この操作は自分自身のデータのみ可能です。");
 	}
-	return authUser;
+	return user;
 };
 
 export const UserKind = {
