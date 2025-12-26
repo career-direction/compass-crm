@@ -5,7 +5,7 @@ import type {
 	MutationResolvers,
 	QueryResolvers,
 	Trainer,
-} from "@/generated/graphql-resolvers";
+} from "@/graphql/generated/server/graphql-resolvers";
 
 import type { Context } from "../types";
 import { requireAdmin } from "@/lib/auth";

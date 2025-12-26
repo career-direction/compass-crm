@@ -5,7 +5,7 @@ import type {
 	Client,
 	MutationResolvers,
 	QueryResolvers,
-} from "@/generated/graphql-resolvers";
+} from "@/graphql/generated/server/graphql-resolvers";
 
 import type { Context } from "../types";
 import { mapClient } from "./mappers";

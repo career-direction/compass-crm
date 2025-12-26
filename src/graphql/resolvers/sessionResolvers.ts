@@ -14,7 +14,7 @@ import type {
 	PtSessionItem,
 	QueryResolvers,
 	SessionStatus,
-} from "@/generated/graphql-resolvers";
+} from "@/graphql/generated/server/graphql-resolvers";
 
 import type { Context } from "../types";
 import { requireTrainer } from "@/lib/auth";

@@ -5,7 +5,7 @@ import type {
 	MutationResolvers,
 	QueryResolvers,
 	TrainingMenu,
-} from "@/generated/graphql-resolvers";
+} from "@/graphql/generated/server/graphql-resolvers";
 
 import type { Context } from "../types";
 import { requireTrainer } from "@/lib/auth";
