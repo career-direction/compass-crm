@@ -45,40 +45,8 @@ export const extractToken = (authHeader: string | null): string | null => {
 export const verifyToken = async (token: string): Promise<AuthResult> => {
 	const result = await verifyJWT(token);
 
-<<<<<<< HEAD
-		if (!credential?.user) {
-			return { success: false, error: "無効なトークンです" };
-		}
-
-		const { user } = credential;
-
-		return {
-			success: true,
-			user: {
-				id: user.id,
-				key: user.key,
-				kind: user.kind,
-				firstName: user.firstName,
-				lastName: user.lastName,
-				email: credential.credential.email,
-			},
-		};
-	} catch (error) {
-		console.error("Token verification error:", error);
-		return { success: false, error: "認証エラーが発生しました" };
-	}
-};
-
-export const checkPermission = (
-	user: AuthUser | null,
-	requiredKind: number | number[],
-): boolean => {
-	if (!user) {
-		return false;
-=======
 	if (!result.success) {
 		return { success: false, error: result.error };
->>>>>>> 003b80b94bd20bf93bcdbddb6b703d4d6413371e
 	}
 
 	const { payload } = result;
@@ -96,18 +64,6 @@ export const checkPermission = (
 	};
 };
 
-<<<<<<< HEAD
-export const isAdmin = (user: AuthUser | null): boolean => {
-	return checkPermission(user, 0);
-};
-
-export const isTrainer = (user: AuthUser | null): boolean => {
-	return checkPermission(user, [0, 1]); // 管理者もトレーナー権限を持つ
-};
-
-export const isClient = (user: AuthUser | null): boolean => {
-	return checkPermission(user, [0, 1, 2]); // 全員がクライアントデータにアクセス可能
-=======
 /**
  * 管理者権限を要求
  */
@@ -139,5 +95,4 @@ export const requireSelfOrAdmin = (
 		throw new Error("この操作は自分自身のデータのみ可能です。");
 	}
 	return user;
->>>>>>> 003b80b94bd20bf93bcdbddb6b703d4d6413371e
 };

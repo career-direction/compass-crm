@@ -9,7 +9,7 @@ import type {
 
 import type { Context } from "../types";
 import { mapClient } from "./mappers";
-import { requireAdmin } from "../utils/auth";
+import { requireAdmin } from "@/lib/auth";
 
 export const clientResolvers = {
 	Query: {
