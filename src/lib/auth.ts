@@ -1,8 +1,5 @@
 import { verifyJWT } from "./jwt";
 
-/**
- * ユーザー種別
- */
 export const UserKind = {
 	ADMIN: 0,
 	TRAINER: 1,
@@ -45,7 +42,7 @@ export const extractToken = (authHeader: string | null): string | null => {
 export const verifyToken = async (token: string): Promise<AuthResult> => {
 	const result = await verifyJWT(token);
 
-	if (!result.success) {
+	if (result.type === "failure") {
 		return { success: false, error: result.error };
 	}
 

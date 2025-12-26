@@ -3,18 +3,12 @@ import { jwtVerify, SignJWT } from "jose";
 // トークンの有効期限（7日間）
 const TOKEN_EXPIRATION = "7d";
 
-/**
- * JWTシークレットを取得（遅延評価）
- */
 const getJWTSecret = (): Uint8Array => {
 	const secret =
 		process.env.JWT_SECRET || "default-secret-please-change-in-production";
 	return new TextEncoder().encode(secret);
 };
 
-/**
- * JWTペイロードの型定義
- */
 export type JWTPayload = {
 	userId: number;
 	userKey: string;
@@ -24,9 +18,6 @@ export type JWTPayload = {
 	lastName: string;
 };
 
-/**
- * JWTトークンを生成する
- */
 export const generateToken = async (payload: JWTPayload): Promise<string> => {
 	const token = await new SignJWT(payload)
 		.setProtectedHeader({ alg: "HS256" })
@@ -37,18 +28,14 @@ export const generateToken = async (payload: JWTPayload): Promise<string> => {
 	return token;
 };
 
-/**
- * JWTトークンを検証してペイロードを取得する
- */
-export const verifyJWT = async (
-	token: string,
-): Promise<
-	{ success: true; payload: JWTPayload } | { success: false; error: string }
-> => {
+export type VerifyJWTResult =
+	| { type: "success"; payload: JWTPayload }
+	| { type: "failure"; error: string };
+
+export const verifyJWT = async (token: string): Promise<VerifyJWTResult> => {
 	try {
 		const { payload } = await jwtVerify(token, getJWTSecret());
 
-		// ペイロードの型チェック
 		if (
 			typeof payload.userId !== "number" ||
 			typeof payload.userKey !== "string" ||
@@ -57,11 +44,11 @@ export const verifyJWT = async (
 			typeof payload.firstName !== "string" ||
 			typeof payload.lastName !== "string"
 		) {
-			return { success: false, error: "無効なトークンペイロードです" };
+			return { type: "failure", error: "無効なトークンペイロードです" };
 		}
 
 		return {
-			success: true,
+			type: "success",
 			payload: {
 				userId: payload.userId,
 				userKey: payload.userKey,
@@ -73,8 +60,8 @@ export const verifyJWT = async (
 		};
 	} catch (error) {
 		if (error instanceof Error && error.message.includes("expired")) {
-			return { success: false, error: "トークンの有効期限が切れています" };
+			return { type: "failure", error: "トークンの有効期限が切れています" };
 		}
-		return { success: false, error: "無効なトークンです" };
+		return { type: "failure", error: "無効なトークンです" };
 	}
 };
