@@ -8,7 +8,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 
 import type { Context } from "../types";
-import { requireAuth, requireTrainer } from "../utils/auth";
+import { requireTrainer } from "@/lib/auth";
 import { formatDateString } from "./mappers";
 
 const mapLearningMaterial = (
@@ -29,16 +29,15 @@ const mapLearningMaterial = (
 export const learningMaterialResolvers = {
 	Query: {
 		learningMaterials: async (_parent, args, context) => {
-			// 認証チェック
-			requireAuth(context.user);
-
 			const limit = Math.min(args.limit ?? 50, 100);
 			const offset = args.offset ?? 0;
 
 			let query = context.db.select().from(learningMaterials);
 
 			if (args.ownerId) {
-				query = query.where(eq(learningMaterials.ownerId, args.ownerId)) as typeof query;
+				query = query.where(
+					eq(learningMaterials.ownerId, args.ownerId),
+				) as typeof query;
 			}
 
 			const rows = await query.limit(limit).offset(offset);
@@ -74,4 +73,3 @@ export const learningMaterialResolvers = {
 	Query: Pick<QueryResolvers<Context>, "learningMaterials">;
 	Mutation: Pick<MutationResolvers<Context>, "createLearningMaterial">;
 };
-

@@ -8,9 +8,9 @@ import type {
 import type {
 	Client,
 	ClientProfile as GqlClientProfile,
+	TrainerProfile as GqlTrainerProfile,
 	PtSession,
 	Trainer,
-	TrainerProfile as GqlTrainerProfile,
 	User,
 } from "@/generated/graphql-resolvers";
 
@@ -53,9 +53,7 @@ const mapClientProfile = (profile: DbClientProfile): GqlClientProfile => ({
 	exerciseHistory: profile.exerciseHistory,
 });
 
-const mapTrainerProfile = (
-	profile: DbTrainerProfile,
-): GqlTrainerProfile => ({
+const mapTrainerProfile = (profile: DbTrainerProfile): GqlTrainerProfile => ({
 	id: Number(profile.id),
 	trainerId: profile.trainerId?.toString() ?? "",
 	motivationStatement: profile.motivationStatement,

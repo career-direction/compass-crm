@@ -8,7 +8,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 
 import type { Context } from "../types";
-import { requireAdmin } from "../utils/auth";
+import { requireAdmin } from "@/lib/auth";
 import { formatDateString, mapUser } from "./mappers";
 
 export const userResolvers = {
@@ -113,4 +113,3 @@ export const userResolvers = {
 	Query: Pick<QueryResolvers<Context>, "hello" | "users">;
 	Mutation: Pick<MutationResolvers<Context>, "createUser">;
 };
-

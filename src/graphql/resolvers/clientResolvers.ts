@@ -8,14 +8,13 @@ import type {
 } from "@/generated/graphql-resolvers";
 
 import type { Context } from "../types";
-import { requireAdmin, requireAuth } from "../utils/auth";
 import { mapClient } from "./mappers";
+import { requireAdmin } from "../utils/auth";
 
 export const clientResolvers = {
 	Query: {
 		clients: async (_parent, args, context) => {
-			requireAuth(context.user);
-
+			// ページネーション強制（大量データ取得防止）
 			const limit = Math.min(args.limit ?? 50, 100); // 最大100件
 			const offset = args.offset ?? 0;
 

@@ -8,7 +8,7 @@ import type {
 } from "@/generated/graphql-resolvers";
 
 import type { Context } from "../types";
-import { requireAuth, requireTrainer } from "../utils/auth";
+import { requireTrainer } from "@/lib/auth";
 
 const parseFloatOrNull = (value: string | null): number | null => {
 	if (value === null) return null;
@@ -48,9 +48,6 @@ const mapBodyCondition = (
 export const bodyConditionResolvers = {
 	Query: {
 		bodyConditions: async (_parent, args, context) => {
-			// 認証チェック
-			requireAuth(context.user);
-
 			const limit = Math.min(args.limit ?? 50, 100);
 			const offset = args.offset ?? 0;
 
@@ -96,4 +93,3 @@ export const bodyConditionResolvers = {
 	Query: Pick<QueryResolvers<Context>, "bodyConditions">;
 	Mutation: Pick<MutationResolvers<Context>, "createBodyCondition">;
 };
-

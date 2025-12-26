@@ -8,15 +8,12 @@ import type {
 } from "@/generated/graphql-resolvers";
 
 import type { Context } from "../types";
-import { requireAdmin, requireAuth } from "../utils/auth";
+import { requireAdmin } from "@/lib/auth";
 import { mapTrainer } from "./mappers";
 
 export const trainerResolvers = {
 	Query: {
 		trainers: async (_parent, _args, context) => {
-			// 認証チェック
-			requireAuth(context.user);
-
 			const rows = await context.db
 				.select({
 					trainer: trainers,

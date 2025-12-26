@@ -1,11 +1,20 @@
-import { eq } from "drizzle-orm";
-import { userCredentials, users } from "@/db/schema";
-import { db } from "./drizzle";
+import { verifyJWT } from "./jwt";
+
+/**
+ * ユーザー種別
+ */
+export const UserKind = {
+	ADMIN: 0,
+	TRAINER: 1,
+	CLIENT: 2,
+} as const;
+
+export type UserKindType = (typeof UserKind)[keyof typeof UserKind];
 
 export type AuthUser = {
 	id: number;
 	key: string;
-	kind: number; // 0: 管理者, 1: トレーナー, 2: クライアント
+	kind: UserKindType;
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -31,24 +40,12 @@ export const extractToken = (authHeader: string | null): string | null => {
 };
 
 /**
- * トークンからユーザー情報を取得
- *
- * 注意: 現在は簡易実装（トークン = ユーザーのkey）
- * 本番環境ではJWTやセッションベースの認証に置き換えてください
+ * JWTトークンを検証してユーザー情報を取得
  */
 export const verifyToken = async (token: string): Promise<AuthResult> => {
-	try {
-		// トークンをユーザーのkeyとして検証（簡易実装）
-		const [credential] = await db
-			.select({
-				credential: userCredentials,
-				user: users,
-			})
-			.from(userCredentials)
-			.leftJoin(users, eq(userCredentials.userId, users.key))
-			.where(eq(userCredentials.userId, token))
-			.limit(1);
+	const result = await verifyJWT(token);
 
+<<<<<<< HEAD
 		if (!credential?.user) {
 			return { success: false, error: "無効なトークンです" };
 		}
@@ -78,12 +75,28 @@ export const checkPermission = (
 ): boolean => {
 	if (!user) {
 		return false;
+=======
+	if (!result.success) {
+		return { success: false, error: result.error };
+>>>>>>> 003b80b94bd20bf93bcdbddb6b703d4d6413371e
 	}
 
-	const kinds = Array.isArray(requiredKind) ? requiredKind : [requiredKind];
-	return kinds.includes(user.kind);
+	const { payload } = result;
+
+	return {
+		success: true,
+		user: {
+			id: payload.userId,
+			key: payload.userKey,
+			kind: payload.kind as UserKindType,
+			firstName: payload.firstName,
+			lastName: payload.lastName,
+			email: payload.email,
+		},
+	};
 };
 
+<<<<<<< HEAD
 export const isAdmin = (user: AuthUser | null): boolean => {
 	return checkPermission(user, 0);
 };
@@ -94,4 +107,37 @@ export const isTrainer = (user: AuthUser | null): boolean => {
 
 export const isClient = (user: AuthUser | null): boolean => {
 	return checkPermission(user, [0, 1, 2]); // 全員がクライアントデータにアクセス可能
+=======
+/**
+ * 管理者権限を要求
+ */
+export const requireAdmin = (user: AuthUser): AuthUser => {
+	if (user.kind !== UserKind.ADMIN) {
+		throw new Error("この操作には管理者権限が必要です。");
+	}
+	return user;
+};
+
+/**
+ * トレーナー以上の権限を要求（管理者 or トレーナー）
+ */
+export const requireTrainer = (user: AuthUser): AuthUser => {
+	if (user.kind !== UserKind.ADMIN && user.kind !== UserKind.TRAINER) {
+		throw new Error("この操作にはトレーナー権限が必要です。");
+	}
+	return user;
+};
+
+/**
+ * 特定のユーザー自身または管理者であることを要求
+ */
+export const requireSelfOrAdmin = (
+	user: AuthUser,
+	targetUserId: number,
+): AuthUser => {
+	if (user.kind !== UserKind.ADMIN && user.id !== targetUserId) {
+		throw new Error("この操作は自分自身のデータのみ可能です。");
+	}
+	return user;
+>>>>>>> 003b80b94bd20bf93bcdbddb6b703d4d6413371e
 };
