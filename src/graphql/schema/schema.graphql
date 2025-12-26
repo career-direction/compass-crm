@@ -4,6 +4,34 @@ type Query {
 	clients(limit: Int, offset: Int): [Client!]!
 	trainers(limit: Int, offset: Int): [Trainer!]!
 	sessions(limit: Int, offset: Int): [PTSession!]!
+	bodyConditions(clientId: Int!, limit: Int, offset: Int): [BodyCondition!]!
+	midtermHealthPurposes(
+		clientId: Int!
+		limit: Int
+		offset: Int
+	): [MidtermHealthPurpose!]!
+	assignments(sessionId: Int!, limit: Int, offset: Int): [Assignment!]!
+	learningMaterials(
+		ownerId: String
+		limit: Int
+		offset: Int
+	): [LearningMaterial!]!
+	curriculumUnits(limit: Int, offset: Int): [CurriculumUnit!]!
+	requiredFunctions(
+		curriculumUnitId: Int!
+		limit: Int
+		offset: Int
+	): [RequiredFunction!]!
+	treatmentMenus(
+		requiredFunctionId: Int
+		limit: Int
+		offset: Int
+	): [TreatmentMenu!]!
+	trainingMenus(
+		requiredFunctionId: Int
+		limit: Int
+		offset: Int
+	): [TrainingMenu!]!
 }
 
 type Mutation {
@@ -11,6 +39,16 @@ type Mutation {
 	createClient(input: CreateClientInput!): Client!
 	createTrainer(input: CreateTrainerInput!): Trainer!
 	createSession(input: CreateSessionInput!): PTSession!
+	createBodyCondition(input: CreateBodyConditionInput!): BodyCondition!
+	createMidtermHealthPurpose(
+		input: CreateMidtermHealthPurposeInput!
+	): MidtermHealthPurpose!
+	createAssignment(input: CreateAssignmentInput!): Assignment!
+	createLearningMaterial(input: CreateLearningMaterialInput!): LearningMaterial!
+	createCurriculumUnit(input: CreateCurriculumUnitInput!): CurriculumUnit!
+	createRequiredFunction(input: CreateRequiredFunctionInput!): RequiredFunction!
+	createTreatmentMenu(input: CreateTreatmentMenuInput!): TreatmentMenu!
+	createTrainingMenu(input: CreateTrainingMenuInput!): TrainingMenu!
 }
 
 type User {
@@ -145,4 +183,216 @@ input CreateSessionInput {
 	scheduledAt: String!
 	duration: Int!
 	notes: String
+}
+
+# BodyCondition - 体調記録
+type BodyCondition {
+	id: Int!
+	clientId: Int!
+	measuredAt: String!
+	weight: Float
+	bodyFat: Float
+	muscleMass: Float
+	skeletalMuscleRate: Float
+	bmi: Float
+	bmr: Float
+	avgSleepTime: Float
+	avgRespirationRate: Float
+	sympathetic: Float
+	parasympathetic: Float
+	bust: Float
+	underbust: Float
+	waist: Float
+	hip: Float
+	armCircumference: Float
+	buttockHeight: Float
+	thighCircumference: Float
+	calfCircumference: Float
+	ffd: Float
+	hwd: Float
+	memo: String
+}
+
+input CreateBodyConditionInput {
+	clientId: Int!
+	measuredAt: String!
+	weight: Float
+	bodyFat: Float
+	muscleMass: Float
+	skeletalMuscleRate: Float
+	bmi: Float
+	bmr: Float
+	avgSleepTime: Float
+	avgRespirationRate: Float
+	sympathetic: Float
+	parasympathetic: Float
+	bust: Float
+	underbust: Float
+	waist: Float
+	hip: Float
+	armCircumference: Float
+	buttockHeight: Float
+	thighCircumference: Float
+	calfCircumference: Float
+	ffd: Float
+	hwd: Float
+	memo: String
+}
+
+# MidtermHealthPurpose - 中期健康目標
+type MidtermHealthPurpose {
+	id: Int!
+	key: String!
+	clientId: Int!
+	purpose: String!
+	months: Int!
+	settingDate: String!
+	startDate: String!
+	memo: String
+	createdAt: String!
+	updatedAt: String!
+}
+
+input CreateMidtermHealthPurposeInput {
+	clientId: Int!
+	purpose: String!
+	months: Int!
+	settingDate: String!
+	startDate: String!
+	memo: String
+}
+
+# Assignment - 課題
+type Assignment {
+	id: Int!
+	key: String!
+	ptSessionId: Int!
+	dueDate: String!
+	taskType: String!
+	taskId: Int!
+	createdAt: String!
+	updatedAt: String!
+}
+
+input CreateAssignmentInput {
+	ptSessionId: Int!
+	dueDate: String!
+	taskType: String!
+	taskId: Int!
+}
+
+# LearningMaterial - 学習教材
+type LearningMaterial {
+	id: Int!
+	ownerId: String!
+	key: String!
+	name: String!
+	status: String!
+	sourceUrl: String!
+	contentType: String!
+	contentId: Int!
+	createdAt: String!
+	updatedAt: String!
+}
+
+input CreateLearningMaterialInput {
+	ownerId: String!
+	name: String!
+	status: String!
+	sourceUrl: String!
+	contentType: String!
+	contentId: Int!
+}
+
+# CurriculumUnit - カリキュラム単元
+type CurriculumUnit {
+	id: Int!
+	name: String!
+	type: String!
+	overview: String!
+	overviewUrl: String!
+	evaluationCriteria: String!
+	evaluationCriteriaUrl: String!
+	requiredFunctions: [RequiredFunction!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
+input CreateCurriculumUnitInput {
+	name: String!
+	type: String!
+	overview: String!
+	overviewUrl: String!
+	evaluationCriteria: String!
+	evaluationCriteriaUrl: String!
+}
+
+# RequiredFunction - 必須機能
+type RequiredFunction {
+	id: Int!
+	curriculumUnitId: Int!
+	name: String!
+	overview: String!
+	overviewUrl: String!
+	evaluationCriteria: String!
+	evaluationCriteriaUrl: String!
+	treatmentMenus: [TreatmentMenu!]!
+	trainingMenus: [TrainingMenu!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
+input CreateRequiredFunctionInput {
+	curriculumUnitId: Int!
+	name: String!
+	overview: String!
+	overviewUrl: String!
+	evaluationCriteria: String!
+	evaluationCriteriaUrl: String!
+}
+
+# TreatmentMenu - 施術メニュー
+type TreatmentMenu {
+	id: Int!
+	name: String!
+	requiredFunctionId: Int!
+	learningMaterialId: Int!
+	tips: String!
+	commonErrors: [String!]!
+	targetMuscles: [String!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
+input CreateTreatmentMenuInput {
+	name: String!
+	requiredFunctionId: Int!
+	learningMaterialId: Int!
+	tips: String!
+	commonErrors: [String!]!
+	targetMuscles: [String!]!
+}
+
+# TrainingMenu - トレーニングメニュー
+type TrainingMenu {
+	id: Int!
+	name: String!
+	requiredFunctionId: Int!
+	learningMaterialId: Int!
+	tips: String!
+	commonErrors: [String!]!
+	targetMuscles: [String!]!
+	level: Int!
+	createdAt: String!
+	updatedAt: String!
+}
+
+input CreateTrainingMenuInput {
+	name: String!
+	requiredFunctionId: Int!
+	learningMaterialId: Int!
+	tips: String!
+	commonErrors: [String!]!
+	targetMuscles: [String!]!
+	level: Int!
 }

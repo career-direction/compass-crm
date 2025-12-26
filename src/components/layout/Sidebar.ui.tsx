@@ -9,9 +9,9 @@ import {
 	IconUser,
 	IconUsers,
 } from "@tabler/icons-react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { memo, useMemo } from "react";
-import Image from "next/image";
 
 type SidebarProps = {
 	isOpen: boolean;

@@ -3,8 +3,8 @@
 import { Group, SimpleGrid, Skeleton, Stack } from "@mantine/core";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
-import { TrainerCardContent } from "../components/TrainerCardContent.ui";
 import { useGetTrainersQuery } from "@/generated/gql/urql";
+import { TrainerCardContent } from "../components/TrainerCardContent.ui";
 
 export const TrainerList = () => {
 	const [{ data, fetching, error }] = useGetTrainersQuery();

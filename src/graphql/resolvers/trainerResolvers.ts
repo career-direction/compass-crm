@@ -1,11 +1,14 @@
 import { eq } from "drizzle-orm";
+
 import { trainerProfiles, trainers, users } from "@/db/schema";
 import type {
 	MutationResolvers,
 	QueryResolvers,
 	Trainer,
 } from "@/generated/graphql-resolvers";
+
 import type { Context } from "../types";
+import { requireAdmin } from "@/lib/auth";
 import { mapTrainer } from "./mappers";
 
 export const trainerResolvers = {
@@ -33,6 +36,9 @@ export const trainerResolvers = {
 
 	Mutation: {
 		createTrainer: async (_parent, args, context) => {
+			// 管理者のみトレーナー作成可能
+			requireAdmin(context.user);
+
 			const { userId } = args.input;
 			const [createdTrainer] = await context.db
 				.insert(trainers)

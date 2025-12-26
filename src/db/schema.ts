@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
 	bigint,
 	bigserial,
@@ -10,7 +11,6 @@ import {
 	uuid,
 	varchar,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 
 export const users = pgTable("users", {
 	id: bigserial("id", { mode: "number" }).primaryKey(),

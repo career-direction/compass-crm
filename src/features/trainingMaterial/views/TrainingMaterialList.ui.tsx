@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
 

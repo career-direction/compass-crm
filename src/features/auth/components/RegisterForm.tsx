@@ -9,8 +9,11 @@ import {
 	Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CPButton } from "@/components/ui/CPButton";
+import { useAuth } from "../contexts/AuthContext";
 import {
 	validateEmail,
 	validateName,
@@ -28,6 +31,8 @@ type RegisterFormData = {
 
 export function RegisterForm() {
 	const [loading, setLoading] = useState(false);
+	const { refetch } = useAuth();
+	const router = useRouter();
 
 	const form = useForm<RegisterFormData>({
 		initialValues: {
@@ -51,10 +56,45 @@ export function RegisterForm() {
 	const handleSubmit = async (values: RegisterFormData) => {
 		setLoading(true);
 		try {
-			console.log("Registration data:", values);
-			// TODO: Implement actual registration logic
+			const response = await fetch("/api/auth/register", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					email: values.email,
+					password: values.password,
+					firstName: values.firstName,
+					lastName: values.lastName,
+				}),
+			});
+
+			const data = await response.json();
+
+			if (!response.ok) {
+				notifications.show({
+					title: "登録失敗",
+					message: data.error,
+					color: "red",
+				});
+				return;
+			}
+
+			// 認証状態を更新
+			await refetch();
+
+			notifications.show({
+				title: "登録完了",
+				message: `${data.user.lastName} ${data.user.firstName}さん、ようこそ！`,
+				color: "green",
+			});
+
+			router.push("/");
 		} catch (error) {
 			console.error("Registration error:", error);
+			notifications.show({
+				title: "エラー",
+				message: "アカウント作成中にエラーが発生しました",
+				color: "red",
+			});
 		} finally {
 			setLoading(false);
 		}
@@ -103,7 +143,7 @@ export function RegisterForm() {
 						{...form.getInputProps("confirmPassword")}
 					/>
 
-					<CPButton fullWidth mt="xl" loading={loading}>
+					<CPButton fullWidth mt="xl" loading={loading} type="submit">
 						アカウント作成
 					</CPButton>
 				</Stack>

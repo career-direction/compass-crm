@@ -1,7 +1,9 @@
+import type { AuthUser } from "@/lib/auth";
 import type { DrizzleDB } from "@/lib/drizzle";
 
 export type Context = {
 	db: DrizzleDB;
+	user: AuthUser;
 };
 
 export type CreateUserInput = {

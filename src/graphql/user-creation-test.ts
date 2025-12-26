@@ -173,8 +173,15 @@ export const GENDER_DESCRIPTION = {
 	2: "その他 (Other)",
 };
 
+// テストケースの型定義
+type TestCase = {
+	name: string;
+	description: string;
+	command: string;
+};
+
 // 実行用ヘルパー関数のサンプル
-export const executeTest = async (testCase: any) => {
+export const executeTest = async (testCase: TestCase) => {
 	console.log(`\n🧪 ${testCase.name}`);
 	console.log(`📝 ${testCase.description}`);
 	console.log(`💻 ${testCase.command}`);
