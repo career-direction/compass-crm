@@ -1,7 +1,7 @@
 "use client";
 
 import { Provider } from "urql";
-import { urqlClient } from "../../lib/urql-client";
+import { urqlClient } from "../../lib/urql/urql-client";
 
 type UrqlProviderProps = {
 	children: React.ReactNode;

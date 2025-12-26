@@ -1,5 +1,5 @@
-import type { DrizzleDB } from "@/lib/drizzle";
-import { db } from "@/lib/drizzle";
+import type { DrizzleDB } from "@/lib/drizzle/drizzle";
+import { db } from "@/lib/drizzle/drizzle";
 
 export type GraphQLContext = {
 	db: DrizzleDB;

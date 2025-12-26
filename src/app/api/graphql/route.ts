@@ -8,7 +8,7 @@ import type { NextRequest } from "next/server";
 import { resolvers } from "@/graphql/resolvers";
 import type { Context } from "@/graphql/types";
 import { extractToken, verifyToken } from "@/lib/auth";
-import { db } from "@/lib/drizzle";
+import { db } from "@/lib/drizzle/drizzle";
 
 // graphql-yogaプラグインの型定義（このファイルでのみ使用）
 type OnValidateParams = {

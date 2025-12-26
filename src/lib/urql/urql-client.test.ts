@@ -14,7 +14,7 @@ describe("urqlクライアント設定", () => {
 	test("urqlClientが正しくエクスポートされている", async () => {
 		// Act
 		const { urqlClient, default: defaultClient } = await import(
-			"./urql-client"
+			"./urql/urql-client"
 		);
 
 		// Assert
@@ -25,7 +25,7 @@ describe("urqlクライアント設定", () => {
 
 	test("urqlClientがClientインスタンスである", async () => {
 		// Act
-		const { urqlClient } = await import("./urql-client");
+		const { urqlClient } = await import("./urql/urql-client");
 
 		// Assert
 		expect(urqlClient).toHaveProperty("suspense");
@@ -40,7 +40,7 @@ describe("urqlクライアント設定", () => {
 		});
 
 		// Act
-		const { urqlClient: serverClient } = await import("./urql-client");
+		const { urqlClient: serverClient } = await import("./urql/urql-client");
 
 		// サーバーサイドでのテスト
 		expect(serverClient).toBeDefined();
@@ -53,7 +53,7 @@ describe("urqlクライアント設定", () => {
 		});
 
 		// Act
-		const { urqlClient: clientClient } = await import("./urql-client");
+		const { urqlClient: clientClient } = await import("./urql/urql-client");
 
 		// クライアントサイドでのテスト
 		expect(clientClient).toBeDefined();
@@ -61,7 +61,7 @@ describe("urqlクライアント設定", () => {
 
 	test("urqlクライアントの基本設定が正しい", async () => {
 		// Act
-		const { urqlClient } = await import("./urql-client");
+		const { urqlClient } = await import("./urql/urql-client");
 
 		// Assert
 		expect(urqlClient.suspense).toBe(false);
