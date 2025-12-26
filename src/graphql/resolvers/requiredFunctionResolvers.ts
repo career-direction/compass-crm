@@ -10,7 +10,7 @@ import type {
 } from "@/graphql/generated/server/graphql-resolvers";
 
 import type { Context } from "../types";
-import { requireTrainer } from "@/lib/auth";
+import { requireTrainer } from "@/features/auth/auth";
 import { formatDateString } from "./mappers";
 
 const mapTreatmentMenu = (

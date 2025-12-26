@@ -1,4 +1,4 @@
-import { verifyJWT } from "./jwt";
+import { verifyJWT } from "../../lib/jwt";
 
 export const UserKind = {
 	ADMIN: 0,

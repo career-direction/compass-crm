@@ -1,4 +1,4 @@
-import type { AuthUser } from "@/lib/auth";
+import type { AuthUser } from "@/features/auth/auth";
 import type { DrizzleDB } from "@/lib/drizzle/drizzle";
 
 export type Context = {
