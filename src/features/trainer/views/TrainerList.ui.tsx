@@ -19,7 +19,6 @@ export const TrainerListUI = ({
 	error,
 	onNewTrainerClick,
 }: TrainerListProps) => {
-	console.log(trainers);
 	const skeletonItems = Array.from({ length: 6 });
 
 	const header = (
