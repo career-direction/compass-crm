@@ -3,7 +3,7 @@ import { jwtVerify, SignJWT } from "jose";
 // トークンの有効期限（7日間）
 const TOKEN_EXPIRATION = "7d";
 
-const getJWTSecret = (): Uint8Array => {
+const getJWTSecret = () => {
 	const secret =
 		process.env.JWT_SECRET || "default-secret-please-change-in-production";
 	return new TextEncoder().encode(secret);

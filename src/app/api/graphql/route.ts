@@ -66,14 +66,15 @@ const { handleRequest } = createYoga<Record<string, unknown>, Context>({
 		}
 
 		const result = await verifyToken(token);
-		if (!result.success) {
-			throw new Error("認証に失敗しました");
+		switch (result.type) {
+			case "success":
+				return {
+					db,
+					user: result.data,
+				};
+			case "failure":
+				throw new Error("認証に失敗しました");
 		}
-
-		return {
-			db,
-			user: result.user,
-		};
 	},
 
 	graphqlEndpoint: "/api/graphql",

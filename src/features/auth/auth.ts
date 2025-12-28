@@ -18,8 +18,8 @@ export type AuthUser = {
 };
 
 export type AuthResult =
-	| { success: true; user: AuthUser }
-	| { success: false; error: string };
+	| { type: "success"; data: AuthUser }
+	| { type: "failure"; error: string };
 
 /**
  * Authorizationヘッダーからトークンを抽出
@@ -43,14 +43,14 @@ export const verifyToken = async (token: string): Promise<AuthResult> => {
 	const result = await verifyJWT(token);
 
 	if (result.type === "failure") {
-		return { success: false, error: result.error };
+		return { type: "failure", error: result.error };
 	}
 
 	const { payload } = result;
 
 	return {
-		success: true,
-		user: {
+		type: "success",
+		data: {
 			id: payload.userId,
 			key: payload.userKey,
 			kind: payload.kind as UserKindType,
