@@ -5,11 +5,13 @@ import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
 import { TrainerCardContent } from "../components/TrainerCardContent.ui";
 import { useGetTrainersQuery } from "@/graphql/generated/client/gql/urql";
+import { toTrainers } from "../trainer.mapper";
 
 export const TrainerList = () => {
 	const [{ data, fetching, error }] = useGetTrainersQuery();
 
-	const trainers = data?.trainers ?? [];
+	const trainers = data ? toTrainers(data) : [];
+
 	const skeletonItems = Array.from({ length: 6 });
 
 	const handleNewTrainerClick = () => {
@@ -59,8 +61,8 @@ export const TrainerList = () => {
 				{trainers.map((trainer) => (
 					<CPCard key={trainer.id}>
 						<TrainerCardContent
-							firstName={trainer.user.first_name}
-							lastName={trainer.user.last_name}
+							firstName={trainer.firstName}
+							lastName={trainer.lastName}
 						/>
 					</CPCard>
 				))}
