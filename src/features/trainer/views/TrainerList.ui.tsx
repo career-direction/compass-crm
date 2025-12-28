@@ -4,23 +4,27 @@ import { Group, SimpleGrid, Skeleton, Stack } from "@mantine/core";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
 import { TrainerCardContent } from "../components/TrainerCardContent.ui";
-import { useGetTrainersQuery } from "@/graphql/generated/client/gql/urql";
-import { toTrainers } from "../trainer.mapper";
+import type { TrainerType } from "../types/trainer";
 
-export const TrainerList = () => {
-	const [{ data, fetching, error }] = useGetTrainersQuery();
+type TrainerListProps = {
+	trainers: TrainerType[];
+	fetching: boolean;
+	error?: string;
+	onNewTrainerClick: () => void;
+};
 
-	const trainers = data ? toTrainers(data) : [];
-
+export const TrainerListUI = ({
+	trainers,
+	fetching,
+	error,
+	onNewTrainerClick,
+}: TrainerListProps) => {
+	console.log(trainers);
 	const skeletonItems = Array.from({ length: 6 });
-
-	const handleNewTrainerClick = () => {
-		console.log("新規トレーナー登録ボタンがクリックされました");
-	};
 
 	const header = (
 		<Group justify="space-between" align="center">
-			<CPButton onClick={handleNewTrainerClick}>新規トレーナー登録</CPButton>
+			<CPButton onClick={onNewTrainerClick}>新規トレーナー登録</CPButton>
 		</Group>
 	);
 
@@ -48,7 +52,7 @@ export const TrainerList = () => {
 		return (
 			<Stack gap="xl">
 				{header}
-				<div>エラーが発生しました: {error.message}</div>
+				<div>エラーが発生しました: {error}</div>
 			</Stack>
 		);
 	}
