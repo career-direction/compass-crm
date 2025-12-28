@@ -7,7 +7,7 @@ import type {
 	QueryResolvers,
 } from "@/graphql/generated/server/graphql-resolvers";
 
-import type { Context } from "../types";
+import type { Context } from "../context";
 import { mapClient } from "./mappers";
 import { requireAdmin } from "@/features/auth/auth";
 

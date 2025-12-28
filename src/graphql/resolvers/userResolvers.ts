@@ -7,7 +7,7 @@ import type {
 	User,
 } from "@/graphql/generated/server/graphql-resolvers";
 
-import type { Context } from "../types";
+import type { Context } from "../context";
 import { requireAdmin } from "@/features/auth/auth";
 import { formatDateString, mapUser } from "./mappers";
 

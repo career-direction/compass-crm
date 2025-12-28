@@ -6,7 +6,7 @@ import depthLimit from "graphql-depth-limit";
 import { createYoga } from "graphql-yoga";
 import type { NextRequest } from "next/server";
 import { resolvers } from "@/graphql/resolvers";
-import type { Context } from "@/graphql/types";
+import type { Context } from "@/graphql/context";
 import { extractToken, verifyToken } from "@/features/auth/auth";
 import { db } from "@/lib/drizzle/drizzle";
 

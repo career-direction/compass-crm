@@ -7,7 +7,7 @@ import type {
 	TrainingMenu,
 } from "@/graphql/generated/server/graphql-resolvers";
 
-import type { Context } from "../types";
+import type { Context } from "../context";
 import { requireTrainer } from "@/features/auth/auth";
 import { formatDateString } from "./mappers";
 
