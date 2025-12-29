@@ -1,45 +1,76 @@
 "use client";
 
-import { Group, Modal, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import {
+	Center,
+	Group,
+	Loader,
+	Modal,
+	SimpleGrid,
+	Stack,
+	Text,
+	Title,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
+import type { TrainingMaterialType } from "../types/trainingMaterial";
 import { NewTrainingMaterialModal } from "../components/NewTrainingMaterialModal.container";
 
-export const TrainingMaterialList = () => {
+type TrainingMaterialListUIProps = {
+	materials: TrainingMaterialType[];
+	fetching: boolean;
+	error?: string;
+	onAddSuccess: () => void;
+};
+
+const contentTypeLabel: Record<string, string> = {
+	video: "動画",
+	document: "資料",
+	audio: "音声",
+};
+
+const statusLabel: Record<string, string> = {
+	draft: "下書き",
+	published: "公開",
+	archived: "アーカイブ",
+};
+
+export const TrainingMaterialListUI = ({
+	materials,
+	fetching,
+	error,
+	onAddSuccess,
+}: TrainingMaterialListUIProps) => {
 	const [opened, { open, close }] = useDisclosure(false);
 
 	const handleFilterClick = () => {
 		console.log("フィルターボタンがクリックされました");
 	};
 
-	const handleDetailClick = () => {
-		console.log("詳細を見るボタンがクリックされました");
+	const handleDetailClick = (key: string) => {
+		console.log("詳細を見る:", key);
 	};
 
-	const trainingMaterials = [
-		{
-			id: 1,
-			title: "筋力トレーニング基礎",
-			category: "筋力",
-			type: "動画",
-			duration: "15分",
-		},
-		{
-			id: 2,
-			title: "栄養学入門",
-			category: "栄養",
-			type: "資料",
-			duration: "20分",
-		},
-		{
-			id: 3,
-			title: "ストレッチ方法",
-			category: "柔軟性",
-			type: "動画",
-			duration: "10分",
-		},
-	];
+	const handleClose = () => {
+		close();
+		onAddSuccess();
+	};
+
+	if (fetching) {
+		return (
+			<Center h={200}>
+				<Loader />
+			</Center>
+		);
+	}
+
+	if (error) {
+		return (
+			<Center h={200}>
+				<Text c="red">{error}</Text>
+			</Center>
+		);
+	}
 
 	return (
 		<>
@@ -54,39 +85,52 @@ export const TrainingMaterialList = () => {
 				</Group>
 			</Group>
 
-			<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
-				{trainingMaterials.map((material) => (
-					<CPCard key={material.id}>
-						<Stack gap="md">
-							<Title order={3} size="h4">
-								{material.title}
-							</Title>
-							<Group justify="space-between">
-								<Text size="sm" c="dimmed">
-									カテゴリ: {material.category}
-								</Text>
-								<Text size="sm" c="dimmed">
-									{material.type} / {material.duration}
-								</Text>
-							</Group>
-							<CPButton
-								variant="light"
-								fullWidth
-								mt="md"
-								radius="md"
-								size="sm"
-								onClick={handleDetailClick}
-							>
-								詳細を見る
-							</CPButton>
-						</Stack>
-					</CPCard>
-				))}
-			</SimpleGrid>
+			{materials.length === 0 ? (
+				<Center h={200}>
+					<Text c="dimmed">教材がありません</Text>
+				</Center>
+			) : (
+				<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
+					{materials.map((material) => (
+						<CPCard key={material.id}>
+							<Stack gap="md">
+								<Title order={3} size="h4">
+									{material.name}
+								</Title>
+								<Group justify="space-between">
+									<Text size="sm" c="dimmed">
+										ステータス: {statusLabel[material.status] || material.status}
+									</Text>
+									<Text size="sm" c="dimmed">
+										{contentTypeLabel[material.contentType] ||
+											material.contentType}
+									</Text>
+								</Group>
+								<CPButton
+									variant="light"
+									fullWidth
+									mt="md"
+									radius="md"
+									size="sm"
+									onClick={() => handleDetailClick(material.key)}
+								>
+									詳細を見る
+								</CPButton>
+							</Stack>
+						</CPCard>
+					))}
+				</SimpleGrid>
+			)}
 
 			{/* 教材追加モーダル */}
-			<Modal opened={opened} onClose={close} title="新しい教材" centered size="lg">
-				<NewTrainingMaterialModal onClose={close} />
+			<Modal
+				opened={opened}
+				onClose={close}
+				title="新しい教材"
+				centered
+				size="lg"
+			>
+				<NewTrainingMaterialModal onClose={handleClose} />
 			</Modal>
 		</>
 	);
