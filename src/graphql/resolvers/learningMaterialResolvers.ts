@@ -53,6 +53,7 @@ export const learningMaterialResolvers = {
 			const { ownerId, name, status, sourceUrl, contentType, contentId } =
 				args.input;
 
+			const now = new Date();
 			const [created] = await context.db
 				.insert(learningMaterials)
 				.values({
@@ -62,6 +63,8 @@ export const learningMaterialResolvers = {
 					sourceUrl,
 					contentType,
 					contentId,
+					createdAt: now,
+					updatedAt: now,
 				})
 				.returning();
 

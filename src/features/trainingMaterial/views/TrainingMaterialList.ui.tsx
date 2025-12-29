@@ -4,7 +4,7 @@ import { Group, Modal, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
-import { NewTrainingMaterialModal } from "../components/NewTrainingMaterialModal.ui";
+import { NewTrainingMaterialModal } from "../components/NewTrainingMaterialModal.container";
 
 export const TrainingMaterialList = () => {
 	const [opened, { open, close }] = useDisclosure(false);
@@ -86,7 +86,8 @@ export const TrainingMaterialList = () => {
 
 			{/* 教材追加モーダル */}
 			<Modal opened={opened} onClose={close} title="新しい教材" centered size="lg">
-				<NewTrainingMaterialModal onClose={close} />
+				{/* TODO: 実際のownerIdを認証情報から取得する */}
+				<NewTrainingMaterialModal onClose={close} ownerId="00000000-0000-0000-0000-000000000000" />
 			</Modal>
 		</>
 	);

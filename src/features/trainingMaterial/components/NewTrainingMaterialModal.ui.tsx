@@ -1,110 +1,100 @@
 "use client";
 
-import { Group, Select, Stack, Textarea, TextInput } from "@mantine/core";
-import { useState } from "react";
+import { Group, NumberInput, Select, Stack, TextInput } from "@mantine/core";
 import { CPButton } from "@/components/ui/CPButton";
 
-type NewTrainingMaterialModalProps = {
-	onClose: () => void;
+export type TrainingMaterialFormData = {
+	name: string;
+	status: string;
+	sourceUrl: string;
+	contentType: string;
+	contentId: number | string;
 };
 
-export const NewTrainingMaterialModal = ({
+type NewTrainingMaterialModalUIProps = {
+	formData: TrainingMaterialFormData;
+	onFormChange: (data: TrainingMaterialFormData) => void;
+	onSubmit: () => void;
+	onClose: () => void;
+	isSubmitting: boolean;
+};
+
+const statusOptions = [
+	{ value: "draft", label: "下書き" },
+	{ value: "published", label: "公開" },
+	{ value: "archived", label: "アーカイブ" },
+];
+
+const contentTypeOptions = [
+	{ value: "video", label: "動画" },
+	{ value: "document", label: "資料" },
+	{ value: "audio", label: "音声" },
+];
+
+export const NewTrainingMaterialModalUI = ({
+	formData,
+	onFormChange,
+	onSubmit,
 	onClose,
-}: NewTrainingMaterialModalProps) => {
-	const [formData, setFormData] = useState({
-		title: "",
-		category: "",
-		type: "",
-		duration: "",
-		description: "",
-	});
-
-	const categoryOptions = [
-		{ value: "strength", label: "筋力" },
-		{ value: "nutrition", label: "栄養" },
-		{ value: "flexibility", label: "柔軟性" },
-		{ value: "cardio", label: "有酸素" },
-		{ value: "recovery", label: "リカバリー" },
-	];
-
-	const typeOptions = [
-		{ value: "video", label: "動画" },
-		{ value: "document", label: "資料" },
-		{ value: "audio", label: "音声" },
-	];
-
-	const durationOptions = [
-		{ value: "5", label: "5分" },
-		{ value: "10", label: "10分" },
-		{ value: "15", label: "15分" },
-		{ value: "20", label: "20分" },
-		{ value: "30", label: "30分" },
-		{ value: "60", label: "60分" },
-	];
-
-	const handleSubmit = () => {
-		console.log("教材データ:", formData);
-		onClose();
-	};
-
+	isSubmitting,
+}: NewTrainingMaterialModalUIProps) => {
 	return (
 		<Stack gap="md">
 			<TextInput
-				label="教材タイトル"
-				placeholder="教材のタイトルを入力"
-				value={formData.title}
+				label="教材名"
+				placeholder="教材名を入力"
+				value={formData.name}
 				onChange={(event) =>
-					setFormData({ ...formData, title: event.currentTarget.value })
+					onFormChange({ ...formData, name: event.currentTarget.value })
 				}
 				required
 			/>
 
 			<Select
-				label="カテゴリ"
-				placeholder="カテゴリを選択"
-				data={categoryOptions}
-				value={formData.category}
-				onChange={(value) =>
-					setFormData({ ...formData, category: value || "" })
-				}
+				label="ステータス"
+				placeholder="ステータスを選択"
+				data={statusOptions}
+				value={formData.status}
+				onChange={(value) => onFormChange({ ...formData, status: value || "" })}
 				required
 			/>
 
-			<Select
-				label="タイプ"
-				placeholder="タイプを選択"
-				data={typeOptions}
-				value={formData.type}
-				onChange={(value) => setFormData({ ...formData, type: value || "" })}
-				required
-			/>
-
-			<Select
-				label="所要時間"
-				placeholder="所要時間を選択"
-				data={durationOptions}
-				value={formData.duration}
-				onChange={(value) =>
-					setFormData({ ...formData, duration: value || "" })
-				}
-				required
-			/>
-
-			<Textarea
-				label="説明"
-				placeholder="教材の説明を入力"
-				rows={4}
-				value={formData.description}
+			<TextInput
+				label="ソースURL"
+				placeholder="https://example.com/video.mp4"
+				value={formData.sourceUrl}
 				onChange={(event) =>
-					setFormData({ ...formData, description: event.currentTarget.value })
+					onFormChange({ ...formData, sourceUrl: event.currentTarget.value })
 				}
+				required
+			/>
+
+			<Select
+				label="コンテンツタイプ"
+				placeholder="コンテンツタイプを選択"
+				data={contentTypeOptions}
+				value={formData.contentType}
+				onChange={(value) =>
+					onFormChange({ ...formData, contentType: value || "" })
+				}
+				required
+			/>
+
+			<NumberInput
+				label="コンテンツID"
+				placeholder="コンテンツIDを入力"
+				value={formData.contentId}
+				onChange={(value) => onFormChange({ ...formData, contentId: value })}
+				required
 			/>
 
 			<Group justify="flex-end" mt="md">
-				<CPButton variant="outline" onClick={onClose}>
+				<CPButton variant="outline" onClick={onClose} disabled={isSubmitting}>
 					キャンセル
 				</CPButton>
-				<CPButton onClick={handleSubmit}>教材を追加</CPButton>
+				<CPButton onClick={onSubmit} loading={isSubmitting}>
+					教材を追加
+				</CPButton>
 			</Group>
 		</Stack>
 	);
