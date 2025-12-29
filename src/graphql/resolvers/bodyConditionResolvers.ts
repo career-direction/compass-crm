@@ -1,14 +1,13 @@
 import { eq } from "drizzle-orm";
 
 import { bodyConditions } from "@/db/schema";
+import { requireTrainer } from "@/features/auth/auth";
 import type {
 	BodyCondition,
 	MutationResolvers,
 	QueryResolvers,
 } from "@/graphql/generated/server/graphql-resolvers";
-
 import type { Context } from "../context";
-import { requireTrainer } from "@/features/auth/auth";
 
 const parseFloatOrNull = (value: string | null): number | null => {
 	if (value === null) return null;

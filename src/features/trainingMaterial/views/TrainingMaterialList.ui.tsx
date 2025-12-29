@@ -13,8 +13,8 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
-import type { TrainingMaterialType } from "../types/trainingMaterial";
 import { NewTrainingMaterialModal } from "../components/NewTrainingMaterialModal.container";
+import type { TrainingMaterialType } from "../types/trainingMaterial";
 
 type TrainingMaterialListUIProps = {
 	materials: TrainingMaterialType[];
@@ -99,7 +99,8 @@ export const TrainingMaterialListUI = ({
 								</Title>
 								<Group justify="space-between">
 									<Text size="sm" c="dimmed">
-										ステータス: {statusLabel[material.status] || material.status}
+										ステータス:{" "}
+										{statusLabel[material.status] || material.status}
 									</Text>
 									<Text size="sm" c="dimmed">
 										{contentTypeLabel[material.contentType] ||

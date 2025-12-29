@@ -1,13 +1,13 @@
 import { eq } from "drizzle-orm";
 
 import { learningMaterials } from "@/db/schema";
+import { requireTrainer } from "@/features/auth/auth";
 import type {
 	LearningMaterial,
 	MutationResolvers,
 	QueryResolvers,
 } from "@/graphql/generated/server/graphql-resolvers";
 import type { Context } from "../context";
-import { requireTrainer } from "@/features/auth/auth";
 import { formatDateString } from "./mappers";
 
 const mapLearningMaterial = (

@@ -1,14 +1,13 @@
 import { eq } from "drizzle-orm";
 
 import { userCredentials, users } from "@/db/schema";
+import { requireAdmin } from "@/features/auth/auth";
 import type {
 	MutationResolvers,
 	QueryResolvers,
 	User,
 } from "@/graphql/generated/server/graphql-resolvers";
-
 import type { Context } from "../context";
-import { requireAdmin } from "@/features/auth/auth";
 import { formatDateString, mapUser } from "./mappers";
 
 export const userResolvers = {

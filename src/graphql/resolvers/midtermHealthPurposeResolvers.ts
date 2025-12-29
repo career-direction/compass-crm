@@ -1,14 +1,13 @@
 import { eq } from "drizzle-orm";
 
 import { midtermHealthPurposes } from "@/db/schema";
+import { requireTrainer } from "@/features/auth/auth";
 import type {
 	MidtermHealthPurpose,
 	MutationResolvers,
 	QueryResolvers,
 } from "@/graphql/generated/server/graphql-resolvers";
-
 import type { Context } from "../context";
-import { requireTrainer } from "@/features/auth/auth";
 import { formatDateString } from "./mappers";
 
 const mapMidtermHealthPurpose = (

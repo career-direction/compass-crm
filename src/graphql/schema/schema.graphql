@@ -37,6 +37,7 @@ type Query {
 type Mutation {
 	createUser(input: CreateUserInput!): User!
 	createClient(input: CreateClientInput!): Client!
+	createClientWithProfile(input: CreateClientWithProfileInput!): Client!
 	createTrainer(input: CreateTrainerInput!): Trainer!
 	createSession(input: CreateSessionInput!): PTSession!
 	createBodyCondition(input: CreateBodyConditionInput!): BodyCondition!
@@ -171,6 +172,21 @@ input CreateUserInput {
 
 input CreateClientInput {
 	userId: String!
+}
+
+input CreateClientWithProfileInput {
+	# User情報
+	firstName: String!
+	lastName: String!
+	firstNameKana: String!
+	lastNameKana: String!
+	birthDate: String!
+	gender: Int!
+	# ClientProfile情報
+	occupation: String!
+	hobby: String!
+	allowSnsPost: String!
+	exerciseHistory: String!
 }
 
 input CreateTrainerInput {

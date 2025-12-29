@@ -1,9 +1,11 @@
 "use client";
 
-import { Badge, Group, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Badge, Group, Modal, SimpleGrid, Stack, Text } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { IconMail, IconPhone, IconUser } from "@tabler/icons-react";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
+import { NewClientModal } from "../components/NewClientModal.container";
 
 const clients = [
 	{
@@ -33,9 +35,7 @@ const clients = [
 ];
 
 export const ClientList = () => {
-	const handleNewClientClick = () => {
-		console.log("新規クライアント登録ボタンがクリックされました");
-	};
+	const [opened, { open, close }] = useDisclosure(false);
 
 	const handleDetailClick = () => {
 		console.log("詳細ボタンがクリックされました");
@@ -48,7 +48,7 @@ export const ClientList = () => {
 	return (
 		<Stack gap="xl">
 			<Group justify="space-between" align="center">
-				<CPButton onClick={handleNewClientClick}>新規クライアント登録</CPButton>
+				<CPButton onClick={open}>新規クライアント登録</CPButton>
 			</Group>
 
 			<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
@@ -93,6 +93,17 @@ export const ClientList = () => {
 					</CPCard>
 				))}
 			</SimpleGrid>
+
+			{/* クライアント追加モーダル */}
+			<Modal
+				opened={opened}
+				onClose={close}
+				title="新規クライアント登録"
+				centered
+				size="lg"
+			>
+				<NewClientModal onClose={close} />
+			</Modal>
 		</Stack>
 	);
 };
