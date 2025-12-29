@@ -125,7 +125,6 @@ export type CreateLearningMaterialInput = {
   contentId: Scalars['Int']['input'];
   contentType: Scalars['String']['input'];
   name: Scalars['String']['input'];
-  ownerId: Scalars['String']['input'];
   sourceUrl: Scalars['String']['input'];
   status: Scalars['String']['input'];
 };

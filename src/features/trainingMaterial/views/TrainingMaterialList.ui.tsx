@@ -86,8 +86,7 @@ export const TrainingMaterialList = () => {
 
 			{/* 教材追加モーダル */}
 			<Modal opened={opened} onClose={close} title="新しい教材" centered size="lg">
-				{/* TODO: 実際のownerIdを認証情報から取得する */}
-				<NewTrainingMaterialModal onClose={close} ownerId="00000000-0000-0000-0000-000000000000" />
+				<NewTrainingMaterialModal onClose={close} />
 			</Modal>
 		</>
 	);

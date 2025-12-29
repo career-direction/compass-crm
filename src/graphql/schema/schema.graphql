@@ -296,7 +296,6 @@ type LearningMaterial {
 }
 
 input CreateLearningMaterialInput {
-	ownerId: String!
 	name: String!
 	status: String!
 	sourceUrl: String!

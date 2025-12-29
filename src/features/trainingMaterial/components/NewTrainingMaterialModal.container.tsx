@@ -9,7 +9,6 @@ import {
 
 type NewTrainingMaterialModalProps = {
 	onClose: () => void;
-	ownerId: string;
 };
 
 const initialFormData: TrainingMaterialFormData = {
@@ -22,7 +21,6 @@ const initialFormData: TrainingMaterialFormData = {
 
 export const NewTrainingMaterialModal = ({
 	onClose,
-	ownerId,
 }: NewTrainingMaterialModalProps) => {
 	const [formData, setFormData] =
 		useState<TrainingMaterialFormData>(initialFormData);
@@ -44,7 +42,6 @@ export const NewTrainingMaterialModal = ({
 		try {
 			const result = await createLearningMaterial({
 				input: {
-					ownerId,
 					name: formData.name,
 					status: formData.status,
 					sourceUrl: formData.sourceUrl,
