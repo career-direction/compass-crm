@@ -105,7 +105,10 @@ export const NewClientModalUI = ({
 					label="誕生日"
 					placeholder="生年月日を選択"
 					value={formData.birthDate}
-					onChange={(value) => onFormChange({ ...formData, birthDate: value })}
+					onChange={(value) =>
+						//FIXME: 型アサーション以外で解決できないかどうかを調査
+						onFormChange({ ...formData, birthDate: value as Date | null })
+					}
 					required
 				/>
 				<Select
