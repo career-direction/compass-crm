@@ -1,16 +1,16 @@
 "use client";
 
-import { Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Group, Modal, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
+import { NewTrainingMaterialModal } from "../components/NewTrainingMaterialModal.ui";
 
 export const TrainingMaterialList = () => {
+	const [opened, { open, close }] = useDisclosure(false);
+
 	const handleFilterClick = () => {
 		console.log("フィルターボタンがクリックされました");
-	};
-
-	const handleAddClick = () => {
-		console.log("教材追加ボタンがクリックされました");
 	};
 
 	const handleDetailClick = () => {
@@ -48,7 +48,7 @@ export const TrainingMaterialList = () => {
 					<CPButton variant="light" size="sm" onClick={handleFilterClick}>
 						フィルター
 					</CPButton>
-					<CPButton size="sm" onClick={handleAddClick}>
+					<CPButton size="sm" onClick={open}>
 						教材追加
 					</CPButton>
 				</Group>
@@ -83,6 +83,11 @@ export const TrainingMaterialList = () => {
 					</CPCard>
 				))}
 			</SimpleGrid>
+
+			{/* 教材追加モーダル */}
+			<Modal opened={opened} onClose={close} title="新しい教材" centered size="lg">
+				<NewTrainingMaterialModal onClose={close} />
+			</Modal>
 		</>
 	);
 };
