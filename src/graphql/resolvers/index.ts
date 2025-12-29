@@ -42,4 +42,4 @@ export const resolvers = {
 	},
 };
 
-export type { Context } from "../types";
+export type { Context } from "../context";
