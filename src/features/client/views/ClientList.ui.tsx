@@ -1,49 +1,64 @@
 "use client";
 
-import { Badge, Group, Modal, SimpleGrid, Stack, Text } from "@mantine/core";
+import {
+	Center,
+	Group,
+	Loader,
+	Modal,
+	SimpleGrid,
+	Stack,
+	Text,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconMail, IconPhone, IconUser } from "@tabler/icons-react";
+import { IconUser } from "@tabler/icons-react";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
 import { NewClientModal } from "../components/NewClientModal.container";
+import type { ClientType } from "../types/client";
 
-const clients = [
-	{
-		id: 1,
-		name: "田中太郎",
-		email: "tanaka@example.com",
-		phone: "090-1234-5678",
-		status: "アクティブ",
-		lastSession: "2024-01-15",
-	},
-	{
-		id: 2,
-		name: "佐藤花子",
-		email: "sato@example.com",
-		phone: "090-9876-5432",
-		status: "アクティブ",
-		lastSession: "2024-01-14",
-	},
-	{
-		id: 3,
-		name: "鈴木一郎",
-		email: "suzuki@example.com",
-		phone: "090-5555-1234",
-		status: "休眠中",
-		lastSession: "2023-12-20",
-	},
-];
+type ClientListUIProps = {
+	clients: ClientType[];
+	fetching: boolean;
+	error?: string;
+	onAddSuccess: () => void;
+};
 
-export const ClientList = () => {
+export const ClientListUI = ({
+	clients,
+	fetching,
+	error,
+	onAddSuccess,
+}: ClientListUIProps) => {
 	const [opened, { open, close }] = useDisclosure(false);
 
-	const handleDetailClick = () => {
-		console.log("詳細ボタンがクリックされました");
+	const handleDetailClick = (id: number) => {
+		console.log("詳細ボタンがクリックされました:", id);
 	};
 
-	const handleEditClick = () => {
-		console.log("編集ボタンがクリックされました");
+	const handleEditClick = (id: number) => {
+		console.log("編集ボタンがクリックされました:", id);
 	};
+
+	const handleClose = () => {
+		close();
+		onAddSuccess();
+	};
+
+	if (fetching) {
+		return (
+			<Center h={200}>
+				<Loader />
+			</Center>
+		);
+	}
+
+	if (error) {
+		return (
+			<Center h={200}>
+				<Text c="red">{error}</Text>
+			</Center>
+		);
+	}
 
 	return (
 		<Stack gap="xl">
@@ -51,48 +66,56 @@ export const ClientList = () => {
 				<CPButton onClick={open}>新規クライアント登録</CPButton>
 			</Group>
 
-			<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
-				{clients.map((client) => (
-					<CPCard key={client.id}>
-						<Group justify="space-between" mb="sm">
-							<Group>
-								<IconUser size={24} />
-								<Text fw={600}>{client.name}</Text>
+			{clients.length === 0 ? (
+				<Center h={200}>
+					<Text c="dimmed">クライアントがいません</Text>
+				</Center>
+			) : (
+				<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
+					{clients.map((client) => (
+						<CPCard key={client.id}>
+							<Group justify="space-between" mb="sm">
+								<Group>
+									<IconUser size={24} />
+									<Text fw={600}>{client.name}</Text>
+								</Group>
 							</Group>
-							<Badge color={client.status === "アクティブ" ? "green" : "gray"}>
-								{client.status}
-							</Badge>
-						</Group>
 
-						<Stack gap="xs" mb="md">
-							<Group gap="xs">
-								<IconMail size={16} />
+							<Stack gap="xs" mb="md">
 								<Text size="sm" c="dimmed">
-									{client.email}
+									{client.nameKana}
 								</Text>
-							</Group>
-							<Group gap="xs">
-								<IconPhone size={16} />
 								<Text size="sm" c="dimmed">
-									{client.phone}
+									職業: {client.occupation || "未設定"}
 								</Text>
-							</Group>
-							<Text size="sm" c="dimmed">
-								最終セッション: {client.lastSession}
-							</Text>
-						</Stack>
+								<Text size="sm" c="dimmed">
+									趣味: {client.hobby || "未設定"}
+								</Text>
+								<Text size="sm" c="dimmed">
+									性別: {client.gender}
+								</Text>
+							</Stack>
 
-						<Group justify="space-between">
-							<CPButton variant="light" size="sm" onClick={handleDetailClick}>
-								詳細
-							</CPButton>
-							<CPButton variant="outline" size="sm" onClick={handleEditClick}>
-								編集
-							</CPButton>
-						</Group>
-					</CPCard>
-				))}
-			</SimpleGrid>
+							<Group justify="space-between">
+								<CPButton
+									variant="light"
+									size="sm"
+									onClick={() => handleDetailClick(client.id)}
+								>
+									詳細
+								</CPButton>
+								<CPButton
+									variant="outline"
+									size="sm"
+									onClick={() => handleEditClick(client.id)}
+								>
+									編集
+								</CPButton>
+							</Group>
+						</CPCard>
+					))}
+				</SimpleGrid>
+			)}
 
 			{/* クライアント追加モーダル */}
 			<Modal
@@ -102,7 +125,7 @@ export const ClientList = () => {
 				centered
 				size="lg"
 			>
-				<NewClientModal onClose={close} />
+				<NewClientModal onClose={handleClose} />
 			</Modal>
 		</Stack>
 	);

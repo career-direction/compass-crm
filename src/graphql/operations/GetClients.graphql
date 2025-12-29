@@ -1,0 +1,23 @@
+query GetClients($limit: Int, $offset: Int) {
+	clients(limit: $limit, offset: $offset) {
+		id
+		userId
+		user {
+			id
+			key
+			first_name
+			last_name
+			first_name_kana
+			last_name_kana
+			birth_date
+			gender
+		}
+		profile {
+			id
+			occupation
+			hobby
+			allowSnsPost
+			exerciseHistory
+		}
+	}
+}
