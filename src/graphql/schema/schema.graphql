@@ -10,28 +10,34 @@ type Query {
 		limit: Int
 		offset: Int
 	): [MidtermHealthPurpose!]!
-	assignments(sessionId: Int!, limit: Int, offset: Int): [Assignment!]!
-	learningMaterials(
-		ownerId: String
+	monthlyHealthMilestones(
+		clientId: Int!
 		limit: Int
 		offset: Int
-	): [LearningMaterial!]!
+	): [MonthlyHealthMilestone!]!
+	monthlyActionGoals(
+		monthlyHealthMilestoneId: Int!
+		limit: Int
+		offset: Int
+	): [MonthlyActionGoal!]!
+	assignments(ptSessionId: Int!, limit: Int, offset: Int): [Assignment!]!
+	trainingTasks(limit: Int, offset: Int): [TrainingTask!]!
+	treatmentTasks(limit: Int, offset: Int): [TreatmentTask!]!
+	trainingMenus(limit: Int, offset: Int): [TrainingMenu!]!
+	treatmentMenus(limit: Int, offset: Int): [TreatmentMenu!]!
 	curriculumUnits(limit: Int, offset: Int): [CurriculumUnit!]!
 	requiredFunctions(
 		curriculumUnitId: Int!
 		limit: Int
 		offset: Int
 	): [RequiredFunction!]!
-	treatmentMenus(
-		requiredFunctionId: Int
+	learningMaterials(limit: Int, offset: Int): [LearningMaterial!]!
+	homeworkAssignments(
+		clientId: Int!
 		limit: Int
 		offset: Int
-	): [TreatmentMenu!]!
-	trainingMenus(
-		requiredFunctionId: Int
-		limit: Int
-		offset: Int
-	): [TrainingMenu!]!
+	): [HomeworkAssignment!]!
+	homeworkRecords(homeworkId: Int!, limit: Int, offset: Int): [HomeworkRecord!]!
 }
 
 type Mutation {
@@ -43,58 +49,81 @@ type Mutation {
 	createMidtermHealthPurpose(
 		input: CreateMidtermHealthPurposeInput!
 	): MidtermHealthPurpose!
+	createMonthlyHealthMilestone(
+		input: CreateMonthlyHealthMilestoneInput!
+	): MonthlyHealthMilestone!
+	createMonthlyActionGoal(
+		input: CreateMonthlyActionGoalInput!
+	): MonthlyActionGoal!
 	createAssignment(input: CreateAssignmentInput!): Assignment!
-	createLearningMaterial(input: CreateLearningMaterialInput!): LearningMaterial!
-	createCurriculumUnit(input: CreateCurriculumUnitInput!): CurriculumUnit!
-	createRequiredFunction(input: CreateRequiredFunctionInput!): RequiredFunction!
-	createTreatmentMenu(input: CreateTreatmentMenuInput!): TreatmentMenu!
-	createTrainingMenu(input: CreateTrainingMenuInput!): TrainingMenu!
+	createHomeworkAssignment(
+		input: CreateHomeworkAssignmentInput!
+	): HomeworkAssignment!
+	createHomeworkRecord(input: CreateHomeworkRecordInput!): HomeworkRecord!
 }
+
+# ====================
+# ユーザー関連
+# ====================
 
 type User {
 	id: Int!
 	key: String!
 	kind: Int!
-	first_name: String!
-	last_name: String!
-	first_name_kana: String!
-	last_name_kana: String!
-	birth_date: String!
+	firstName: String!
+	lastName: String!
+	firstNameKana: String!
+	lastNameKana: String!
+	birthDate: String!
 	gender: Int!
-	active_flag: Boolean!
+	activeFlag: Boolean!
+	deletedAt: String
 	credentials: UserCredentials
-	created_at: String!
-	updated_at: String!
+	createdAt: String!
+	updatedAt: String!
 }
 
 type UserCredentials {
 	id: Int!
+	userId: String!
 	email: String!
-	reset_at: Boolean!
-	created_at: String!
-	updated_at: String!
+	passwordDigest: String!
+	resetAt: Boolean!
+	createdAt: String!
+	updatedAt: String!
 }
+
+# ====================
+# クライアント関連
+# ====================
 
 type Client {
 	id: Int!
-	userId: String!
+	userId: Int!
 	user: User!
 	profile: ClientProfile
 	sessions: [PTSession!]!
+	bodyConditions: [BodyCondition!]!
+	midtermHealthPurposes: [MidtermHealthPurpose!]!
+	assignments: [Assignment!]!
 }
 
 type ClientProfile {
 	id: Int!
-	clientId: String!
+	clientId: Int!
 	occupation: String!
 	hobby: String!
 	allowSnsPost: String!
 	exerciseHistory: String!
 }
 
+# ====================
+# トレーナー関連
+# ====================
+
 type Trainer {
 	id: Int!
-	userId: String!
+	userId: Int!
 	user: User!
 	profile: TrainerProfile
 	sessions: [PTSession!]!
@@ -102,90 +131,52 @@ type Trainer {
 
 type TrainerProfile {
 	id: Int!
-	trainerId: String!
+	trainerId: Int!
 	motivationStatement: String!
-	signatureMuscle: String!
-	specialization: String!
+	signatureMuscles: String!
+	specializations: String!
 	certifications: String!
 }
 
+# ====================
+# セッション関連
+# ====================
+
 type PTSession {
 	id: Int!
-	clientId: String!
-	trainerId: String!
+	clientId: Int!
+	trainerId: Int!
+	key: String!
+	performedAt: String!
+	kind: String!
+	theme: String
+	archiveUrl: String
+	trainerComment: String
+	memo: String
+	chatContents: String
 	client: Client!
 	trainer: Trainer!
-	scheduledAt: String!
-	duration: Int!
-	status: SessionStatus!
-	notes: String
 	items: [PTSessionItem!]!
+	assignments: [Assignment!]!
 	createdAt: String!
 	updatedAt: String!
 }
 
 type PTSessionItem {
 	id: Int!
-	sessionId: String!
-	exerciseName: String!
-	sets: Int
-	reps: Int
-	weight: Float
-	duration: Int
-	notes: String
+	ptSessionId: Int!
+	taskId: Int!
+	taskType: String!
+	trainerAdvice: String
+	memo: String
 	createdAt: String!
 	updatedAt: String!
 }
 
-enum UserRole {
-	ADMIN
-	TRAINER
-	CLIENT
-}
+# ====================
+# 身体情報関連
+# ====================
 
-enum Gender {
-	MALE
-	FEMALE
-	OTHER
-	PREFER_NOT_TO_SAY
-}
-
-enum SessionStatus {
-	SCHEDULED
-	IN_PROGRESS
-	COMPLETED
-	CANCELLED
-}
-
-input CreateUserInput {
-	kind: Int!
-	first_name: String!
-	last_name: String!
-	first_name_kana: String!
-	last_name_kana: String!
-	birth_date: String!
-	gender: Int!
-	email: String!
-	password: String!
-}
-
-input CreateClientInput {
-	userId: String!
-}
-
-input CreateTrainerInput {
-	userId: String!
-}
-
-input CreateSessionInput {
-	clientId: String!
-	trainerId: String!
-	scheduledAt: String!
-	duration: Int!
-	notes: String
-}
-
-# BodyCondition - 体調記録
 type BodyCondition {
 	id: Int!
 	clientId: Int!
@@ -211,6 +202,259 @@ type BodyCondition {
 	ffd: Float
 	hwd: Float
 	memo: String
+}
+
+# ====================
+# 健康目標関連
+# ====================
+
+type MidtermHealthPurpose {
+	id: Int!
+	key: String!
+	clientId: Int!
+	purpose: String!
+	months: Int!
+	settingDate: String!
+	startDate: String!
+	memo: String
+	milestones: [MonthlyHealthMilestone!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type MonthlyHealthMilestone {
+	id: Int!
+	key: String!
+	clientId: Int!
+	midtermHealthGoalId: Int!
+	target: String!
+	asIs: String!
+	toBe: String
+	achieved: Boolean
+	yearMonth: String!
+	actionGoals: [MonthlyActionGoal!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type MonthlyActionGoal {
+	id: Int!
+	key: String!
+	monthlyHealthMilestoneId: Int!
+	goal: String!
+	frequencyPerWeek: Int!
+	actionType: String
+	achieved: String
+	targetMonth: String!
+	createdAt: String!
+	updatedAt: String!
+}
+
+# ====================
+# 宿題関連
+# ====================
+
+type Assignment {
+	id: Int!
+	key: String!
+	ptSessionId: Int!
+	dueDate: String!
+	taskType: String!
+	taskId: Int!
+	executions: [AssignmentExecution!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type AssignmentExecution {
+	id: Int!
+	assignmentId: Int!
+	executionDate: String!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type HomeworkAssignment {
+	id: Int!
+	key: String!
+	sessionId: Int!
+	clientId: Int!
+	trainerId: Int!
+	homeworkType: String!
+	title: String!
+	description: String!
+	frequency: String!
+	durationDays: Int!
+	notes: String
+	materialUrl: String
+	priority: String!
+	status: String!
+	records: [HomeworkRecord!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type HomeworkRecord {
+	id: Int!
+	homeworkId: Int!
+	clientId: Int!
+	performedAt: String!
+	completionStatus: String!
+	durationMinutes: Int
+	repetitions: Int
+	feedback: String
+	difficulties: String
+	createdAt: String!
+	updatedAt: String!
+}
+
+# ====================
+# タスク関連
+# ====================
+
+type TrainingTask {
+	id: Int!
+	key: String!
+	contentType: String!
+	contentId: Int!
+	weight: Float
+	reps: Int
+	sec: Int
+	memo: String
+	createdAt: String!
+	updatedAt: String!
+}
+
+type TreatmentTask {
+	id: Int!
+	key: String!
+	contentType: String!
+	contentId: Int!
+	sec: Int
+	memo: String
+	createdAt: String!
+	updatedAt: String!
+}
+
+# ====================
+# マスターデータ
+# ====================
+
+type TrainingMenu {
+	id: Int!
+	name: String!
+	requiredFunctionId: Int!
+	requiredFunction: RequiredFunction
+	learningMaterialId: Int
+	learningMaterial: LearningMaterial
+	tips: String
+	commonErrors: [String!]
+	targetMuscles: [String!]
+	level: Int
+	createdAt: String!
+	updatedAt: String!
+}
+
+type TreatmentMenu {
+	id: Int!
+	name: String!
+	requiredFunctionId: Int!
+	requiredFunction: RequiredFunction
+	learningMaterialId: Int
+	learningMaterial: LearningMaterial
+	tips: String
+	commonErrors: [String!]
+	targetMuscles: [String!]
+	createdAt: String!
+	updatedAt: String!
+}
+
+type RequiredFunction {
+	id: Int!
+	curriculumUnitId: Int!
+	curriculumUnit: CurriculumUnit
+	name: String!
+	overview: String!
+	overviewUrl: String
+	evaluationCriteria: String!
+	evaluationCriteriaUrl: String
+	createdAt: String!
+	updatedAt: String!
+}
+
+type CurriculumUnit {
+	id: Int!
+	name: String!
+	type: String!
+	overview: String!
+	overviewUrl: String
+	evaluationCriteria: String!
+	evaluationCriteriaUrl: String
+	requiredFunctions: [RequiredFunction!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type LearningMaterial {
+	id: Int!
+	ownerId: String!
+	key: String!
+	name: String!
+	status: String!
+	sourceUrl: String!
+	contentType: String!
+	contentId: Int!
+	createdAt: String!
+	updatedAt: String!
+}
+
+# ====================
+# Enum定義
+# ====================
+
+enum UserRole {
+	ADMIN
+	TRAINER
+	CLIENT
+}
+
+enum Gender {
+	MALE
+	FEMALE
+	OTHER
+	PREFER_NOT_TO_SAY
+}
+
+# ====================
+# Input定義
+# ====================
+
+input CreateUserInput {
+	kind: Int!
+	firstName: String!
+	lastName: String!
+	firstNameKana: String!
+	lastNameKana: String!
+	birthDate: String!
+	gender: Int!
+	email: String!
+	password: String!
+}
+
+input CreateClientInput {
+	userId: Int!
+}
+
+input CreateTrainerInput {
+	userId: Int!
+}
+
+input CreateSessionInput {
+	clientId: Int!
+	trainerId: Int!
+	performedAt: String!
+	kind: String!
+	theme: String
 }
 
 input CreateBodyConditionInput {
@@ -239,20 +483,6 @@ input CreateBodyConditionInput {
 	memo: String
 }
 
-# MidtermHealthPurpose - 中期健康目標
-type MidtermHealthPurpose {
-	id: Int!
-	key: String!
-	clientId: Int!
-	purpose: String!
-	months: Int!
-	settingDate: String!
-	startDate: String!
-	memo: String
-	createdAt: String!
-	updatedAt: String!
-}
-
 input CreateMidtermHealthPurposeInput {
 	clientId: Int!
 	purpose: String!
@@ -262,16 +492,21 @@ input CreateMidtermHealthPurposeInput {
 	memo: String
 }
 
-# Assignment - 課題
-type Assignment {
-	id: Int!
-	key: String!
-	ptSessionId: Int!
-	dueDate: String!
-	taskType: String!
-	taskId: Int!
-	createdAt: String!
-	updatedAt: String!
+input CreateMonthlyHealthMilestoneInput {
+	clientId: Int!
+	midtermHealthGoalId: Int!
+	target: String!
+	asIs: String!
+	toBe: String
+	yearMonth: String!
+}
+
+input CreateMonthlyActionGoalInput {
+	monthlyHealthMilestoneId: Int!
+	goal: String!
+	frequencyPerWeek: Int!
+	actionType: String
+	targetMonth: String!
 }
 
 input CreateAssignmentInput {
@@ -281,118 +516,27 @@ input CreateAssignmentInput {
 	taskId: Int!
 }
 
-# LearningMaterial - 学習教材
-type LearningMaterial {
-	id: Int!
-	ownerId: String!
-	key: String!
-	name: String!
-	status: String!
-	sourceUrl: String!
-	contentType: String!
-	contentId: Int!
-	createdAt: String!
-	updatedAt: String!
+input CreateHomeworkAssignmentInput {
+	sessionId: Int!
+	clientId: Int!
+	trainerId: Int!
+	homeworkType: String!
+	title: String!
+	description: String!
+	frequency: String!
+	durationDays: Int!
+	notes: String
+	materialUrl: String
+	priority: String!
 }
 
-input CreateLearningMaterialInput {
-	ownerId: String!
-	name: String!
-	status: String!
-	sourceUrl: String!
-	contentType: String!
-	contentId: Int!
-}
-
-# CurriculumUnit - カリキュラム単元
-type CurriculumUnit {
-	id: Int!
-	name: String!
-	type: String!
-	overview: String!
-	overviewUrl: String!
-	evaluationCriteria: String!
-	evaluationCriteriaUrl: String!
-	requiredFunctions: [RequiredFunction!]!
-	createdAt: String!
-	updatedAt: String!
-}
-
-input CreateCurriculumUnitInput {
-	name: String!
-	type: String!
-	overview: String!
-	overviewUrl: String!
-	evaluationCriteria: String!
-	evaluationCriteriaUrl: String!
-}
-
-# RequiredFunction - 必須機能
-type RequiredFunction {
-	id: Int!
-	curriculumUnitId: Int!
-	name: String!
-	overview: String!
-	overviewUrl: String!
-	evaluationCriteria: String!
-	evaluationCriteriaUrl: String!
-	treatmentMenus: [TreatmentMenu!]!
-	trainingMenus: [TrainingMenu!]!
-	createdAt: String!
-	updatedAt: String!
-}
-
-input CreateRequiredFunctionInput {
-	curriculumUnitId: Int!
-	name: String!
-	overview: String!
-	overviewUrl: String!
-	evaluationCriteria: String!
-	evaluationCriteriaUrl: String!
-}
-
-# TreatmentMenu - 施術メニュー
-type TreatmentMenu {
-	id: Int!
-	name: String!
-	requiredFunctionId: Int!
-	learningMaterialId: Int!
-	tips: String!
-	commonErrors: [String!]!
-	targetMuscles: [String!]!
-	createdAt: String!
-	updatedAt: String!
-}
-
-input CreateTreatmentMenuInput {
-	name: String!
-	requiredFunctionId: Int!
-	learningMaterialId: Int!
-	tips: String!
-	commonErrors: [String!]!
-	targetMuscles: [String!]!
-}
-
-# TrainingMenu - トレーニングメニュー
-type TrainingMenu {
-	id: Int!
-	name: String!
-	requiredFunctionId: Int!
-	learningMaterialId: Int!
-	tips: String!
-	commonErrors: [String!]!
-	targetMuscles: [String!]!
-	level: Int!
-	createdAt: String!
-	updatedAt: String!
-}
-
-input CreateTrainingMenuInput {
-	name: String!
-	requiredFunctionId: Int!
-	learningMaterialId: Int!
-	tips: String!
-	commonErrors: [String!]!
-	targetMuscles: [String!]!
-	level: Int!
+input CreateHomeworkRecordInput {
+	homeworkId: Int!
+	clientId: Int!
+	performedAt: String!
+	completionStatus: String!
+	durationMinutes: Int
+	repetitions: Int
+	feedback: String
+	difficulties: String
 }
