@@ -5,10 +5,10 @@ import type {
 	BodyCondition,
 	MutationResolvers,
 	QueryResolvers,
-} from "@/generated/graphql-resolvers";
+} from "@/graphql/generated/server/graphql-resolvers";
 
-import type { Context } from "../types";
-import { requireTrainer } from "@/lib/auth";
+import type { Context } from "../context";
+import { requireTrainer } from "@/features/auth/auth";
 
 const parseFloatOrNull = (value: string | null): number | null => {
 	if (value === null) return null;

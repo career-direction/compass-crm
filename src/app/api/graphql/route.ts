@@ -6,9 +6,9 @@ import depthLimit from "graphql-depth-limit";
 import { createYoga } from "graphql-yoga";
 import type { NextRequest } from "next/server";
 import { resolvers } from "@/graphql/resolvers";
-import type { Context } from "@/graphql/types";
-import { extractToken, verifyToken } from "@/lib/auth";
-import { db } from "@/lib/drizzle";
+import type { Context } from "@/graphql/context";
+import { extractToken, verifyToken } from "@/features/auth/auth";
+import { db } from "@/lib/drizzle/drizzle";
 
 // graphql-yogaプラグインの型定義（このファイルでのみ使用）
 type OnValidateParams = {
@@ -66,14 +66,15 @@ const { handleRequest } = createYoga<Record<string, unknown>, Context>({
 		}
 
 		const result = await verifyToken(token);
-		if (!result.success) {
-			throw new Error("認証に失敗しました");
+		switch (result.type) {
+			case "success":
+				return {
+					db,
+					user: result.data,
+				};
+			case "failure":
+				throw new Error("認証に失敗しました");
 		}
-
-		return {
-			db,
-			user: result.user,
-		};
 	},
 
 	graphqlEndpoint: "/api/graphql",

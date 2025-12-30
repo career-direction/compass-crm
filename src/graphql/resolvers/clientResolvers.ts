@@ -5,11 +5,11 @@ import type {
 	Client,
 	MutationResolvers,
 	QueryResolvers,
-} from "@/generated/graphql-resolvers";
+} from "@/graphql/generated/server/graphql-resolvers";
 
-import type { Context } from "../types";
+import type { Context } from "../context";
 import { mapClient } from "./mappers";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin } from "@/features/auth/auth";
 
 export const clientResolvers = {
 	Query: {

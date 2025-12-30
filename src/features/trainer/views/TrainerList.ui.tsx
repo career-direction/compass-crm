@@ -3,22 +3,27 @@
 import { Group, SimpleGrid, Skeleton, Stack } from "@mantine/core";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
-import { useGetTrainersQuery } from "@/generated/gql/urql";
 import { TrainerCardContent } from "../components/TrainerCardContent.ui";
+import type { TrainerType } from "../types/trainer";
 
-export const TrainerList = () => {
-	const [{ data, fetching, error }] = useGetTrainersQuery();
+type TrainerListProps = {
+	trainers: TrainerType[];
+	fetching: boolean;
+	error?: string;
+	onNewTrainerClick: () => void;
+};
 
-	const trainers = data?.trainers ?? [];
+export const TrainerListUI = ({
+	trainers,
+	fetching,
+	error,
+	onNewTrainerClick,
+}: TrainerListProps) => {
 	const skeletonItems = Array.from({ length: 6 });
-
-	const handleNewTrainerClick = () => {
-		console.log("新規トレーナー登録ボタンがクリックされました");
-	};
 
 	const header = (
 		<Group justify="space-between" align="center">
-			<CPButton onClick={handleNewTrainerClick}>新規トレーナー登録</CPButton>
+			<CPButton onClick={onNewTrainerClick}>新規トレーナー登録</CPButton>
 		</Group>
 	);
 
@@ -46,7 +51,7 @@ export const TrainerList = () => {
 		return (
 			<Stack gap="xl">
 				{header}
-				<div>エラーが発生しました: {error.message}</div>
+				<div>エラーが発生しました: {error}</div>
 			</Stack>
 		);
 	}
@@ -59,8 +64,8 @@ export const TrainerList = () => {
 				{trainers.map((trainer) => (
 					<CPCard key={trainer.id}>
 						<TrainerCardContent
-							firstName={trainer.user.first_name}
-							lastName={trainer.user.last_name}
+							firstName={trainer.firstName}
+							lastName={trainer.lastName}
 						/>
 					</CPCard>
 				))}

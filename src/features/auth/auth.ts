@@ -1,8 +1,5 @@
-import { verifyJWT } from "./jwt";
+import { verifyJWT } from "../../lib/jwt";
 
-/**
- * ユーザー種別
- */
 export const UserKind = {
 	ADMIN: 0,
 	TRAINER: 1,
@@ -21,8 +18,8 @@ export type AuthUser = {
 };
 
 export type AuthResult =
-	| { success: true; user: AuthUser }
-	| { success: false; error: string };
+	| { type: "success"; data: AuthUser }
+	| { type: "failure"; error: string };
 
 /**
  * Authorizationヘッダーからトークンを抽出
@@ -45,15 +42,15 @@ export const extractToken = (authHeader: string | null): string | null => {
 export const verifyToken = async (token: string): Promise<AuthResult> => {
 	const result = await verifyJWT(token);
 
-	if (!result.success) {
-		return { success: false, error: result.error };
+	if (result.type === "failure") {
+		return { type: "failure", error: result.error };
 	}
 
 	const { payload } = result;
 
 	return {
-		success: true,
-		user: {
+		type: "success",
+		data: {
 			id: payload.userId,
 			key: payload.userKey,
 			kind: payload.kind as UserKindType,

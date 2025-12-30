@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 		// JWTトークンを検証してユーザー情報を取得
 		const result = await verifyJWT(token);
 
-		if (!result.success) {
+		if (result.type === "failure") {
 			// トークンが無効な場合はCookieを削除
 			const response = NextResponse.json({ user: null });
 			response.cookies.set("auth-token", "", {

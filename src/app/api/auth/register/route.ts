@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { userCredentials, users } from "@/db/schema";
-import { db } from "@/lib/drizzle";
+import { db } from "@/lib/drizzle/drizzle";
 import { generateToken } from "@/lib/jwt";
 
 type RegisterRequest = {

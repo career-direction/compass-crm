@@ -5,10 +5,10 @@ import type {
 	MutationResolvers,
 	QueryResolvers,
 	Trainer,
-} from "@/generated/graphql-resolvers";
+} from "@/graphql/generated/server/graphql-resolvers";
 
-import type { Context } from "../types";
-import { requireAdmin } from "@/lib/auth";
+import type { Context } from "../context";
+import { requireAdmin } from "@/features/auth/auth";
 import { mapTrainer } from "./mappers";
 
 export const trainerResolvers = {

@@ -5,10 +5,10 @@ import type {
 	MutationResolvers,
 	QueryResolvers,
 	TrainingMenu,
-} from "@/generated/graphql-resolvers";
+} from "@/graphql/generated/server/graphql-resolvers";
 
-import type { Context } from "../types";
-import { requireTrainer } from "@/lib/auth";
+import type { Context } from "../context";
+import { requireTrainer } from "@/features/auth/auth";
 import { formatDateString } from "./mappers";
 
 const mapTrainingMenu = (
