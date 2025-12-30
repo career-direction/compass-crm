@@ -60,6 +60,15 @@ type Mutation {
 		input: CreateHomeworkAssignmentInput!
 	): HomeworkAssignment!
 	createHomeworkRecord(input: CreateHomeworkRecordInput!): HomeworkRecord!
+	createLearningMaterial(
+		input: CreateLearningMaterialInput!
+	): LearningMaterial!
+	createCurriculumUnit(input: CreateCurriculumUnitInput!): CurriculumUnit!
+	createRequiredFunction(
+		input: CreateRequiredFunctionInput!
+	): RequiredFunction!
+	createTreatmentMenu(input: CreateTreatmentMenuInput!): TreatmentMenu!
+	createTrainingMenu(input: CreateTrainingMenuInput!): TrainingMenu!
 }
 
 # ====================
@@ -378,6 +387,8 @@ type RequiredFunction {
 	overviewUrl: String
 	evaluationCriteria: String!
 	evaluationCriteriaUrl: String
+	treatmentMenus: [TreatmentMenu!]!
+	trainingMenus: [TrainingMenu!]!
 	createdAt: String!
 	updatedAt: String!
 }
@@ -539,4 +550,50 @@ input CreateHomeworkRecordInput {
 	repetitions: Int
 	feedback: String
 	difficulties: String
+}
+
+input CreateLearningMaterialInput {
+	ownerId: String!
+	name: String!
+	status: String!
+	sourceUrl: String!
+	contentType: String!
+	contentId: Int!
+}
+
+input CreateCurriculumUnitInput {
+	name: String!
+	type: String!
+	overview: String!
+	overviewUrl: String
+	evaluationCriteria: String!
+	evaluationCriteriaUrl: String
+}
+
+input CreateRequiredFunctionInput {
+	curriculumUnitId: Int!
+	name: String!
+	overview: String!
+	overviewUrl: String
+	evaluationCriteria: String!
+	evaluationCriteriaUrl: String
+}
+
+input CreateTreatmentMenuInput {
+	name: String!
+	requiredFunctionId: Int!
+	learningMaterialId: Int
+	tips: String
+	commonErrors: [String!]
+	targetMuscles: [String!]
+}
+
+input CreateTrainingMenuInput {
+	name: String!
+	requiredFunctionId: Int!
+	learningMaterialId: Int
+	tips: String
+	commonErrors: [String!]
+	targetMuscles: [String!]
+	level: Int
 }
