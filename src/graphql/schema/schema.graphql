@@ -60,13 +60,9 @@ type Mutation {
 		input: CreateHomeworkAssignmentInput!
 	): HomeworkAssignment!
 	createHomeworkRecord(input: CreateHomeworkRecordInput!): HomeworkRecord!
-	createLearningMaterial(
-		input: CreateLearningMaterialInput!
-	): LearningMaterial!
+	createLearningMaterial(input: CreateLearningMaterialInput!): LearningMaterial!
 	createCurriculumUnit(input: CreateCurriculumUnitInput!): CurriculumUnit!
-	createRequiredFunction(
-		input: CreateRequiredFunctionInput!
-	): RequiredFunction!
+	createRequiredFunction(input: CreateRequiredFunctionInput!): RequiredFunction!
 	createTreatmentMenu(input: CreateTreatmentMenuInput!): TreatmentMenu!
 	createTrainingMenu(input: CreateTrainingMenuInput!): TrainingMenu!
 }
