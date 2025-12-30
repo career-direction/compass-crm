@@ -1,0 +1,14 @@
+query GetLearningMaterials($ownerId: String, $limit: Int, $offset: Int) {
+	learningMaterials(ownerId: $ownerId, limit: $limit, offset: $offset) {
+		id
+		ownerId
+		key
+		name
+		status
+		sourceUrl
+		contentType
+		contentId
+		createdAt
+		updatedAt
+	}
+}

@@ -48,20 +48,22 @@ export const learningMaterialResolvers = {
 	Mutation: {
 		createLearningMaterial: async (_parent, args, context) => {
 			// トレーナー以上の権限が必要
-			requireTrainer(context.user);
+			const user = requireTrainer(context.user);
 
-			const { ownerId, name, status, sourceUrl, contentType, contentId } =
-				args.input;
+			const { name, status, sourceUrl, contentType, contentId } = args.input;
 
+			const now = new Date();
 			const [created] = await context.db
 				.insert(learningMaterials)
 				.values({
-					ownerId,
+					ownerId: user.key,
 					name,
 					status,
 					sourceUrl,
 					contentType,
 					contentId,
+					createdAt: now,
+					updatedAt: now,
 				})
 				.returning();
 

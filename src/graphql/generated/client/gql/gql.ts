@@ -14,9 +14,13 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+    "mutation CreateLearningMaterial($input: CreateLearningMaterialInput!) {\n  createLearningMaterial(input: $input) {\n    id\n    ownerId\n    key\n    name\n    status\n    sourceUrl\n    contentType\n    contentId\n    createdAt\n    updatedAt\n  }\n}": typeof types.CreateLearningMaterialDocument,
+    "query GetLearningMaterials($ownerId: String, $limit: Int, $offset: Int) {\n  learningMaterials(ownerId: $ownerId, limit: $limit, offset: $offset) {\n    id\n    ownerId\n    key\n    name\n    status\n    sourceUrl\n    contentType\n    contentId\n    createdAt\n    updatedAt\n  }\n}": typeof types.GetLearningMaterialsDocument,
     "query GetTrainers {\n  trainers {\n    id\n    user {\n      first_name\n      last_name\n    }\n  }\n}": typeof types.GetTrainersDocument,
 };
 const documents: Documents = {
+    "mutation CreateLearningMaterial($input: CreateLearningMaterialInput!) {\n  createLearningMaterial(input: $input) {\n    id\n    ownerId\n    key\n    name\n    status\n    sourceUrl\n    contentType\n    contentId\n    createdAt\n    updatedAt\n  }\n}": types.CreateLearningMaterialDocument,
+    "query GetLearningMaterials($ownerId: String, $limit: Int, $offset: Int) {\n  learningMaterials(ownerId: $ownerId, limit: $limit, offset: $offset) {\n    id\n    ownerId\n    key\n    name\n    status\n    sourceUrl\n    contentType\n    contentId\n    createdAt\n    updatedAt\n  }\n}": types.GetLearningMaterialsDocument,
     "query GetTrainers {\n  trainers {\n    id\n    user {\n      first_name\n      last_name\n    }\n  }\n}": types.GetTrainersDocument,
 };
 
@@ -34,6 +38,14 @@ const documents: Documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation CreateLearningMaterial($input: CreateLearningMaterialInput!) {\n  createLearningMaterial(input: $input) {\n    id\n    ownerId\n    key\n    name\n    status\n    sourceUrl\n    contentType\n    contentId\n    createdAt\n    updatedAt\n  }\n}"): (typeof documents)["mutation CreateLearningMaterial($input: CreateLearningMaterialInput!) {\n  createLearningMaterial(input: $input) {\n    id\n    ownerId\n    key\n    name\n    status\n    sourceUrl\n    contentType\n    contentId\n    createdAt\n    updatedAt\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query GetLearningMaterials($ownerId: String, $limit: Int, $offset: Int) {\n  learningMaterials(ownerId: $ownerId, limit: $limit, offset: $offset) {\n    id\n    ownerId\n    key\n    name\n    status\n    sourceUrl\n    contentType\n    contentId\n    createdAt\n    updatedAt\n  }\n}"): (typeof documents)["query GetLearningMaterials($ownerId: String, $limit: Int, $offset: Int) {\n  learningMaterials(ownerId: $ownerId, limit: $limit, offset: $offset) {\n    id\n    ownerId\n    key\n    name\n    status\n    sourceUrl\n    contentType\n    contentId\n    createdAt\n    updatedAt\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

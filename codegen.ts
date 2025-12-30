@@ -24,7 +24,7 @@ const config: CodegenConfig = {
 		"./src/graphql/generated/server/graphql-resolvers.ts": {
 			plugins: ["typescript", "typescript-resolvers"],
 			config: {
-				contextType: "@/graphql/types#Context",
+				contextType: "@/graphql/context#Context",
 				avoidOptionals: true,
 			},
 		},
