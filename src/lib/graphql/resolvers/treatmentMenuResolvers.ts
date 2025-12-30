@@ -1,19 +1,19 @@
 import { eq } from "drizzle-orm";
 
-import { trainingMenus } from "@/db/schema";
+import { treatmentMenus } from "@/db/schema";
 import type {
 	MutationResolvers,
 	QueryResolvers,
-	TrainingMenu,
-} from "@/graphql/generated/server/graphql-resolvers";
+	TreatmentMenu,
+} from "@/lib/graphql/generated/server/graphql-resolvers";
 
 import type { Context } from "../context";
 import { requireTrainer } from "@/features/auth/auth";
 import { formatDateString } from "./mappers";
 
-const mapTrainingMenu = (
-	row: typeof trainingMenus.$inferSelect,
-): TrainingMenu => ({
+const mapTreatmentMenu = (
+	row: typeof treatmentMenus.$inferSelect,
+): TreatmentMenu => ({
 	id: Number(row.id),
 	name: row.name,
 	requiredFunctionId: Number(row.requiredFunctionId),
@@ -21,33 +21,32 @@ const mapTrainingMenu = (
 	tips: row.tips,
 	commonErrors: row.commonErrors,
 	targetMuscles: row.targetMuscles,
-	level: row.level,
 	createdAt: formatDateString(row.createdAt),
 	updatedAt: formatDateString(row.updatedAt),
 });
 
-export const trainingMenuResolvers = {
+export const treatmentMenuResolvers = {
 	Query: {
-		trainingMenus: async (_parent, args, context) => {
+		treatmentMenus: async (_parent, args, context) => {
 			const limit = Math.min(args.limit ?? 50, 100);
 			const offset = args.offset ?? 0;
 
-			let query = context.db.select().from(trainingMenus);
+			let query = context.db.select().from(treatmentMenus);
 
 			if (args.requiredFunctionId) {
 				query = query.where(
-					eq(trainingMenus.requiredFunctionId, args.requiredFunctionId),
+					eq(treatmentMenus.requiredFunctionId, args.requiredFunctionId),
 				) as typeof query;
 			}
 
 			const rows = await query.limit(limit).offset(offset);
 
-			return rows.map(mapTrainingMenu);
+			return rows.map(mapTreatmentMenu);
 		},
 	},
 
 	Mutation: {
-		createTrainingMenu: async (_parent, args, context) => {
+		createTreatmentMenu: async (_parent, args, context) => {
 			// トレーナー以上の権限が必要
 			requireTrainer(context.user);
 
@@ -58,11 +57,10 @@ export const trainingMenuResolvers = {
 				tips,
 				commonErrors,
 				targetMuscles,
-				level,
 			} = args.input;
 
 			const [created] = await context.db
-				.insert(trainingMenus)
+				.insert(treatmentMenus)
 				.values({
 					name,
 					requiredFunctionId,
@@ -70,14 +68,13 @@ export const trainingMenuResolvers = {
 					tips,
 					commonErrors,
 					targetMuscles,
-					level,
 				})
 				.returning();
 
-			return mapTrainingMenu(created);
+			return mapTreatmentMenu(created);
 		},
 	},
 } satisfies {
-	Query: Pick<QueryResolvers<Context>, "trainingMenus">;
-	Mutation: Pick<MutationResolvers<Context>, "createTrainingMenu">;
+	Query: Pick<QueryResolvers<Context>, "treatmentMenus">;
+	Mutation: Pick<MutationResolvers<Context>, "createTreatmentMenu">;
 };

@@ -12,7 +12,7 @@ import type {
 	PtSession,
 	Trainer,
 	User,
-} from "@/graphql/generated/server/graphql-resolvers";
+} from "@/lib/graphql/generated/server/graphql-resolvers";
 
 type DbUser = typeof users.$inferSelect;
 type DbClient = typeof clients.$inferSelect;

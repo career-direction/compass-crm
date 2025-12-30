@@ -7,7 +7,7 @@ import type {
 	RequiredFunction,
 	TrainingMenu,
 	TreatmentMenu,
-} from "@/graphql/generated/server/graphql-resolvers";
+} from "@/lib/graphql/generated/server/graphql-resolvers";
 
 import type { Context } from "../context";
 import { requireTrainer } from "@/features/auth/auth";

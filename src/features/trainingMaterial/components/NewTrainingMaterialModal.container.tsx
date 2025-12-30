@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useCreateLearningMaterialMutation } from "@/graphql/generated/client/gql/urql";
+import { useCreateLearningMaterialMutation } from "@/lib/graphql/generated/client/gql/urql";
 import {
 	NewTrainingMaterialModalUI,
 	type TrainingMaterialFormData,

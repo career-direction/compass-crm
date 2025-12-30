@@ -57,18 +57,17 @@ src/
 │
 ├── lib/                          # ライブラリ設定・ユーティリティ
 │   ├── drizzle/                  # Drizzle ORM 設定
-│   └── urql/                     # urql（GraphQLクライアント）設定
+│   ├── urql/                     # urql（GraphQLクライアント）設定
+│   └── graphql/                  # GraphQL関連
+│       ├── generated/            # 自動生成コード
+│       │   ├── client/           # クライアント用（gqlタグ等）
+│       │   │   └── gql/
+│       │   └── server/           # サーバー用（リゾルバ型等）
+│       ├── resolvers/            # GraphQL リゾルバ
+│       └── schema/               # GraphQL スキーマ定義
 │
-├── db/                           # データベース関連
-│   └── migrations/               # マイグレーションファイル
-│
-└── graphql/                      # GraphQL関連
-    ├── generated/                # 自動生成コード
-    │   ├── client/               # クライアント用（gqlタグ等）
-    │   │   └── gql/
-    │   └── server/               # サーバー用（リゾルバ型等）
-    ├── resolvers/                # GraphQL リゾルバ
-    └── schema/                   # GraphQL スキーマ定義
+└── db/                           # データベース関連
+    └── migrations/               # マイグレーションファイル
 ```
 
 ### `src/features`
@@ -84,5 +83,6 @@ src/
 
 ### `src/lib`
 
-### `src/graphql`
+### `src/lib/graphql`
+
 graphql 関連のファイルがここに配置される。

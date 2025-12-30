@@ -1,4 +1,4 @@
-import type * as Operations from "@/graphql/generated/client/gql/graphql";
+import type * as Operations from "@/lib/graphql/generated/client/gql/graphql";
 import type { TrainingMaterialType } from "./types/trainingMaterial";
 
 export function toTrainingMaterials(

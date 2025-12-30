@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetTrainersQuery } from "@/graphql/generated/client/gql/urql";
+import { useGetTrainersQuery } from "@/lib/graphql/generated/client/gql/urql";
 import { toTrainers } from "../trainer.mapper";
 import { TrainerListUI } from "./TrainerList.ui";
 
