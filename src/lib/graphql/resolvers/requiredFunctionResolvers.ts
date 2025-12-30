@@ -1,15 +1,16 @@
 import { eq, inArray } from "drizzle-orm";
 
 import { requiredFunctions, trainingMenus, treatmentMenus } from "@/db/schema";
-import { requireTrainer } from "@/features/auth/auth";
 import type {
 	MutationResolvers,
 	QueryResolvers,
 	RequiredFunction,
 	TrainingMenu,
 	TreatmentMenu,
-} from "@/graphql/generated/server/graphql-resolvers";
+} from "@/lib/graphql/generated/server/graphql-resolvers";
+
 import type { Context } from "../context";
+import { requireTrainer } from "@/features/auth/auth";
 import { formatDateString } from "./mappers";
 
 const mapTreatmentMenu = (

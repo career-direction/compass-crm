@@ -8,15 +8,16 @@ import {
 	trainers,
 	users,
 } from "@/db/schema";
-import { requireTrainer } from "@/features/auth/auth";
 import type {
 	MutationResolvers,
 	PtSession,
 	PtSessionItem,
 	QueryResolvers,
 	SessionStatus,
-} from "@/graphql/generated/server/graphql-resolvers";
+} from "@/lib/graphql/generated/server/graphql-resolvers";
+
 import type { Context } from "../context";
+import { requireTrainer } from "@/features/auth/auth";
 import { formatDateString, mapClient, mapTrainer } from "./mappers";
 
 export const sessionResolvers = {

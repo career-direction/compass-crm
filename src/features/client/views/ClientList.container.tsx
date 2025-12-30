@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetClientsQuery } from "@/graphql/generated/client/gql/urql";
+import { useGetClientsQuery } from "@/lib/graphql/generated/client/gql/urql";
 import { toClients } from "../client.mapper";
 import { ClientListUI } from "./ClientList.ui";
 

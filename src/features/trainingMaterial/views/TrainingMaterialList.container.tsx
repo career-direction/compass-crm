@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetLearningMaterialsQuery } from "@/graphql/generated/client/gql/urql";
+import { useGetLearningMaterialsQuery } from "@/lib/graphql/generated/client/gql/urql";
 import { toTrainingMaterials } from "../trainingMaterial.mapper";
 import { TrainingMaterialListUI } from "./TrainingMaterialList.ui";
 

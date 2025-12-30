@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useCreateClientWithProfileMutation } from "@/graphql/generated/client/gql/urql";
 import { type ClientFormData, NewClientModalUI } from "./NewClientModal.ui";
+import { useCreateClientWithProfileMutation } from "@/lib/graphql/generated/client/gql/urql";
 
 type NewClientModalProps = {
 	onClose: () => void;
