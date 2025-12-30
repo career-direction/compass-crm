@@ -1,4 +1,4 @@
-import type * as Operations from "@/graphql/generated/client/gql/graphql";
+import type * as Operations from "@/lib/graphql/generated/client/gql/graphql";
 import type { ClientType } from "./types/client";
 
 const genderLabel = (gender: number): string => {
