@@ -6,5 +6,8 @@ export default defineConfig({
 	plugins: [tsconfigPaths(), react()],
 	test: {
 		environment: "jsdom",
+		env: {
+			JWT_SECRET: "test-secret-key-for-vitest-minimum-32-characters",
+		},
 	},
 });

@@ -1,18 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
 import {
+	ActionIcon,
+	Badge,
+	Box,
+	Button,
 	Card,
+	Divider,
 	Grid,
 	Group,
-	Text,
 	NumberInput,
 	Select,
-	TextInput,
-	Button,
-	Divider,
-	Box,
-	Badge,
-	ActionIcon,
 	Stack,
+	Text,
+	TextInput,
 } from "@mantine/core";
 import {
 	IconChevronLeft,
@@ -20,6 +19,7 @@ import {
 	IconPlus,
 	IconTrash,
 } from "@tabler/icons-react";
+import { useEffect, useMemo, useState } from "react";
 
 // --- Types ---
 export type SetItem = {

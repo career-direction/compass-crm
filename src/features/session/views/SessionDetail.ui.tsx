@@ -1,30 +1,30 @@
 "use client";
 
 import {
+	ActionIcon,
+	Badge,
+	Box,
+	Button,
 	Card,
+	Divider,
+	Flex,
 	Grid,
 	Group,
-	Text,
 	NumberInput,
 	Select,
-	TextInput,
-	Button,
-	Divider,
-	Box,
-	Badge,
-	ActionIcon,
-	Stack,
-	Title,
-	Flex,
 	Space,
+	Stack,
+	Text,
+	TextInput,
+	Title,
 } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 
 import { useEffect, useState } from "react";
 import {
 	ContentCalendarCard,
-	type ExerciseMenuItem,
 	type DateCarouselItem,
+	type ExerciseMenuItem,
 } from "../components/TrainingCalendarCard.ui";
 
 type Props = {

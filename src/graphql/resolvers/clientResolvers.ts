@@ -1,12 +1,15 @@
 import { eq } from "drizzle-orm";
+
 import { clientProfiles, clients, users } from "@/db/schema";
 import type {
 	Client,
 	MutationResolvers,
 	QueryResolvers,
-} from "@/generated/graphql-resolvers";
-import type { Context } from "../types";
+} from "@/graphql/generated/server/graphql-resolvers";
+
+import type { Context } from "../context";
 import { mapClient } from "./mappers";
+import { requireAdmin } from "@/features/auth/auth";
 
 export const clientResolvers = {
 	Query: {
@@ -15,7 +18,6 @@ export const clientResolvers = {
 			const limit = Math.min(args.limit ?? 50, 100); // 最大100件
 			const offset = args.offset ?? 0;
 
-			// クエリタイムアウト設定
 			const timeoutPromise = new Promise<never>((_, reject) => {
 				setTimeout(
 					() => reject(new Error("Query timeout: Operation took too long")),
@@ -49,6 +51,8 @@ export const clientResolvers = {
 
 	Mutation: {
 		createClient: async (_parent, args, context) => {
+			requireAdmin(context.user);
+
 			const { userId } = args.input;
 			const [createdClient] = await context.db
 				.insert(clients)

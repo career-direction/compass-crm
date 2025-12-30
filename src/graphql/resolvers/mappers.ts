@@ -1,18 +1,18 @@
 import type {
-	Client,
-	ClientProfile as GqlClientProfile,
-	Trainer,
-	TrainerProfile as GqlTrainerProfile,
-	User,
-	PtSession,
-} from "@/generated/graphql-resolvers";
-import {
 	clientProfiles,
 	clients,
 	trainerProfiles,
 	trainers,
 	users,
 } from "@/db/schema";
+import type {
+	Client,
+	ClientProfile as GqlClientProfile,
+	TrainerProfile as GqlTrainerProfile,
+	PtSession,
+	Trainer,
+	User,
+} from "@/graphql/generated/server/graphql-resolvers";
 
 type DbUser = typeof users.$inferSelect;
 type DbClient = typeof clients.$inferSelect;
@@ -53,9 +53,7 @@ const mapClientProfile = (profile: DbClientProfile): GqlClientProfile => ({
 	exerciseHistory: profile.exerciseHistory,
 });
 
-const mapTrainerProfile = (
-	profile: DbTrainerProfile,
-): GqlTrainerProfile => ({
+const mapTrainerProfile = (profile: DbTrainerProfile): GqlTrainerProfile => ({
 	id: Number(profile.id),
 	trainerId: profile.trainerId?.toString() ?? "",
 	motivationStatement: profile.motivationStatement,

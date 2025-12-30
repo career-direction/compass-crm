@@ -9,8 +9,11 @@ import {
 	Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CPButton } from "@/components/ui/CPButton";
+import { useAuth } from "../contexts/AuthContext";
 import { validateEmail } from "../utils/validation";
 
 type LoginFormData = {
@@ -20,6 +23,8 @@ type LoginFormData = {
 
 export function LoginForm() {
 	const [loading, setLoading] = useState(false);
+	const { login } = useAuth();
+	const router = useRouter();
 
 	const form = useForm<LoginFormData>({
 		initialValues: {
@@ -37,10 +42,29 @@ export function LoginForm() {
 	const handleSubmit = async (values: LoginFormData) => {
 		setLoading(true);
 		try {
-			console.log("Login data:", values);
-			// TODO: Implement actual login logic
+			const result = await login(values.email, values.password);
+
+			if (result.success) {
+				notifications.show({
+					title: "ログイン成功",
+					message: `${result.user.lastName} ${result.user.firstName}さん、ようこそ！`,
+					color: "green",
+				});
+				router.push("/");
+			} else {
+				notifications.show({
+					title: "ログイン失敗",
+					message: result.error,
+					color: "red",
+				});
+			}
 		} catch (error) {
 			console.error("Login error:", error);
+			notifications.show({
+				title: "エラー",
+				message: "ログイン処理中にエラーが発生しました",
+				color: "red",
+			});
 		} finally {
 			setLoading(false);
 		}
@@ -68,7 +92,7 @@ export function LoginForm() {
 						{...form.getInputProps("password")}
 					/>
 
-					<CPButton fullWidth mt="xl" loading={loading}>
+					<CPButton type="submit" fullWidth mt="xl" loading={loading}>
 						ログイン
 					</CPButton>
 				</Stack>

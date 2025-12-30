@@ -1,5 +1,6 @@
 import { eq, inArray } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
+
 import {
 	clients,
 	ptSessionItems,
@@ -13,8 +14,10 @@ import type {
 	PtSessionItem,
 	QueryResolvers,
 	SessionStatus,
-} from "@/generated/graphql-resolvers";
-import type { Context } from "../types";
+} from "@/graphql/generated/server/graphql-resolvers";
+
+import type { Context } from "../context";
+import { requireTrainer } from "@/features/auth/auth";
 import { formatDateString, mapClient, mapTrainer } from "./mappers";
 
 export const sessionResolvers = {
@@ -69,42 +72,46 @@ export const sessionResolvers = {
 				itemsBySession.set(sessionId, list);
 			}
 
-			return rows.map(({ session, client, trainer, clientUser, trainerUser }) => {
-				if (!client || !clientUser) {
-					throw new Error("セッションのクライアント情報が不足しています");
-				}
+			return rows.map(
+				({ session, client, trainer, clientUser, trainerUser }) => {
+					if (!client || !clientUser) {
+						throw new Error("セッションのクライアント情報が不足しています");
+					}
 
-				if (!trainer || !trainerUser) {
-					throw new Error("セッションのトレーナー情報が不足しています");
-				}
+					if (!trainer || !trainerUser) {
+						throw new Error("セッションのトレーナー情報が不足しています");
+					}
 
-				const scheduleBase =
-					session.performedAt ?? session.createdAt ?? new Date();
+					const scheduleBase =
+						session.performedAt ?? session.createdAt ?? new Date();
 
-				const mappedSession: PtSession = {
-					id: Number(session.id),
-					clientId: client.id?.toString() ?? "",
-					trainerId: trainer.id?.toString() ?? "",
-					client: mapClient(client, clientUser),
-					trainer: mapTrainer(trainer, trainerUser),
-					items: itemsBySession.get(Number(session.id)) ?? [],
-					scheduledAt: formatDateString(scheduleBase),
-					createdAt: formatDateString(session.createdAt),
-					updatedAt: formatDateString(session.updatedAt),
-					status:
-						((session.kind?.toUpperCase() as SessionStatus) ??
+					const mappedSession: PtSession = {
+						id: Number(session.id),
+						clientId: client.id?.toString() ?? "",
+						trainerId: trainer.id?.toString() ?? "",
+						client: mapClient(client, clientUser),
+						trainer: mapTrainer(trainer, trainerUser),
+						items: itemsBySession.get(Number(session.id)) ?? [],
+						scheduledAt: formatDateString(scheduleBase),
+						createdAt: formatDateString(session.createdAt),
+						updatedAt: formatDateString(session.updatedAt),
+						status: ((session.kind?.toUpperCase() as SessionStatus) ??
 							"SCHEDULED") as SessionStatus,
-					notes: session.memo ?? session.trainerComment ?? null,
-					duration: 0,
-				};
+						notes: session.memo ?? session.trainerComment ?? null,
+						duration: 0,
+					};
 
-				return mappedSession;
-			});
+					return mappedSession;
+				},
+			);
 		},
 	},
 
 	Mutation: {
 		createSession: async (_parent, args, context) => {
+			// トレーナー以上の権限が必要
+			requireTrainer(context.user);
+
 			const { clientId, trainerId, scheduledAt, duration, notes } = args.input;
 			const performedAt = scheduledAt ? new Date(scheduledAt) : new Date();
 			const [session] = await context.db
@@ -163,9 +170,8 @@ export const sessionResolvers = {
 				scheduledAt: formatDateString(baseScheduledAt),
 				createdAt: formatDateString(session.createdAt),
 				updatedAt: formatDateString(session.updatedAt),
-				status:
-					((session.kind?.toUpperCase() as SessionStatus) ??
-						"SCHEDULED") as SessionStatus,
+				status: ((session.kind?.toUpperCase() as SessionStatus) ??
+					"SCHEDULED") as SessionStatus,
 				notes: notes ?? null,
 				duration: duration ?? 0,
 			};

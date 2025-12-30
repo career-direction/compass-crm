@@ -1,11 +1,23 @@
-import { createYoga } from "graphql-yoga";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { makeExecutableSchema } from "@graphql-tools/schema";
+import type { ValidationRule } from "graphql";
 import depthLimit from "graphql-depth-limit";
-import { resolvers } from "@/graphql/resolvers";
-import { db } from "@/lib/drizzle";
+import { createYoga } from "graphql-yoga";
 import type { NextRequest } from "next/server";
+import { resolvers } from "@/graphql/resolvers";
+import type { Context } from "@/graphql/context";
+import { extractToken, verifyToken } from "@/features/auth/auth";
+import { db } from "@/lib/drizzle/drizzle";
+
+// graphql-yogaプラグインの型定義（このファイルでのみ使用）
+type OnValidateParams = {
+	addValidationRule: (rule: ValidationRule) => void;
+};
+
+type OnRequestParams = {
+	request: Request;
+};
 
 const typeDefs = readFileSync(
 	join(process.cwd(), "src/graphql/schema/schema.graphql"),
@@ -24,11 +36,46 @@ const depthLimitRule = depthLimit(maxDepth);
 
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
-const { handleRequest } = createYoga({
+const { handleRequest } = createYoga<Record<string, unknown>, Context>({
 	schema,
-	context: () => ({
-		db,
-	}),
+	context: async ({ request }) => {
+		let token: string | null = null;
+
+		// 1. Authorizationヘッダーからトークンを取得（API呼び出し用）
+		const authHeader = request.headers.get("authorization");
+		token = extractToken(authHeader);
+
+		// 2. Cookieからトークンを取得（ブラウザ用）
+		if (!token) {
+			const cookieHeader = request.headers.get("cookie");
+			if (cookieHeader) {
+				const cookies = cookieHeader.split(";").reduce(
+					(acc, cookie) => {
+						const [key, value] = cookie.trim().split("=");
+						acc[key] = value;
+						return acc;
+					},
+					{} as Record<string, string>,
+				);
+				token = cookies["auth-token"] || null;
+			}
+		}
+
+		if (!token) {
+			throw new Error("認証が必要です");
+		}
+
+		const result = await verifyToken(token);
+		switch (result.type) {
+			case "success":
+				return {
+					db,
+					user: result.data,
+				};
+			case "failure":
+				throw new Error("認証に失敗しました");
+		}
+	},
 
 	graphqlEndpoint: "/api/graphql",
 
@@ -43,12 +90,12 @@ const { handleRequest } = createYoga({
 
 	plugins: [
 		{
-			onValidate: ({ addValidationRule }: any) => {
+			onValidate: ({ addValidationRule }: OnValidateParams) => {
 				addValidationRule(depthLimitRule);
 			},
 		},
 		{
-			onRequest: async ({ request }: any) => {
+			onRequest: async ({ request }: OnRequestParams) => {
 				const ip =
 					request.headers.get("x-forwarded-for") ||
 					request.headers.get("x-real-ip") ||
