@@ -70,7 +70,11 @@ src/
     └── migrations/               # マイグレーションファイル
 ```
 
+### `src/app`
+
 ### `src/features`
+
+本アプリケーションを構成する機能単位で `features` ディレクトリを作成する。
 
 
 ### `src/components`
@@ -83,6 +87,9 @@ src/
 
 ### `src/lib`
 
-### `src/lib/graphql`
+#### drizzle
 
-graphql 関連のファイルがここに配置される。
+#### graphql
+
+`generated` 配下には、 `npm run codegen` コマンド実行時に自動生成されるファイルを配置。
+
