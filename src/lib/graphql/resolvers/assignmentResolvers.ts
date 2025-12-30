@@ -5,7 +5,11 @@ import type {
 	Assignment,
 	MutationResolvers,
 	QueryResolvers,
+<<<<<<< HEAD:src/lib/graphql/resolvers/assignmentResolvers.ts
 } from "@/lib/graphql/generated/server/graphql-resolvers";
+=======
+} from "@/graphql/generated/server/graphql-resolvers";
+>>>>>>> 9b1a8144a161edc3f732dff517141fba942a4a55:src/graphql/resolvers/assignmentResolvers.ts
 
 import type { Context } from "../context";
 import { requireTrainer } from "@/features/auth/auth";
