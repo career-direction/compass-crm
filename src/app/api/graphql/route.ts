@@ -5,8 +5,8 @@ import type { ValidationRule } from "graphql";
 import depthLimit from "graphql-depth-limit";
 import { createYoga } from "graphql-yoga";
 import type { NextRequest } from "next/server";
-import { resolvers } from "@/graphql/resolvers";
-import type { Context } from "@/graphql/context";
+import { resolvers } from "@/lib/graphql/resolvers";
+import type { Context } from "@/lib/graphql/context";
 import { extractToken, verifyToken } from "@/features/auth/auth";
 import { db } from "@/lib/drizzle/drizzle";
 
@@ -20,7 +20,7 @@ type OnRequestParams = {
 };
 
 const typeDefs = readFileSync(
-	join(process.cwd(), "src/graphql/schema/schema.graphql"),
+	join(process.cwd(), "src/lib/graphql/schema/schema.graphql"),
 	"utf-8",
 );
 

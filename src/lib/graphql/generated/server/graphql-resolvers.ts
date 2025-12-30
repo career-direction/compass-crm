@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from "graphql";
-import { Context } from "@/graphql/context";
+import { Context } from "@/lib/graphql/context";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -141,7 +141,6 @@ export type CreateLearningMaterialInput = {
 	contentId: Scalars["Int"]["input"];
 	contentType: Scalars["String"]["input"];
 	name: Scalars["String"]["input"];
-	ownerId: Scalars["String"]["input"];
 	sourceUrl: Scalars["String"]["input"];
 	status: Scalars["String"]["input"];
 };
