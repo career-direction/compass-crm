@@ -14,9 +14,10 @@ import {
 } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { memo } from "react";
 import { CPButton } from "@/components/ui/CPButton";
+import { useAuth } from "@/features/auth/contexts/AuthContext";
 import classes from "./Sidebar.module.css";
 
 type SidebarProps = {
@@ -49,12 +50,15 @@ const navItems = [
 
 export const Sidebar = memo(({ isOpen, onToggle }: SidebarProps) => {
 	const pathname = usePathname();
+	const router = useRouter();
+	const { logout } = useAuth();
 	const [logoutModalOpened, { open: openLogoutModal, close: closeLogoutModal }] =
 		useDisclosure(false);
 
-	const handleLogout = () => {
-		// TODO: ログアウト処理を実装
+	const handleLogout = async () => {
+		await logout();
 		closeLogoutModal();
+		router.push("/login");
 	};
 
 	if (!isOpen) {

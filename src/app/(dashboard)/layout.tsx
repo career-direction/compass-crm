@@ -1,6 +1,6 @@
 "use client";
 
-import { AppShell, Text } from "@mantine/core";
+import { AppShell } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import type { ReactNode } from "react";
 import { Sidebar } from "@/components/layout/Sidebar.ui";
