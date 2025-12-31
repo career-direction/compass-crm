@@ -7,14 +7,8 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { APIError, apiClient } from "@/lib/api/apiClient";
-import { createAuthApi, type AuthApi, type AuthUser } from "../api/authApi";
-
-// AuthUser を再エクスポート
-export type { AuthUser };
-
-// デフォルトの AuthApi インスタンス（コンポーネント外で生成して安定化）
-const defaultAuthApi = createAuthApi(apiClient);
+import { APIError } from "@/lib/api/apiClient";
+import { type AuthAPI, type AuthUser, defaultAuthAPI } from "../api/authAPI";
 
 type AuthContextType = {
 	user: AuthUser | null;
@@ -34,19 +28,19 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 type AuthProviderProps = {
 	children: React.ReactNode;
-	authApi?: AuthApi;
+	authAPI?: AuthAPI; // テスト用にオプショナル
 };
 
 export function AuthProvider({
 	children,
-	authApi = defaultAuthApi,
+	authAPI = defaultAuthAPI,
 }: AuthProviderProps) {
 	const [user, setUser] = useState<AuthUser | null>(null);
 	const [loading, setLoading] = useState(true);
 
 	const fetchUser = useCallback(async () => {
 		try {
-			const data = await authApi.me();
+			const data = await authAPI.me();
 			setUser(data.user);
 		} catch (error) {
 			console.error("Failed to fetch user:", error);
@@ -54,7 +48,7 @@ export function AuthProvider({
 		} finally {
 			setLoading(false);
 		}
-	}, [authApi]);
+	}, [authAPI]);
 
 	useEffect(() => {
 		fetchUser();
@@ -63,7 +57,7 @@ export function AuthProvider({
 	const login = useCallback(
 		async (email: string, password: string): Promise<LoginResult> => {
 			try {
-				const data = await authApi.login(email, password);
+				const data = await authAPI.login(email, password);
 				setUser(data.user);
 				return { success: true, user: data.user };
 			} catch (error) {
@@ -78,19 +72,19 @@ export function AuthProvider({
 				return { success: false, error: "ログインに失敗しました" };
 			}
 		},
-		[authApi],
+		[authAPI],
 	);
 
 	const logout = useCallback(async (): Promise<LogoutResult> => {
 		try {
-			await authApi.logout();
+			await authAPI.logout();
 			setUser(null);
 			return { success: true };
 		} catch (error) {
 			console.error("Logout error:", error);
 			return { success: false, error: "ログアウトに失敗しました" };
 		}
-	}, [authApi]);
+	}, [authAPI]);
 
 	const refetch = useCallback(async () => {
 		await fetchUser();

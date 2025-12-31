@@ -1,4 +1,5 @@
 import { verifyJWT } from "../../lib/jwt";
+import { AuthUser } from "./api/authAPI";
 
 export const UserKind = {
 	ADMIN: 0,
@@ -7,15 +8,6 @@ export const UserKind = {
 } as const;
 
 export type UserKindType = (typeof UserKind)[keyof typeof UserKind];
-
-export type AuthUser = {
-	id: number;
-	key: string;
-	kind: UserKindType;
-	firstName: string;
-	lastName: string;
-	email: string;
-};
 
 export type AuthResult =
 	| { type: "success"; data: AuthUser }

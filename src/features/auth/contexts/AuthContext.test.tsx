@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import type { AuthApi } from "../api/authApi";
 import { AuthProvider, useAuth } from "./AuthContext";
+import { AuthAPI } from "../api/authAPI";
 
 describe("AuthProvider", () => {
 	beforeEach(() => {
@@ -11,7 +11,7 @@ describe("AuthProvider", () => {
 	describe("logout", () => {
 		test("ログアウト成功時、success: true を返しユーザー状態がnullになる", async () => {
 			// Arrange
-			const mockAuthApi: AuthApi = {
+			const mockAuthAPI: AuthAPI = {
 				me: vi.fn().mockResolvedValue({
 					user: { id: 1, email: "test@example.com" },
 				}),
@@ -20,7 +20,7 @@ describe("AuthProvider", () => {
 			};
 
 			const wrapper = ({ children }: { children: React.ReactNode }) => (
-				<AuthProvider authApi={mockAuthApi}>{children}</AuthProvider>
+				<AuthProvider authAPI={mockAuthAPI}>{children}</AuthProvider>
 			);
 			const { result } = renderHook(() => useAuth(), { wrapper });
 
@@ -36,12 +36,12 @@ describe("AuthProvider", () => {
 			await waitFor(() => {
 				expect(result.current.user).toBeNull();
 			});
-			expect(mockAuthApi.logout).toHaveBeenCalledTimes(1);
+			expect(mockAuthAPI.logout).toHaveBeenCalledTimes(1);
 		});
 
 		test("ログアウト失敗時、success: false とエラーメッセージを返す", async () => {
 			// Arrange
-			const mockAuthApi: AuthApi = {
+			const mockAuthAPI: AuthAPI = {
 				me: vi.fn().mockResolvedValue({
 					user: { id: 1, email: "test@example.com" },
 				}),
@@ -50,7 +50,7 @@ describe("AuthProvider", () => {
 			};
 
 			const wrapper = ({ children }: { children: React.ReactNode }) => (
-				<AuthProvider authApi={mockAuthApi}>{children}</AuthProvider>
+				<AuthProvider authAPI={mockAuthAPI}>{children}</AuthProvider>
 			);
 			const { result } = renderHook(() => useAuth(), { wrapper });
 
@@ -80,14 +80,14 @@ describe("AuthProvider", () => {
 				lastName: "山田",
 				email: "test@example.com",
 			};
-			const mockAuthApi: AuthApi = {
+			const mockAuthAPI: AuthAPI = {
 				me: vi.fn().mockResolvedValue({ user: null }),
 				login: vi.fn().mockResolvedValue({ user: mockUser }),
 				logout: vi.fn(),
 			};
 
 			const wrapper = ({ children }: { children: React.ReactNode }) => (
-				<AuthProvider authApi={mockAuthApi}>{children}</AuthProvider>
+				<AuthProvider authAPI={mockAuthAPI}>{children}</AuthProvider>
 			);
 			const { result } = renderHook(() => useAuth(), { wrapper });
 
@@ -106,7 +106,7 @@ describe("AuthProvider", () => {
 			await waitFor(() => {
 				expect(result.current.user).toEqual(mockUser);
 			});
-			expect(mockAuthApi.login).toHaveBeenCalledWith(
+			expect(mockAuthAPI.login).toHaveBeenCalledWith(
 				"test@example.com",
 				"password",
 			);
@@ -115,7 +115,7 @@ describe("AuthProvider", () => {
 		test("ログイン失敗時、success: false とエラーメッセージを返す", async () => {
 			// Arrange
 			const { APIError } = await import("@/lib/api/apiClient");
-			const mockAuthApi: AuthApi = {
+			const mockAuthAPI: AuthAPI = {
 				me: vi.fn().mockResolvedValue({ user: null }),
 				login: vi
 					.fn()
@@ -126,7 +126,7 @@ describe("AuthProvider", () => {
 			};
 
 			const wrapper = ({ children }: { children: React.ReactNode }) => (
-				<AuthProvider authApi={mockAuthApi}>{children}</AuthProvider>
+				<AuthProvider authAPI={mockAuthAPI}>{children}</AuthProvider>
 			);
 			const { result } = renderHook(() => useAuth(), { wrapper });
 

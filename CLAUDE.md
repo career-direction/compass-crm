@@ -4,6 +4,11 @@
 
 回答は全て日本語で行うこと。
 
+## 命名
+
+略称を使う場合は、すべて大文字で命名すること。例えば、API は Application Programming Interface の略称、 URL は Uniform Resource Locator の略称です。これらが命名に含まれる場合は、testApi ではなくtestAPI、testUrl ではなく testURL のようにすること。
+ただし、これらの略称が命名の先頭に来る場合はすべて大文字ではなく、小文字で表記すること。APITest ではなく apiTest、URLTest ではなく urlTestとする。
+型に対しての命名の場合は、略称の位置に関係なく、すべて大文字とすること。型の命名とは、`type APITest = {}`のような形で宣言されるものです。この場合は、`type TestURL = {} type URLTest = {}` のようにすること。
 
 ## 単体テスト
 
@@ -26,4 +31,6 @@ test('テストケース名', () => {
   // Assert
   // 結果の検証
 });
+
+テストファイル内で命名について、`mock` という単語の使用はできるだけ避け、 `stub` or `spy` を明示的に変数名で表現すること
 ```

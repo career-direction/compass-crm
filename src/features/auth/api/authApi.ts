@@ -1,7 +1,6 @@
 import { z } from "zod";
-import type { APIClient } from "@/lib/api/apiClient";
+import { apiClient, type APIClient } from "@/lib/api/apiClient";
 
-// AuthUser スキーマ
 const authUserSchema = z.object({
 	id: z.number(),
 	key: z.string(),
@@ -13,7 +12,6 @@ const authUserSchema = z.object({
 
 export type AuthUser = z.infer<typeof authUserSchema>;
 
-// レスポンススキーマ
 const meResponseSchema = z.object({
 	user: authUserSchema.nullable(),
 });
@@ -26,20 +24,25 @@ const logoutResponseSchema = z.object({
 	success: z.boolean(),
 });
 
-// Auth API のレスポンス型
 type MeResponse = z.infer<typeof meResponseSchema>;
 type LoginResponse = z.infer<typeof loginResponseSchema>;
 type LogoutResponse = z.infer<typeof logoutResponseSchema>;
 
-// Auth API の操作を定義
-export type AuthApi = {
+export type MeAPI = {
 	me: () => Promise<MeResponse>;
+};
+
+export type LoginAPI = {
 	login: (email: string, password: string) => Promise<LoginResponse>;
+};
+
+export type LogoutAPI = {
 	logout: () => Promise<LogoutResponse>;
 };
 
-// APIClient を受け取って AuthApi を生成
-export const createAuthApi = (client: APIClient): AuthApi => ({
+export type AuthAPI = MeAPI & LoginAPI & LogoutAPI;
+
+export const createAuthApi = (client: APIClient): AuthAPI => ({
 	me: () =>
 		client.request({
 			method: "GET",
@@ -60,3 +63,5 @@ export const createAuthApi = (client: APIClient): AuthApi => ({
 			schema: logoutResponseSchema,
 		}),
 });
+
+export const defaultAuthAPI = createAuthApi(apiClient);

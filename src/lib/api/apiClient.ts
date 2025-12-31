@@ -1,6 +1,5 @@
 import type { z } from "zod";
 
-// メソッドごとのリクエスト定義（判別共用体型）
 type GetRequest<T> = {
 	method: "GET";
 	path: string;
@@ -27,14 +26,12 @@ type DeleteRequest<T> = {
 	schema: z.ZodType<T>;
 };
 
-// 判別共用体型
 export type APIRequest<T, B = unknown> =
 	| GetRequest<T>
 	| PostRequest<T, B>
 	| PutRequest<T, B>
 	| DeleteRequest<T>;
 
-// APIClient の型定義
 export type APIClient = {
 	request: <T, B = unknown>(req: APIRequest<T, B>) => Promise<T>;
 };
