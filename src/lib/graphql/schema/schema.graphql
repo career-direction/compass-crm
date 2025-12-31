@@ -453,6 +453,19 @@ input CreateClientInput {
 	userId: Int!
 }
 
+input CreateClientWithProfileInput {
+	firstName: String!
+	lastName: String!
+	firstNameKana: String!
+	lastNameKana: String!
+	birthDate: String!
+	gender: Int!
+	occupation: String!
+	hobby: String!
+	allowSnsPost: String!
+	exerciseHistory: String!
+}
+
 input CreateTrainerInput {
 	userId: Int!
 }

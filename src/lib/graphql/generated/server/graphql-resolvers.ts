@@ -21,11 +21,21 @@ export type Assignment = {
   __typename?: 'Assignment';
   createdAt: Scalars['String']['output'];
   dueDate: Scalars['String']['output'];
+  executions: Array<AssignmentExecution>;
   id: Scalars['Int']['output'];
   key: Scalars['String']['output'];
   ptSessionId: Scalars['Int']['output'];
   taskId: Scalars['Int']['output'];
   taskType: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
+export type AssignmentExecution = {
+  __typename?: 'AssignmentExecution';
+  assignmentId: Scalars['Int']['output'];
+  createdAt: Scalars['String']['output'];
+  executionDate: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
   updatedAt: Scalars['String']['output'];
 };
 
@@ -59,17 +69,20 @@ export type BodyCondition = {
 
 export type Client = {
   __typename?: 'Client';
+  assignments: Array<Assignment>;
+  bodyConditions: Array<BodyCondition>;
   id: Scalars['Int']['output'];
+  midtermHealthPurposes: Array<MidtermHealthPurpose>;
   profile: Maybe<ClientProfile>;
   sessions: Array<PtSession>;
   user: User;
-  userId: Scalars['String']['output'];
+  userId: Scalars['Int']['output'];
 };
 
 export type ClientProfile = {
   __typename?: 'ClientProfile';
   allowSnsPost: Scalars['String']['output'];
-  clientId: Scalars['String']['output'];
+  clientId: Scalars['Int']['output'];
   exerciseHistory: Scalars['String']['output'];
   hobby: Scalars['String']['output'];
   id: Scalars['Int']['output'];
@@ -110,7 +123,7 @@ export type CreateBodyConditionInput = {
 };
 
 export type CreateClientInput = {
-  userId: Scalars['String']['input'];
+  userId: Scalars['Int']['input'];
 };
 
 export type CreateClientWithProfileInput = {
@@ -128,11 +141,36 @@ export type CreateClientWithProfileInput = {
 
 export type CreateCurriculumUnitInput = {
   evaluationCriteria: Scalars['String']['input'];
-  evaluationCriteriaUrl: Scalars['String']['input'];
+  evaluationCriteriaUrl: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   overview: Scalars['String']['input'];
-  overviewUrl: Scalars['String']['input'];
+  overviewUrl: InputMaybe<Scalars['String']['input']>;
   type: Scalars['String']['input'];
+};
+
+export type CreateHomeworkAssignmentInput = {
+  clientId: Scalars['Int']['input'];
+  description: Scalars['String']['input'];
+  durationDays: Scalars['Int']['input'];
+  frequency: Scalars['String']['input'];
+  homeworkType: Scalars['String']['input'];
+  materialUrl: InputMaybe<Scalars['String']['input']>;
+  notes: InputMaybe<Scalars['String']['input']>;
+  priority: Scalars['String']['input'];
+  sessionId: Scalars['Int']['input'];
+  title: Scalars['String']['input'];
+  trainerId: Scalars['Int']['input'];
+};
+
+export type CreateHomeworkRecordInput = {
+  clientId: Scalars['Int']['input'];
+  completionStatus: Scalars['String']['input'];
+  difficulties: InputMaybe<Scalars['String']['input']>;
+  durationMinutes: InputMaybe<Scalars['Int']['input']>;
+  feedback: InputMaybe<Scalars['String']['input']>;
+  homeworkId: Scalars['Int']['input'];
+  performedAt: Scalars['String']['input'];
+  repetitions: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type CreateLearningMaterialInput = {
@@ -152,55 +190,72 @@ export type CreateMidtermHealthPurposeInput = {
   startDate: Scalars['String']['input'];
 };
 
+export type CreateMonthlyActionGoalInput = {
+  actionType: InputMaybe<Scalars['String']['input']>;
+  frequencyPerWeek: Scalars['Int']['input'];
+  goal: Scalars['String']['input'];
+  monthlyHealthMilestoneId: Scalars['Int']['input'];
+  targetMonth: Scalars['String']['input'];
+};
+
+export type CreateMonthlyHealthMilestoneInput = {
+  asIs: Scalars['String']['input'];
+  clientId: Scalars['Int']['input'];
+  midtermHealthGoalId: Scalars['Int']['input'];
+  target: Scalars['String']['input'];
+  toBe: InputMaybe<Scalars['String']['input']>;
+  yearMonth: Scalars['String']['input'];
+};
+
 export type CreateRequiredFunctionInput = {
   curriculumUnitId: Scalars['Int']['input'];
   evaluationCriteria: Scalars['String']['input'];
-  evaluationCriteriaUrl: Scalars['String']['input'];
+  evaluationCriteriaUrl: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   overview: Scalars['String']['input'];
-  overviewUrl: Scalars['String']['input'];
+  overviewUrl: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateSessionInput = {
-  clientId: Scalars['String']['input'];
-  duration: Scalars['Int']['input'];
-  notes: InputMaybe<Scalars['String']['input']>;
-  scheduledAt: Scalars['String']['input'];
-  trainerId: Scalars['String']['input'];
+  clientId: Scalars['Int']['input'];
+  kind: Scalars['String']['input'];
+  performedAt: Scalars['String']['input'];
+  theme: InputMaybe<Scalars['String']['input']>;
+  trainerId: Scalars['Int']['input'];
 };
 
 export type CreateTrainerInput = {
-  userId: Scalars['String']['input'];
+  userId: Scalars['Int']['input'];
 };
 
 export type CreateTrainingMenuInput = {
-  commonErrors: Array<Scalars['String']['input']>;
-  learningMaterialId: Scalars['Int']['input'];
-  level: Scalars['Int']['input'];
+  commonErrors: InputMaybe<Array<Scalars['String']['input']>>;
+  learningMaterialId: InputMaybe<Scalars['Int']['input']>;
+  level: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
   requiredFunctionId: Scalars['Int']['input'];
-  targetMuscles: Array<Scalars['String']['input']>;
-  tips: Scalars['String']['input'];
+  targetMuscles: InputMaybe<Array<Scalars['String']['input']>>;
+  tips: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateTreatmentMenuInput = {
-  commonErrors: Array<Scalars['String']['input']>;
-  learningMaterialId: Scalars['Int']['input'];
+  commonErrors: InputMaybe<Array<Scalars['String']['input']>>;
+  learningMaterialId: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
   requiredFunctionId: Scalars['Int']['input'];
-  targetMuscles: Array<Scalars['String']['input']>;
-  tips: Scalars['String']['input'];
+  targetMuscles: InputMaybe<Array<Scalars['String']['input']>>;
+  tips: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateUserInput = {
-  birth_date: Scalars['String']['input'];
+  birthDate: Scalars['String']['input'];
   email: Scalars['String']['input'];
-  first_name: Scalars['String']['input'];
-  first_name_kana: Scalars['String']['input'];
+  firstName: Scalars['String']['input'];
+  firstNameKana: Scalars['String']['input'];
   gender: Scalars['Int']['input'];
   kind: Scalars['Int']['input'];
-  last_name: Scalars['String']['input'];
-  last_name_kana: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
+  lastNameKana: Scalars['String']['input'];
   password: Scalars['String']['input'];
 };
 
@@ -208,11 +263,11 @@ export type CurriculumUnit = {
   __typename?: 'CurriculumUnit';
   createdAt: Scalars['String']['output'];
   evaluationCriteria: Scalars['String']['output'];
-  evaluationCriteriaUrl: Scalars['String']['output'];
+  evaluationCriteriaUrl: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   overview: Scalars['String']['output'];
-  overviewUrl: Scalars['String']['output'];
+  overviewUrl: Maybe<Scalars['String']['output']>;
   requiredFunctions: Array<RequiredFunction>;
   type: Scalars['String']['output'];
   updatedAt: Scalars['String']['output'];
@@ -224,6 +279,42 @@ export enum Gender {
   Other = 'OTHER',
   PreferNotToSay = 'PREFER_NOT_TO_SAY'
 }
+
+export type HomeworkAssignment = {
+  __typename?: 'HomeworkAssignment';
+  clientId: Scalars['Int']['output'];
+  createdAt: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+  durationDays: Scalars['Int']['output'];
+  frequency: Scalars['String']['output'];
+  homeworkType: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  key: Scalars['String']['output'];
+  materialUrl: Maybe<Scalars['String']['output']>;
+  notes: Maybe<Scalars['String']['output']>;
+  priority: Scalars['String']['output'];
+  records: Array<HomeworkRecord>;
+  sessionId: Scalars['Int']['output'];
+  status: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  trainerId: Scalars['Int']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
+export type HomeworkRecord = {
+  __typename?: 'HomeworkRecord';
+  clientId: Scalars['Int']['output'];
+  completionStatus: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  difficulties: Maybe<Scalars['String']['output']>;
+  durationMinutes: Maybe<Scalars['Int']['output']>;
+  feedback: Maybe<Scalars['String']['output']>;
+  homeworkId: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  performedAt: Scalars['String']['output'];
+  repetitions: Maybe<Scalars['Int']['output']>;
+  updatedAt: Scalars['String']['output'];
+};
 
 export type LearningMaterial = {
   __typename?: 'LearningMaterial';
@@ -246,11 +337,42 @@ export type MidtermHealthPurpose = {
   id: Scalars['Int']['output'];
   key: Scalars['String']['output'];
   memo: Maybe<Scalars['String']['output']>;
+  milestones: Array<MonthlyHealthMilestone>;
   months: Scalars['Int']['output'];
   purpose: Scalars['String']['output'];
   settingDate: Scalars['String']['output'];
   startDate: Scalars['String']['output'];
   updatedAt: Scalars['String']['output'];
+};
+
+export type MonthlyActionGoal = {
+  __typename?: 'MonthlyActionGoal';
+  achieved: Maybe<Scalars['String']['output']>;
+  actionType: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
+  frequencyPerWeek: Scalars['Int']['output'];
+  goal: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  key: Scalars['String']['output'];
+  monthlyHealthMilestoneId: Scalars['Int']['output'];
+  targetMonth: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+};
+
+export type MonthlyHealthMilestone = {
+  __typename?: 'MonthlyHealthMilestone';
+  achieved: Maybe<Scalars['Boolean']['output']>;
+  actionGoals: Array<MonthlyActionGoal>;
+  asIs: Scalars['String']['output'];
+  clientId: Scalars['Int']['output'];
+  createdAt: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  key: Scalars['String']['output'];
+  midtermHealthGoalId: Scalars['Int']['output'];
+  target: Scalars['String']['output'];
+  toBe: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['String']['output'];
+  yearMonth: Scalars['String']['output'];
 };
 
 export type Mutation = {
@@ -260,8 +382,12 @@ export type Mutation = {
   createClient: Client;
   createClientWithProfile: Client;
   createCurriculumUnit: CurriculumUnit;
+  createHomeworkAssignment: HomeworkAssignment;
+  createHomeworkRecord: HomeworkRecord;
   createLearningMaterial: LearningMaterial;
   createMidtermHealthPurpose: MidtermHealthPurpose;
+  createMonthlyActionGoal: MonthlyActionGoal;
+  createMonthlyHealthMilestone: MonthlyHealthMilestone;
   createRequiredFunction: RequiredFunction;
   createSession: PtSession;
   createTrainer: Trainer;
@@ -296,6 +422,16 @@ export type MutationCreateCurriculumUnitArgs = {
 };
 
 
+export type MutationCreateHomeworkAssignmentArgs = {
+  input: CreateHomeworkAssignmentInput;
+};
+
+
+export type MutationCreateHomeworkRecordArgs = {
+  input: CreateHomeworkRecordInput;
+};
+
+
 export type MutationCreateLearningMaterialArgs = {
   input: CreateLearningMaterialInput;
 };
@@ -303,6 +439,16 @@ export type MutationCreateLearningMaterialArgs = {
 
 export type MutationCreateMidtermHealthPurposeArgs = {
   input: CreateMidtermHealthPurposeInput;
+};
+
+
+export type MutationCreateMonthlyActionGoalArgs = {
+  input: CreateMonthlyActionGoalInput;
+};
+
+
+export type MutationCreateMonthlyHealthMilestoneArgs = {
+  input: CreateMonthlyHealthMilestoneInput;
 };
 
 
@@ -337,32 +483,35 @@ export type MutationCreateUserArgs = {
 
 export type PtSession = {
   __typename?: 'PTSession';
+  archiveUrl: Maybe<Scalars['String']['output']>;
+  assignments: Array<Assignment>;
+  chatContents: Maybe<Scalars['String']['output']>;
   client: Client;
-  clientId: Scalars['String']['output'];
+  clientId: Scalars['Int']['output'];
   createdAt: Scalars['String']['output'];
-  duration: Scalars['Int']['output'];
   id: Scalars['Int']['output'];
   items: Array<PtSessionItem>;
-  notes: Maybe<Scalars['String']['output']>;
-  scheduledAt: Scalars['String']['output'];
-  status: SessionStatus;
+  key: Scalars['String']['output'];
+  kind: Scalars['String']['output'];
+  memo: Maybe<Scalars['String']['output']>;
+  performedAt: Scalars['String']['output'];
+  theme: Maybe<Scalars['String']['output']>;
   trainer: Trainer;
-  trainerId: Scalars['String']['output'];
+  trainerComment: Maybe<Scalars['String']['output']>;
+  trainerId: Scalars['Int']['output'];
   updatedAt: Scalars['String']['output'];
 };
 
 export type PtSessionItem = {
   __typename?: 'PTSessionItem';
   createdAt: Scalars['String']['output'];
-  duration: Maybe<Scalars['Int']['output']>;
-  exerciseName: Scalars['String']['output'];
   id: Scalars['Int']['output'];
-  notes: Maybe<Scalars['String']['output']>;
-  reps: Maybe<Scalars['Int']['output']>;
-  sessionId: Scalars['String']['output'];
-  sets: Maybe<Scalars['Int']['output']>;
+  memo: Maybe<Scalars['String']['output']>;
+  ptSessionId: Scalars['Int']['output'];
+  taskId: Scalars['Int']['output'];
+  taskType: Scalars['String']['output'];
+  trainerAdvice: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['String']['output'];
-  weight: Maybe<Scalars['Float']['output']>;
 };
 
 export type Query = {
@@ -372,13 +521,19 @@ export type Query = {
   clients: Array<Client>;
   curriculumUnits: Array<CurriculumUnit>;
   hello: Maybe<Scalars['String']['output']>;
+  homeworkAssignments: Array<HomeworkAssignment>;
+  homeworkRecords: Array<HomeworkRecord>;
   learningMaterials: Array<LearningMaterial>;
   midtermHealthPurposes: Array<MidtermHealthPurpose>;
+  monthlyActionGoals: Array<MonthlyActionGoal>;
+  monthlyHealthMilestones: Array<MonthlyHealthMilestone>;
   requiredFunctions: Array<RequiredFunction>;
   sessions: Array<PtSession>;
   trainers: Array<Trainer>;
   trainingMenus: Array<TrainingMenu>;
+  trainingTasks: Array<TrainingTask>;
   treatmentMenus: Array<TreatmentMenu>;
+  treatmentTasks: Array<TreatmentTask>;
   users: Array<User>;
 };
 
@@ -386,7 +541,7 @@ export type Query = {
 export type QueryAssignmentsArgs = {
   limit: InputMaybe<Scalars['Int']['input']>;
   offset: InputMaybe<Scalars['Int']['input']>;
-  sessionId: Scalars['Int']['input'];
+  ptSessionId: Scalars['Int']['input'];
 };
 
 
@@ -409,14 +564,41 @@ export type QueryCurriculumUnitsArgs = {
 };
 
 
+export type QueryHomeworkAssignmentsArgs = {
+  clientId: Scalars['Int']['input'];
+  limit: InputMaybe<Scalars['Int']['input']>;
+  offset: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryHomeworkRecordsArgs = {
+  homeworkId: Scalars['Int']['input'];
+  limit: InputMaybe<Scalars['Int']['input']>;
+  offset: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryLearningMaterialsArgs = {
   limit: InputMaybe<Scalars['Int']['input']>;
   offset: InputMaybe<Scalars['Int']['input']>;
-  ownerId: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryMidtermHealthPurposesArgs = {
+  clientId: Scalars['Int']['input'];
+  limit: InputMaybe<Scalars['Int']['input']>;
+  offset: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryMonthlyActionGoalsArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  monthlyHealthMilestoneId: Scalars['Int']['input'];
+  offset: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryMonthlyHealthMilestonesArgs = {
   clientId: Scalars['Int']['input'];
   limit: InputMaybe<Scalars['Int']['input']>;
   offset: InputMaybe<Scalars['Int']['input']>;
@@ -445,14 +627,24 @@ export type QueryTrainersArgs = {
 export type QueryTrainingMenusArgs = {
   limit: InputMaybe<Scalars['Int']['input']>;
   offset: InputMaybe<Scalars['Int']['input']>;
-  requiredFunctionId: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryTrainingTasksArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  offset: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryTreatmentMenusArgs = {
   limit: InputMaybe<Scalars['Int']['input']>;
   offset: InputMaybe<Scalars['Int']['input']>;
-  requiredFunctionId: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryTreatmentTasksArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  offset: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -464,24 +656,18 @@ export type QueryUsersArgs = {
 export type RequiredFunction = {
   __typename?: 'RequiredFunction';
   createdAt: Scalars['String']['output'];
+  curriculumUnit: Maybe<CurriculumUnit>;
   curriculumUnitId: Scalars['Int']['output'];
   evaluationCriteria: Scalars['String']['output'];
-  evaluationCriteriaUrl: Scalars['String']['output'];
+  evaluationCriteriaUrl: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   overview: Scalars['String']['output'];
-  overviewUrl: Scalars['String']['output'];
+  overviewUrl: Maybe<Scalars['String']['output']>;
   trainingMenus: Array<TrainingMenu>;
   treatmentMenus: Array<TreatmentMenu>;
   updatedAt: Scalars['String']['output'];
 };
-
-export enum SessionStatus {
-  Cancelled = 'CANCELLED',
-  Completed = 'COMPLETED',
-  InProgress = 'IN_PROGRESS',
-  Scheduled = 'SCHEDULED'
-}
 
 export type Trainer = {
   __typename?: 'Trainer';
@@ -489,7 +675,7 @@ export type Trainer = {
   profile: Maybe<TrainerProfile>;
   sessions: Array<PtSession>;
   user: User;
-  userId: Scalars['String']['output'];
+  userId: Scalars['Int']['output'];
 };
 
 export type TrainerProfile = {
@@ -497,62 +683,95 @@ export type TrainerProfile = {
   certifications: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   motivationStatement: Scalars['String']['output'];
-  signatureMuscle: Scalars['String']['output'];
-  specialization: Scalars['String']['output'];
-  trainerId: Scalars['String']['output'];
+  signatureMuscles: Scalars['String']['output'];
+  specializations: Scalars['String']['output'];
+  trainerId: Scalars['Int']['output'];
 };
 
 export type TrainingMenu = {
   __typename?: 'TrainingMenu';
-  commonErrors: Array<Scalars['String']['output']>;
+  commonErrors: Maybe<Array<Scalars['String']['output']>>;
   createdAt: Scalars['String']['output'];
   id: Scalars['Int']['output'];
-  learningMaterialId: Scalars['Int']['output'];
-  level: Scalars['Int']['output'];
+  learningMaterial: Maybe<LearningMaterial>;
+  learningMaterialId: Maybe<Scalars['Int']['output']>;
+  level: Maybe<Scalars['Int']['output']>;
   name: Scalars['String']['output'];
+  requiredFunction: Maybe<RequiredFunction>;
   requiredFunctionId: Scalars['Int']['output'];
-  targetMuscles: Array<Scalars['String']['output']>;
-  tips: Scalars['String']['output'];
+  targetMuscles: Maybe<Array<Scalars['String']['output']>>;
+  tips: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['String']['output'];
+};
+
+export type TrainingTask = {
+  __typename?: 'TrainingTask';
+  contentId: Scalars['Int']['output'];
+  contentType: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  key: Scalars['String']['output'];
+  memo: Maybe<Scalars['String']['output']>;
+  reps: Maybe<Scalars['Int']['output']>;
+  sec: Maybe<Scalars['Int']['output']>;
+  updatedAt: Scalars['String']['output'];
+  weight: Maybe<Scalars['Float']['output']>;
 };
 
 export type TreatmentMenu = {
   __typename?: 'TreatmentMenu';
-  commonErrors: Array<Scalars['String']['output']>;
+  commonErrors: Maybe<Array<Scalars['String']['output']>>;
   createdAt: Scalars['String']['output'];
   id: Scalars['Int']['output'];
-  learningMaterialId: Scalars['Int']['output'];
+  learningMaterial: Maybe<LearningMaterial>;
+  learningMaterialId: Maybe<Scalars['Int']['output']>;
   name: Scalars['String']['output'];
+  requiredFunction: Maybe<RequiredFunction>;
   requiredFunctionId: Scalars['Int']['output'];
-  targetMuscles: Array<Scalars['String']['output']>;
-  tips: Scalars['String']['output'];
+  targetMuscles: Maybe<Array<Scalars['String']['output']>>;
+  tips: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['String']['output'];
+};
+
+export type TreatmentTask = {
+  __typename?: 'TreatmentTask';
+  contentId: Scalars['Int']['output'];
+  contentType: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  key: Scalars['String']['output'];
+  memo: Maybe<Scalars['String']['output']>;
+  sec: Maybe<Scalars['Int']['output']>;
   updatedAt: Scalars['String']['output'];
 };
 
 export type User = {
   __typename?: 'User';
-  active_flag: Scalars['Boolean']['output'];
-  birth_date: Scalars['String']['output'];
-  created_at: Scalars['String']['output'];
+  activeFlag: Scalars['Boolean']['output'];
+  birthDate: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
   credentials: Maybe<UserCredentials>;
-  first_name: Scalars['String']['output'];
-  first_name_kana: Scalars['String']['output'];
+  deletedAt: Maybe<Scalars['String']['output']>;
+  firstName: Scalars['String']['output'];
+  firstNameKana: Scalars['String']['output'];
   gender: Scalars['Int']['output'];
   id: Scalars['Int']['output'];
   key: Scalars['String']['output'];
   kind: Scalars['Int']['output'];
-  last_name: Scalars['String']['output'];
-  last_name_kana: Scalars['String']['output'];
-  updated_at: Scalars['String']['output'];
+  lastName: Scalars['String']['output'];
+  lastNameKana: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
 };
 
 export type UserCredentials = {
   __typename?: 'UserCredentials';
-  created_at: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
-  reset_at: Scalars['Boolean']['output'];
-  updated_at: Scalars['String']['output'];
+  passwordDigest: Scalars['String']['output'];
+  resetAt: Scalars['Boolean']['output'];
+  updatedAt: Scalars['String']['output'];
+  userId: Scalars['String']['output'];
 };
 
 export enum UserRole {
@@ -635,6 +854,7 @@ export type DirectiveResolverFn<TResult = Record<PropertyKey, never>, TParent = 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Assignment: ResolverTypeWrapper<Assignment>;
+  AssignmentExecution: ResolverTypeWrapper<AssignmentExecution>;
   BodyCondition: ResolverTypeWrapper<BodyCondition>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Client: ResolverTypeWrapper<Client>;
@@ -644,8 +864,12 @@ export type ResolversTypes = {
   CreateClientInput: CreateClientInput;
   CreateClientWithProfileInput: CreateClientWithProfileInput;
   CreateCurriculumUnitInput: CreateCurriculumUnitInput;
+  CreateHomeworkAssignmentInput: CreateHomeworkAssignmentInput;
+  CreateHomeworkRecordInput: CreateHomeworkRecordInput;
   CreateLearningMaterialInput: CreateLearningMaterialInput;
   CreateMidtermHealthPurposeInput: CreateMidtermHealthPurposeInput;
+  CreateMonthlyActionGoalInput: CreateMonthlyActionGoalInput;
+  CreateMonthlyHealthMilestoneInput: CreateMonthlyHealthMilestoneInput;
   CreateRequiredFunctionInput: CreateRequiredFunctionInput;
   CreateSessionInput: CreateSessionInput;
   CreateTrainerInput: CreateTrainerInput;
@@ -655,20 +879,25 @@ export type ResolversTypes = {
   CurriculumUnit: ResolverTypeWrapper<CurriculumUnit>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   Gender: Gender;
+  HomeworkAssignment: ResolverTypeWrapper<HomeworkAssignment>;
+  HomeworkRecord: ResolverTypeWrapper<HomeworkRecord>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   LearningMaterial: ResolverTypeWrapper<LearningMaterial>;
   MidtermHealthPurpose: ResolverTypeWrapper<MidtermHealthPurpose>;
+  MonthlyActionGoal: ResolverTypeWrapper<MonthlyActionGoal>;
+  MonthlyHealthMilestone: ResolverTypeWrapper<MonthlyHealthMilestone>;
   Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   PTSession: ResolverTypeWrapper<PtSession>;
   PTSessionItem: ResolverTypeWrapper<PtSessionItem>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   RequiredFunction: ResolverTypeWrapper<RequiredFunction>;
-  SessionStatus: SessionStatus;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Trainer: ResolverTypeWrapper<Trainer>;
   TrainerProfile: ResolverTypeWrapper<TrainerProfile>;
   TrainingMenu: ResolverTypeWrapper<TrainingMenu>;
+  TrainingTask: ResolverTypeWrapper<TrainingTask>;
   TreatmentMenu: ResolverTypeWrapper<TreatmentMenu>;
+  TreatmentTask: ResolverTypeWrapper<TreatmentTask>;
   User: ResolverTypeWrapper<User>;
   UserCredentials: ResolverTypeWrapper<UserCredentials>;
   UserRole: UserRole;
@@ -677,6 +906,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Assignment: Assignment;
+  AssignmentExecution: AssignmentExecution;
   BodyCondition: BodyCondition;
   Boolean: Scalars['Boolean']['output'];
   Client: Client;
@@ -686,8 +916,12 @@ export type ResolversParentTypes = {
   CreateClientInput: CreateClientInput;
   CreateClientWithProfileInput: CreateClientWithProfileInput;
   CreateCurriculumUnitInput: CreateCurriculumUnitInput;
+  CreateHomeworkAssignmentInput: CreateHomeworkAssignmentInput;
+  CreateHomeworkRecordInput: CreateHomeworkRecordInput;
   CreateLearningMaterialInput: CreateLearningMaterialInput;
   CreateMidtermHealthPurposeInput: CreateMidtermHealthPurposeInput;
+  CreateMonthlyActionGoalInput: CreateMonthlyActionGoalInput;
+  CreateMonthlyHealthMilestoneInput: CreateMonthlyHealthMilestoneInput;
   CreateRequiredFunctionInput: CreateRequiredFunctionInput;
   CreateSessionInput: CreateSessionInput;
   CreateTrainerInput: CreateTrainerInput;
@@ -696,9 +930,13 @@ export type ResolversParentTypes = {
   CreateUserInput: CreateUserInput;
   CurriculumUnit: CurriculumUnit;
   Float: Scalars['Float']['output'];
+  HomeworkAssignment: HomeworkAssignment;
+  HomeworkRecord: HomeworkRecord;
   Int: Scalars['Int']['output'];
   LearningMaterial: LearningMaterial;
   MidtermHealthPurpose: MidtermHealthPurpose;
+  MonthlyActionGoal: MonthlyActionGoal;
+  MonthlyHealthMilestone: MonthlyHealthMilestone;
   Mutation: Record<PropertyKey, never>;
   PTSession: PtSession;
   PTSessionItem: PtSessionItem;
@@ -708,7 +946,9 @@ export type ResolversParentTypes = {
   Trainer: Trainer;
   TrainerProfile: TrainerProfile;
   TrainingMenu: TrainingMenu;
+  TrainingTask: TrainingTask;
   TreatmentMenu: TreatmentMenu;
+  TreatmentTask: TreatmentTask;
   User: User;
   UserCredentials: UserCredentials;
 };
@@ -716,11 +956,20 @@ export type ResolversParentTypes = {
 export type AssignmentResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Assignment'] = ResolversParentTypes['Assignment']> = {
   createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   dueDate: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  executions: Resolver<Array<ResolversTypes['AssignmentExecution']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   key: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   ptSessionId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   taskId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   taskType: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type AssignmentExecutionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AssignmentExecution'] = ResolversParentTypes['AssignmentExecution']> = {
+  assignmentId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  executionDate: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
@@ -752,16 +1001,19 @@ export type BodyConditionResolvers<ContextType = Context, ParentType extends Res
 };
 
 export type ClientResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Client'] = ResolversParentTypes['Client']> = {
+  assignments: Resolver<Array<ResolversTypes['Assignment']>, ParentType, ContextType>;
+  bodyConditions: Resolver<Array<ResolversTypes['BodyCondition']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  midtermHealthPurposes: Resolver<Array<ResolversTypes['MidtermHealthPurpose']>, ParentType, ContextType>;
   profile: Resolver<Maybe<ResolversTypes['ClientProfile']>, ParentType, ContextType>;
   sessions: Resolver<Array<ResolversTypes['PTSession']>, ParentType, ContextType>;
   user: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  userId: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  userId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
 };
 
 export type ClientProfileResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ClientProfile'] = ResolversParentTypes['ClientProfile']> = {
   allowSnsPost: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  clientId: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  clientId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   exerciseHistory: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   hobby: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -771,13 +1023,47 @@ export type ClientProfileResolvers<ContextType = Context, ParentType extends Res
 export type CurriculumUnitResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CurriculumUnit'] = ResolversParentTypes['CurriculumUnit']> = {
   createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   evaluationCriteria: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  evaluationCriteriaUrl: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  evaluationCriteriaUrl: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   overview: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  overviewUrl: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  overviewUrl: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   requiredFunctions: Resolver<Array<ResolversTypes['RequiredFunction']>, ParentType, ContextType>;
   type: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type HomeworkAssignmentResolvers<ContextType = Context, ParentType extends ResolversParentTypes['HomeworkAssignment'] = ResolversParentTypes['HomeworkAssignment']> = {
+  clientId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  durationDays: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  frequency: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  homeworkType: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  key: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  materialUrl: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  notes: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  priority: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  records: Resolver<Array<ResolversTypes['HomeworkRecord']>, ParentType, ContextType>;
+  sessionId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  status: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  trainerId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type HomeworkRecordResolvers<ContextType = Context, ParentType extends ResolversParentTypes['HomeworkRecord'] = ResolversParentTypes['HomeworkRecord']> = {
+  clientId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  completionStatus: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  difficulties: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  durationMinutes: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  feedback: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  homeworkId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  performedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  repetitions: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
@@ -800,11 +1086,40 @@ export type MidtermHealthPurposeResolvers<ContextType = Context, ParentType exte
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   key: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   memo: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  milestones: Resolver<Array<ResolversTypes['MonthlyHealthMilestone']>, ParentType, ContextType>;
   months: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   purpose: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   settingDate: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   startDate: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type MonthlyActionGoalResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MonthlyActionGoal'] = ResolversParentTypes['MonthlyActionGoal']> = {
+  achieved: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  actionType: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  frequencyPerWeek: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  goal: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  key: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  monthlyHealthMilestoneId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  targetMonth: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type MonthlyHealthMilestoneResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MonthlyHealthMilestone'] = ResolversParentTypes['MonthlyHealthMilestone']> = {
+  achieved: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  actionGoals: Resolver<Array<ResolversTypes['MonthlyActionGoal']>, ParentType, ContextType>;
+  asIs: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  clientId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  key: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  midtermHealthGoalId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  target: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  toBe: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  yearMonth: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
@@ -813,8 +1128,12 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   createClient: Resolver<ResolversTypes['Client'], ParentType, ContextType, RequireFields<MutationCreateClientArgs, 'input'>>;
   createClientWithProfile: Resolver<ResolversTypes['Client'], ParentType, ContextType, RequireFields<MutationCreateClientWithProfileArgs, 'input'>>;
   createCurriculumUnit: Resolver<ResolversTypes['CurriculumUnit'], ParentType, ContextType, RequireFields<MutationCreateCurriculumUnitArgs, 'input'>>;
+  createHomeworkAssignment: Resolver<ResolversTypes['HomeworkAssignment'], ParentType, ContextType, RequireFields<MutationCreateHomeworkAssignmentArgs, 'input'>>;
+  createHomeworkRecord: Resolver<ResolversTypes['HomeworkRecord'], ParentType, ContextType, RequireFields<MutationCreateHomeworkRecordArgs, 'input'>>;
   createLearningMaterial: Resolver<ResolversTypes['LearningMaterial'], ParentType, ContextType, RequireFields<MutationCreateLearningMaterialArgs, 'input'>>;
   createMidtermHealthPurpose: Resolver<ResolversTypes['MidtermHealthPurpose'], ParentType, ContextType, RequireFields<MutationCreateMidtermHealthPurposeArgs, 'input'>>;
+  createMonthlyActionGoal: Resolver<ResolversTypes['MonthlyActionGoal'], ParentType, ContextType, RequireFields<MutationCreateMonthlyActionGoalArgs, 'input'>>;
+  createMonthlyHealthMilestone: Resolver<ResolversTypes['MonthlyHealthMilestone'], ParentType, ContextType, RequireFields<MutationCreateMonthlyHealthMilestoneArgs, 'input'>>;
   createRequiredFunction: Resolver<ResolversTypes['RequiredFunction'], ParentType, ContextType, RequireFields<MutationCreateRequiredFunctionArgs, 'input'>>;
   createSession: Resolver<ResolversTypes['PTSession'], ParentType, ContextType, RequireFields<MutationCreateSessionArgs, 'input'>>;
   createTrainer: Resolver<ResolversTypes['Trainer'], ParentType, ContextType, RequireFields<MutationCreateTrainerArgs, 'input'>>;
@@ -824,58 +1143,68 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 };
 
 export type PtSessionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PTSession'] = ResolversParentTypes['PTSession']> = {
+  archiveUrl: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  assignments: Resolver<Array<ResolversTypes['Assignment']>, ParentType, ContextType>;
+  chatContents: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   client: Resolver<ResolversTypes['Client'], ParentType, ContextType>;
-  clientId: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  clientId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  duration: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   items: Resolver<Array<ResolversTypes['PTSessionItem']>, ParentType, ContextType>;
-  notes: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  scheduledAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  status: Resolver<ResolversTypes['SessionStatus'], ParentType, ContextType>;
+  key: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  kind: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  memo: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  performedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  theme: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trainer: Resolver<ResolversTypes['Trainer'], ParentType, ContextType>;
-  trainerId: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  trainerComment: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  trainerId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type PtSessionItemResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PTSessionItem'] = ResolversParentTypes['PTSessionItem']> = {
   createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  duration: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  exerciseName: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  notes: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reps: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  sessionId: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  sets: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  memo: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  ptSessionId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  taskId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  taskType: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  trainerAdvice: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  weight: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  assignments: Resolver<Array<ResolversTypes['Assignment']>, ParentType, ContextType, RequireFields<QueryAssignmentsArgs, 'sessionId'>>;
+  assignments: Resolver<Array<ResolversTypes['Assignment']>, ParentType, ContextType, RequireFields<QueryAssignmentsArgs, 'ptSessionId'>>;
   bodyConditions: Resolver<Array<ResolversTypes['BodyCondition']>, ParentType, ContextType, RequireFields<QueryBodyConditionsArgs, 'clientId'>>;
   clients: Resolver<Array<ResolversTypes['Client']>, ParentType, ContextType, QueryClientsArgs>;
   curriculumUnits: Resolver<Array<ResolversTypes['CurriculumUnit']>, ParentType, ContextType, QueryCurriculumUnitsArgs>;
   hello: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  homeworkAssignments: Resolver<Array<ResolversTypes['HomeworkAssignment']>, ParentType, ContextType, RequireFields<QueryHomeworkAssignmentsArgs, 'clientId'>>;
+  homeworkRecords: Resolver<Array<ResolversTypes['HomeworkRecord']>, ParentType, ContextType, RequireFields<QueryHomeworkRecordsArgs, 'homeworkId'>>;
   learningMaterials: Resolver<Array<ResolversTypes['LearningMaterial']>, ParentType, ContextType, QueryLearningMaterialsArgs>;
   midtermHealthPurposes: Resolver<Array<ResolversTypes['MidtermHealthPurpose']>, ParentType, ContextType, RequireFields<QueryMidtermHealthPurposesArgs, 'clientId'>>;
+  monthlyActionGoals: Resolver<Array<ResolversTypes['MonthlyActionGoal']>, ParentType, ContextType, RequireFields<QueryMonthlyActionGoalsArgs, 'monthlyHealthMilestoneId'>>;
+  monthlyHealthMilestones: Resolver<Array<ResolversTypes['MonthlyHealthMilestone']>, ParentType, ContextType, RequireFields<QueryMonthlyHealthMilestonesArgs, 'clientId'>>;
   requiredFunctions: Resolver<Array<ResolversTypes['RequiredFunction']>, ParentType, ContextType, RequireFields<QueryRequiredFunctionsArgs, 'curriculumUnitId'>>;
   sessions: Resolver<Array<ResolversTypes['PTSession']>, ParentType, ContextType, QuerySessionsArgs>;
   trainers: Resolver<Array<ResolversTypes['Trainer']>, ParentType, ContextType, QueryTrainersArgs>;
   trainingMenus: Resolver<Array<ResolversTypes['TrainingMenu']>, ParentType, ContextType, QueryTrainingMenusArgs>;
+  trainingTasks: Resolver<Array<ResolversTypes['TrainingTask']>, ParentType, ContextType, QueryTrainingTasksArgs>;
   treatmentMenus: Resolver<Array<ResolversTypes['TreatmentMenu']>, ParentType, ContextType, QueryTreatmentMenusArgs>;
+  treatmentTasks: Resolver<Array<ResolversTypes['TreatmentTask']>, ParentType, ContextType, QueryTreatmentTasksArgs>;
   users: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, QueryUsersArgs>;
 };
 
 export type RequiredFunctionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RequiredFunction'] = ResolversParentTypes['RequiredFunction']> = {
   createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  curriculumUnit: Resolver<Maybe<ResolversTypes['CurriculumUnit']>, ParentType, ContextType>;
   curriculumUnitId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   evaluationCriteria: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  evaluationCriteriaUrl: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  evaluationCriteriaUrl: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   overview: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  overviewUrl: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  overviewUrl: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trainingMenus: Resolver<Array<ResolversTypes['TrainingMenu']>, ParentType, ContextType>;
   treatmentMenus: Resolver<Array<ResolversTypes['TreatmentMenu']>, ParentType, ContextType>;
   updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -886,75 +1215,111 @@ export type TrainerResolvers<ContextType = Context, ParentType extends Resolvers
   profile: Resolver<Maybe<ResolversTypes['TrainerProfile']>, ParentType, ContextType>;
   sessions: Resolver<Array<ResolversTypes['PTSession']>, ParentType, ContextType>;
   user: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  userId: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  userId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
 };
 
 export type TrainerProfileResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrainerProfile'] = ResolversParentTypes['TrainerProfile']> = {
   certifications: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   motivationStatement: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  signatureMuscle: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  specialization: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  trainerId: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  signatureMuscles: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  specializations: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  trainerId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
 };
 
 export type TrainingMenuResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrainingMenu'] = ResolversParentTypes['TrainingMenu']> = {
-  commonErrors: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  commonErrors: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
   createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  learningMaterialId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  level: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  learningMaterial: Resolver<Maybe<ResolversTypes['LearningMaterial']>, ParentType, ContextType>;
+  learningMaterialId: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  level: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  requiredFunction: Resolver<Maybe<ResolversTypes['RequiredFunction']>, ParentType, ContextType>;
   requiredFunctionId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  targetMuscles: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  tips: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  targetMuscles: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  tips: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
-export type TreatmentMenuResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TreatmentMenu'] = ResolversParentTypes['TreatmentMenu']> = {
-  commonErrors: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+export type TrainingTaskResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrainingTask'] = ResolversParentTypes['TrainingTask']> = {
+  contentId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  contentType: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  learningMaterialId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  key: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  memo: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  reps: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  sec: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  weight: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+};
+
+export type TreatmentMenuResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TreatmentMenu'] = ResolversParentTypes['TreatmentMenu']> = {
+  commonErrors: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  learningMaterial: Resolver<Maybe<ResolversTypes['LearningMaterial']>, ParentType, ContextType>;
+  learningMaterialId: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  requiredFunction: Resolver<Maybe<ResolversTypes['RequiredFunction']>, ParentType, ContextType>;
   requiredFunctionId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  targetMuscles: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  tips: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  targetMuscles: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  tips: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type TreatmentTaskResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TreatmentTask'] = ResolversParentTypes['TreatmentTask']> = {
+  contentId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  contentType: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  key: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  memo: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  sec: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  active_flag: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  birth_date: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  created_at: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  activeFlag: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  birthDate: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   credentials: Resolver<Maybe<ResolversTypes['UserCredentials']>, ParentType, ContextType>;
-  first_name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  first_name_kana: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  deletedAt: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  firstName: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  firstNameKana: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   gender: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   key: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   kind: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  last_name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  last_name_kana: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  updated_at: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  lastName: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  lastNameKana: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type UserCredentialsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UserCredentials'] = ResolversParentTypes['UserCredentials']> = {
-  created_at: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  reset_at: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  updated_at: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  passwordDigest: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  resetAt: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  userId: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = Context> = {
   Assignment: AssignmentResolvers<ContextType>;
+  AssignmentExecution: AssignmentExecutionResolvers<ContextType>;
   BodyCondition: BodyConditionResolvers<ContextType>;
   Client: ClientResolvers<ContextType>;
   ClientProfile: ClientProfileResolvers<ContextType>;
   CurriculumUnit: CurriculumUnitResolvers<ContextType>;
+  HomeworkAssignment: HomeworkAssignmentResolvers<ContextType>;
+  HomeworkRecord: HomeworkRecordResolvers<ContextType>;
   LearningMaterial: LearningMaterialResolvers<ContextType>;
   MidtermHealthPurpose: MidtermHealthPurposeResolvers<ContextType>;
+  MonthlyActionGoal: MonthlyActionGoalResolvers<ContextType>;
+  MonthlyHealthMilestone: MonthlyHealthMilestoneResolvers<ContextType>;
   Mutation: MutationResolvers<ContextType>;
   PTSession: PtSessionResolvers<ContextType>;
   PTSessionItem: PtSessionItemResolvers<ContextType>;
@@ -963,7 +1328,9 @@ export type Resolvers<ContextType = Context> = {
   Trainer: TrainerResolvers<ContextType>;
   TrainerProfile: TrainerProfileResolvers<ContextType>;
   TrainingMenu: TrainingMenuResolvers<ContextType>;
+  TrainingTask: TrainingTaskResolvers<ContextType>;
   TreatmentMenu: TreatmentMenuResolvers<ContextType>;
+  TreatmentTask: TreatmentTaskResolvers<ContextType>;
   User: UserResolvers<ContextType>;
   UserCredentials: UserCredentialsResolvers<ContextType>;
 };

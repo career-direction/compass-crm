@@ -1,5 +1,5 @@
-query GetLearningMaterials($ownerId: String, $limit: Int, $offset: Int) {
-	learningMaterials(ownerId: $ownerId, limit: $limit, offset: $offset) {
+query GetLearningMaterials($limit: Int, $offset: Int) {
+	learningMaterials(limit: $limit, offset: $offset) {
 		id
 		ownerId
 		key
