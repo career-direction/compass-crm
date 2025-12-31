@@ -21,13 +21,15 @@ type AuthContextType = {
 	user: AuthUser | null;
 	loading: boolean;
 	login: (email: string, password: string) => Promise<LoginResult>;
-	logout: () => Promise<void>;
+	logout: () => Promise<LogoutResult>;
 	refetch: () => Promise<void>;
 };
 
 type LoginResult =
 	| { success: true; user: AuthUser }
 	| { success: false; error: string };
+
+type LogoutResult = { success: true } | { success: false; error: string };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -81,12 +83,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 		[],
 	);
 
-	const logout = useCallback(async () => {
+	const logout = useCallback(async (): Promise<LogoutResult> => {
 		try {
 			await fetch("/api/auth/logout", { method: "POST" });
 			setUser(null);
+			return { success: true };
 		} catch (error) {
 			console.error("Logout error:", error);
+			return { success: false, error: "ログアウトに失敗しました" };
 		}
 	}, []);
 

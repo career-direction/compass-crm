@@ -1,6 +1,7 @@
 "use client";
 
 import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
 import { usePathname, useRouter } from "next/navigation";
 import { memo, useCallback } from "react";
 import { useAuth } from "@/features/auth/contexts/AuthContext";
@@ -19,9 +20,19 @@ export const Sidebar = memo(({ isOpen, onToggle }: SidebarContainerProps) => {
 		useDisclosure(false);
 
 	const handleLogout = useCallback(async () => {
-		await logout();
-		closeLogoutModal();
-		router.push("/login");
+		const result = await logout();
+
+		if (result.success) {
+			closeLogoutModal();
+			router.push("/login");
+		} else {
+			closeLogoutModal();
+			notifications.show({
+				title: "エラー",
+				message: result.error,
+				color: "red",
+			});
+		}
 	}, [logout, closeLogoutModal, router]);
 
 	return (
