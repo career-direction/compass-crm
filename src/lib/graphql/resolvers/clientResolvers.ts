@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import { clientProfiles, clients, users } from "@/db/schema";
+import { requireAdmin } from "@/features/auth/auth";
 import type {
 	Client,
 	MutationResolvers,
@@ -9,7 +10,6 @@ import type {
 
 import type { Context } from "../context";
 import { mapClient } from "./mappers";
-import { requireAdmin } from "@/features/auth/auth";
 
 export const clientResolvers = {
 	Query: {
@@ -73,8 +73,67 @@ export const clientResolvers = {
 
 			return mapClient(createdClient, user);
 		},
+
+		createClientWithProfile: async (_parent, args, context) => {
+			requireAdmin(context.user);
+
+			const {
+				firstName,
+				lastName,
+				firstNameKana,
+				lastNameKana,
+				birthDate,
+				gender,
+				occupation,
+				hobby,
+				allowSnsPost,
+				exerciseHistory,
+			} = args.input;
+
+			// 1. ユーザーを作成 (kind: 2 = クライアント)
+			const now = new Date();
+			const [createdUser] = await context.db
+				.insert(users)
+				.values({
+					kind: 2,
+					firstName,
+					lastName,
+					firstNameKana,
+					lastNameKana,
+					birthDate,
+					gender,
+					createdAt: now,
+					updatedAt: now,
+				})
+				.returning();
+
+			// 2. クライアントを作成
+			const [createdClient] = await context.db
+				.insert(clients)
+				.values({
+					userId: createdUser.id,
+				})
+				.returning();
+
+			// 3. クライアントプロファイルを作成
+			const [createdProfile] = await context.db
+				.insert(clientProfiles)
+				.values({
+					clientId: createdClient.id,
+					occupation,
+					hobby,
+					allowSnsPost,
+					exerciseHistory,
+				})
+				.returning();
+
+			return mapClient(createdClient, createdUser, createdProfile);
+		},
 	},
 } satisfies {
 	Query: Pick<QueryResolvers<Context>, "clients">;
-	Mutation: Pick<MutationResolvers<Context>, "createClient">;
+	Mutation: Pick<
+		MutationResolvers<Context>,
+		"createClient" | "createClientWithProfile"
+	>;
 };

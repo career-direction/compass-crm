@@ -41,5 +41,5 @@ export default function DashboardLayout({ children }: Props) {
 
 // TODO: Headerをいい感じにする
 const Header = () => {
-	return <Text>Session</Text>;
+	return <Text>TODO: Session</Text>;
 };

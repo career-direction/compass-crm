@@ -99,7 +99,8 @@ export const TrainingMaterialListUI = ({
 								</Title>
 								<Group justify="space-between">
 									<Text size="sm" c="dimmed">
-										ステータス: {statusLabel[material.status] || material.status}
+										ステータス:{" "}
+										{statusLabel[material.status] || material.status}
 									</Text>
 									<Text size="sm" c="dimmed">
 										{contentTypeLabel[material.contentType] ||
