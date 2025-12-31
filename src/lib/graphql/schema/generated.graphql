@@ -1,0 +1,201 @@
+# ============================================
+# 自動生成されたGraphQLスキーマ
+# 生成元: src/db/schema.ts (Drizzle ORM)
+#
+# このファイルは scripts/generate-graphql-schema.ts によって生成されました
+# 手動で編集しないでください
+# ============================================
+
+type User {
+	id: Int!
+	key: String!
+	kind: Int!
+	firstName: String!
+	lastName: String!
+	firstNameKana: String!
+	lastNameKana: String!
+	birthDate: String!
+	gender: Int!
+	activeFlag: Boolean!
+	deletedAt: String
+	createdAt: String!
+	updatedAt: String!
+}
+
+type UserCredential {
+	id: Int!
+	userId: String!
+	email: String!
+	passwordDigest: String!
+	resetAt: Boolean!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type Client {
+	id: Int!
+	userId: Int!
+}
+
+type ClientProfile {
+	id: Int!
+	clientId: Int!
+	occupation: String!
+	hobby: String!
+	allowSnsPost: String!
+	exerciseHistory: String!
+}
+
+type Trainer {
+	id: Int!
+	userId: Int!
+}
+
+type TrainerProfile {
+	id: Int!
+	trainerId: Int!
+	motivationStatement: String!
+	signatureMuscle: String!
+	specialization: String!
+	certifications: String!
+}
+
+type PtSession {
+	id: Int!
+	clientId: Int!
+	trainerId: Int!
+	key: String!
+	performedAt: String!
+	kind: String!
+	theme: String!
+	archiveUrl: String
+	trainerComment: String
+	memo: String
+	chatContents: String
+	createdAt: String!
+	updatedAt: String!
+}
+
+type PtSessionItem {
+	id: Int!
+	ptSessionId: Int!
+	taskId: Int!
+	taskType: String!
+	trainerAdvice: String
+	memo: String
+	createdAt: String!
+	updatedAt: String!
+}
+
+type BodyCondition {
+	id: Int!
+	clientId: Int!
+	measuredAt: String!
+	weight: String
+	bodyFat: String
+	muscleMass: String
+	skeletalMuscleRate: String
+	bmi: String
+	bmr: String
+	avgSleepTime: String
+	avgRespirationRate: String
+	sympathetic: String
+	parasympathetic: String
+	bust: String
+	underbust: String
+	waist: String
+	hip: String
+	armCircumference: String
+	buttockHeight: String
+	thighCircumference: String
+	calfCircumference: String
+	ffd: String
+	hwd: String
+	memo: String
+}
+
+type MidtermHealthPurpos {
+	id: Int!
+	key: String!
+	clientId: Int!
+	purpose: String!
+	months: Int!
+	settingDate: String!
+	startDate: String!
+	memo: String
+	createdAt: String!
+	updatedAt: String!
+}
+
+type Assignment {
+	id: Int!
+	key: String!
+	ptSessionId: Int!
+	dueDate: String!
+	taskType: String!
+	taskId: Int!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type LearningMaterial {
+	id: Int!
+	ownerId: String!
+	key: String!
+	name: String!
+	status: String!
+	sourceUrl: String!
+	contentType: String!
+	contentId: Int!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type CurriculumUnit {
+	id: Int!
+	name: String!
+	type: String!
+	overview: String!
+	overviewUrl: String!
+	evaluationCriteria: String!
+	evaluationCriteriaUrl: String!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type RequiredFunction {
+	id: Int!
+	curriculumUnitId: Int!
+	name: String!
+	overview: String!
+	overviewUrl: String!
+	evaluationCriteria: String!
+	evaluationCriteriaUrl: String!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type TreatmentMenu {
+	id: Int!
+	name: String!
+	requiredFunctionId: Int!
+	learningMaterialId: Int!
+	tips: String!
+	commonErrors: [String!]!
+	targetMuscles: [String!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type TrainingMenu {
+	id: Int!
+	name: String!
+	requiredFunctionId: Int!
+	learningMaterialId: Int!
+	tips: String!
+	commonErrors: [String!]!
+	targetMuscles: [String!]!
+	level: Int!
+	createdAt: String!
+	updatedAt: String!
+}

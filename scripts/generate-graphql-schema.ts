@@ -16,6 +16,7 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 
 // Drizzleの型をGraphQL型にマッピング
 const typeMapping: Record<string, string> = {
@@ -89,42 +90,48 @@ function toCamelCase(str: string): string {
 function parseSchemaFile(schemaContent: string): TableInfo[] {
 	const tables: TableInfo[] = [];
 
-	// pgTable定義を抽出
-	const tableRegex = new RegExp(
-		'export const (\\w+) = pgTable\\("(\\w+)",\\s*\\{([^}]+(?:\\{[^}]*\\}[^}]*)*)\\}\\)',
-		"gs",
-	);
+	// pgTable定義を抽出（複数行対応）
+	const tableRegex =
+		/export const (\w+) = pgTable\("(\w+)",\s*\{([\s\S]*?)\}\);/g;
 
 	for (const match of schemaContent.matchAll(tableRegex)) {
 		const [, variableName, , columnsBlock] = match;
 		const columns: ColumnInfo[] = [];
 
-		// カラム定義を抽出
-		const columnRegex = /(\w+):\s*(\w+)\([^)]*\)([^,]*(?:,[^,]*\([^)]*\))*)/g;
+		// カラム定義を抽出（複数行にまたがる場合も対応）
+		// 各カラムは "colName: type(" で始まる
+		const columnStarts: number[] = [];
+		const colStartRegex = /^\s*(\w+):\s*\w+\(/gm;
 
-		for (const colMatch of columnsBlock.matchAll(columnRegex)) {
-			const [fullMatch, colName, colType] = colMatch;
-			const modifiers = fullMatch;
+		for (const colStartMatch of columnsBlock.matchAll(colStartRegex)) {
+			columnStarts.push(colStartMatch.index ?? 0);
+		}
 
-			const isNotNull =
-				modifiers.includes(".notNull()") ||
-				modifiers.includes(".primaryKey()") ||
-				(modifiers.includes(".default(") && modifiers.includes(".notNull()"));
-			const isArray = modifiers.includes(".array()");
-			const isPrimary = modifiers.includes(".primaryKey()");
+		for (let i = 0; i < columnStarts.length; i++) {
+			const start = columnStarts[i];
+			const end = columnStarts[i + 1] ?? columnsBlock.length;
+			const colDef = columnsBlock.slice(start, end);
 
-			// default値があってもnotNull()がない場合はnullableとして扱う
-			// ただしdefaultNow()やdefault(true)などでnotNull()が付いている場合はnotNull
-			const hasDefaultWithNotNull =
-				modifiers.includes(".default") && modifiers.includes(".notNull()");
+			// カラム名と型を抽出
+			const colMatch = colDef.match(/^\s*(\w+):\s*(\w+)\(/);
 
-			columns.push({
-				name: toCamelCase(colName),
-				type: colType,
-				isNotNull: isNotNull || hasDefaultWithNotNull,
-				isArray,
-				isPrimary,
-			});
+			if (colMatch) {
+				const [, colName, colType] = colMatch;
+
+				// 修飾子を確認（複数行にまたがっても対応）
+				const isNotNull =
+					colDef.includes(".notNull()") || colDef.includes(".primaryKey()");
+				const isArray = colDef.includes(".array()");
+				const isPrimary = colDef.includes(".primaryKey()");
+
+				columns.push({
+					name: colName, // すでにcamelCaseで定義されている
+					type: colType,
+					isNotNull,
+					isArray,
+					isPrimary,
+				});
+			}
 		}
 
 		tables.push({
@@ -172,7 +179,9 @@ function generateGraphQLType(table: TableInfo): string {
  * メイン処理
  */
 async function main() {
-	const projectRoot = path.resolve(import.meta.dirname, "..");
+	const __filename = fileURLToPath(import.meta.url);
+	const __dirname = path.dirname(__filename);
+	const projectRoot = path.resolve(__dirname, "..");
 	const schemaPath = path.join(projectRoot, "src/db/schema.ts");
 	const outputPath = path.join(
 		projectRoot,
