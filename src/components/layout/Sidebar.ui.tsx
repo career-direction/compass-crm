@@ -1,5 +1,7 @@
 "use client";
 
+import { Group, Modal, Stack, Text } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import {
 	IconBook,
 	IconCalendar,
@@ -14,6 +16,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { memo } from "react";
+import { CPButton } from "@/components/ui/CPButton";
 import classes from "./Sidebar.module.css";
 
 type SidebarProps = {
@@ -46,6 +49,13 @@ const navItems = [
 
 export const Sidebar = memo(({ isOpen, onToggle }: SidebarProps) => {
 	const pathname = usePathname();
+	const [logoutModalOpened, { open: openLogoutModal, close: closeLogoutModal }] =
+		useDisclosure(false);
+
+	const handleLogout = () => {
+		// TODO: ログアウト処理を実装
+		closeLogoutModal();
+	};
 
 	if (!isOpen) {
 		return (
@@ -119,14 +129,30 @@ export const Sidebar = memo(({ isOpen, onToggle }: SidebarProps) => {
 				<button
 					type="button"
 					className={classes.link}
-					onClick={() => {
-						// TODO: ログアウト処理を実装
-					}}
+					onClick={openLogoutModal}
 				>
 					<IconLogout className={classes.linkIcon} stroke={1.5} />
 					<span>ログアウト</span>
 				</button>
 			</div>
+
+			<Modal
+				opened={logoutModalOpened}
+				onClose={closeLogoutModal}
+				title="ログアウト確認"
+				centered
+				size="sm"
+			>
+				<Stack gap="md">
+					<Text>ログアウトしてもよろしいですか？</Text>
+					<Group justify="flex-end">
+						<CPButton variant="outline" onClick={closeLogoutModal}>
+							キャンセル
+						</CPButton>
+						<CPButton onClick={handleLogout}>ログアウト</CPButton>
+					</Group>
+				</Stack>
+			</Modal>
 		</nav>
 	);
 });
