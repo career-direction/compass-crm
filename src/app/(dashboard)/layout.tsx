@@ -3,7 +3,7 @@
 import { AppShell } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import type { ReactNode } from "react";
-import { Sidebar } from "@/components/layout/Sidebar.ui";
+import { Sidebar } from "@/components/layout/Sidebar";
 
 type Props = {
 	children: ReactNode;
