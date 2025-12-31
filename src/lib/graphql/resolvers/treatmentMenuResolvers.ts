@@ -18,9 +18,7 @@ const mapTreatmentMenu = (
 	name: row.name,
 	requiredFunctionId: Number(row.requiredFunctionId),
 	requiredFunction: null,
-	learningMaterialId: row.learningMaterialId
-		? Number(row.learningMaterialId)
-		: null,
+	learningMaterialId: Number(row.learningMaterialId),
 	learningMaterial: null,
 	tips: row.tips,
 	commonErrors: row.commonErrors,
@@ -59,17 +57,17 @@ export const treatmentMenuResolvers = {
 				targetMuscles,
 			} = args.input;
 
-			const [created] = await context.db
-				.insert(treatmentMenus)
-				.values({
-					name,
-					requiredFunctionId,
-					learningMaterialId: learningMaterialId ?? 0,
-					tips: tips ?? "",
-					commonErrors: commonErrors ?? [],
-					targetMuscles: targetMuscles ?? [],
-				})
-				.returning();
+		const [created] = await context.db
+			.insert(treatmentMenus)
+			.values({
+				name,
+				requiredFunctionId,
+				learningMaterialId,
+				tips,
+				commonErrors,
+				targetMuscles,
+			})
+			.returning();
 
 			return mapTreatmentMenu(created);
 		},

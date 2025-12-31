@@ -97,17 +97,17 @@ export const curriculumUnitResolvers = {
 				evaluationCriteriaUrl,
 			} = args.input;
 
-			const [created] = await context.db
-				.insert(curriculumUnits)
-				.values({
-					name,
-					type,
-					overview,
-					overviewUrl: overviewUrl ?? "",
-					evaluationCriteria,
-					evaluationCriteriaUrl: evaluationCriteriaUrl ?? "",
-				})
-				.returning();
+		const [created] = await context.db
+			.insert(curriculumUnits)
+			.values({
+				name,
+				type,
+				overview,
+				overviewUrl,
+				evaluationCriteria,
+				evaluationCriteriaUrl,
+			})
+			.returning();
 
 			return mapCurriculumUnit(created);
 		},

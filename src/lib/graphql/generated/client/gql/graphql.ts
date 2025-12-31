@@ -140,10 +140,10 @@ export type CreateClientWithProfileInput = {
 
 export type CreateCurriculumUnitInput = {
   evaluationCriteria: Scalars['String']['input'];
-  evaluationCriteriaUrl?: InputMaybe<Scalars['String']['input']>;
+  evaluationCriteriaUrl: Scalars['String']['input'];
   name: Scalars['String']['input'];
   overview: Scalars['String']['input'];
-  overviewUrl?: InputMaybe<Scalars['String']['input']>;
+  overviewUrl: Scalars['String']['input'];
   type: Scalars['String']['input'];
 };
 
@@ -210,17 +210,17 @@ export type CreateMonthlyHealthMilestoneInput = {
 export type CreateRequiredFunctionInput = {
   curriculumUnitId: Scalars['Int']['input'];
   evaluationCriteria: Scalars['String']['input'];
-  evaluationCriteriaUrl?: InputMaybe<Scalars['String']['input']>;
+  evaluationCriteriaUrl: Scalars['String']['input'];
   name: Scalars['String']['input'];
   overview: Scalars['String']['input'];
-  overviewUrl?: InputMaybe<Scalars['String']['input']>;
+  overviewUrl: Scalars['String']['input'];
 };
 
 export type CreateSessionInput = {
   clientId: Scalars['Int']['input'];
   kind: Scalars['String']['input'];
   performedAt: Scalars['String']['input'];
-  theme?: InputMaybe<Scalars['String']['input']>;
+  theme: Scalars['String']['input'];
   trainerId: Scalars['Int']['input'];
 };
 
@@ -229,22 +229,22 @@ export type CreateTrainerInput = {
 };
 
 export type CreateTrainingMenuInput = {
-  commonErrors?: InputMaybe<Array<Scalars['String']['input']>>;
-  learningMaterialId?: InputMaybe<Scalars['Int']['input']>;
-  level?: InputMaybe<Scalars['Int']['input']>;
+  commonErrors: Array<Scalars['String']['input']>;
+  learningMaterialId: Scalars['Int']['input'];
+  level: Scalars['Int']['input'];
   name: Scalars['String']['input'];
   requiredFunctionId: Scalars['Int']['input'];
-  targetMuscles?: InputMaybe<Array<Scalars['String']['input']>>;
-  tips?: InputMaybe<Scalars['String']['input']>;
+  targetMuscles: Array<Scalars['String']['input']>;
+  tips: Scalars['String']['input'];
 };
 
 export type CreateTreatmentMenuInput = {
-  commonErrors?: InputMaybe<Array<Scalars['String']['input']>>;
-  learningMaterialId?: InputMaybe<Scalars['Int']['input']>;
+  commonErrors: Array<Scalars['String']['input']>;
+  learningMaterialId: Scalars['Int']['input'];
   name: Scalars['String']['input'];
   requiredFunctionId: Scalars['Int']['input'];
-  targetMuscles?: InputMaybe<Array<Scalars['String']['input']>>;
-  tips?: InputMaybe<Scalars['String']['input']>;
+  targetMuscles: Array<Scalars['String']['input']>;
+  tips: Scalars['String']['input'];
 };
 
 export type CreateUserInput = {
@@ -263,11 +263,11 @@ export type CurriculumUnit = {
   __typename?: 'CurriculumUnit';
   createdAt: Scalars['String']['output'];
   evaluationCriteria: Scalars['String']['output'];
-  evaluationCriteriaUrl?: Maybe<Scalars['String']['output']>;
+  evaluationCriteriaUrl: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   overview: Scalars['String']['output'];
-  overviewUrl?: Maybe<Scalars['String']['output']>;
+  overviewUrl: Scalars['String']['output'];
   requiredFunctions: Array<RequiredFunction>;
   type: Scalars['String']['output'];
   updatedAt: Scalars['String']['output'];
@@ -496,7 +496,7 @@ export type PtSession = {
   kind: Scalars['String']['output'];
   memo?: Maybe<Scalars['String']['output']>;
   performedAt: Scalars['String']['output'];
-  theme?: Maybe<Scalars['String']['output']>;
+  theme: Scalars['String']['output'];
   trainer: Trainer;
   trainerComment?: Maybe<Scalars['String']['output']>;
   trainerId: Scalars['Int']['output'];
@@ -661,11 +661,11 @@ export type RequiredFunction = {
   curriculumUnit?: Maybe<CurriculumUnit>;
   curriculumUnitId: Scalars['Int']['output'];
   evaluationCriteria: Scalars['String']['output'];
-  evaluationCriteriaUrl?: Maybe<Scalars['String']['output']>;
+  evaluationCriteriaUrl: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   overview: Scalars['String']['output'];
-  overviewUrl?: Maybe<Scalars['String']['output']>;
+  overviewUrl: Scalars['String']['output'];
   trainingMenus: Array<TrainingMenu>;
   treatmentMenus: Array<TreatmentMenu>;
   updatedAt: Scalars['String']['output'];
@@ -692,17 +692,17 @@ export type TrainerProfile = {
 
 export type TrainingMenu = {
   __typename?: 'TrainingMenu';
-  commonErrors?: Maybe<Array<Scalars['String']['output']>>;
+  commonErrors: Array<Scalars['String']['output']>;
   createdAt: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   learningMaterial?: Maybe<LearningMaterial>;
-  learningMaterialId?: Maybe<Scalars['Int']['output']>;
-  level?: Maybe<Scalars['Int']['output']>;
+  learningMaterialId: Scalars['Int']['output'];
+  level: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   requiredFunction?: Maybe<RequiredFunction>;
   requiredFunctionId: Scalars['Int']['output'];
-  targetMuscles?: Maybe<Array<Scalars['String']['output']>>;
-  tips?: Maybe<Scalars['String']['output']>;
+  targetMuscles: Array<Scalars['String']['output']>;
+  tips: Scalars['String']['output'];
   updatedAt: Scalars['String']['output'];
 };
 
@@ -722,16 +722,16 @@ export type TrainingTask = {
 
 export type TreatmentMenu = {
   __typename?: 'TreatmentMenu';
-  commonErrors?: Maybe<Array<Scalars['String']['output']>>;
+  commonErrors: Array<Scalars['String']['output']>;
   createdAt: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   learningMaterial?: Maybe<LearningMaterial>;
-  learningMaterialId?: Maybe<Scalars['Int']['output']>;
+  learningMaterialId: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   requiredFunction?: Maybe<RequiredFunction>;
   requiredFunctionId: Scalars['Int']['output'];
-  targetMuscles?: Maybe<Array<Scalars['String']['output']>>;
-  tips?: Maybe<Scalars['String']['output']>;
+  targetMuscles: Array<Scalars['String']['output']>;
+  tips: Scalars['String']['output'];
   updatedAt: Scalars['String']['output'];
 };
 

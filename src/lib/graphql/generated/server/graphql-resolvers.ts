@@ -141,10 +141,10 @@ export type CreateClientWithProfileInput = {
 
 export type CreateCurriculumUnitInput = {
   evaluationCriteria: Scalars['String']['input'];
-  evaluationCriteriaUrl: InputMaybe<Scalars['String']['input']>;
+  evaluationCriteriaUrl: Scalars['String']['input'];
   name: Scalars['String']['input'];
   overview: Scalars['String']['input'];
-  overviewUrl: InputMaybe<Scalars['String']['input']>;
+  overviewUrl: Scalars['String']['input'];
   type: Scalars['String']['input'];
 };
 
@@ -211,17 +211,17 @@ export type CreateMonthlyHealthMilestoneInput = {
 export type CreateRequiredFunctionInput = {
   curriculumUnitId: Scalars['Int']['input'];
   evaluationCriteria: Scalars['String']['input'];
-  evaluationCriteriaUrl: InputMaybe<Scalars['String']['input']>;
+  evaluationCriteriaUrl: Scalars['String']['input'];
   name: Scalars['String']['input'];
   overview: Scalars['String']['input'];
-  overviewUrl: InputMaybe<Scalars['String']['input']>;
+  overviewUrl: Scalars['String']['input'];
 };
 
 export type CreateSessionInput = {
   clientId: Scalars['Int']['input'];
   kind: Scalars['String']['input'];
   performedAt: Scalars['String']['input'];
-  theme: InputMaybe<Scalars['String']['input']>;
+  theme: Scalars['String']['input'];
   trainerId: Scalars['Int']['input'];
 };
 
@@ -230,22 +230,22 @@ export type CreateTrainerInput = {
 };
 
 export type CreateTrainingMenuInput = {
-  commonErrors: InputMaybe<Array<Scalars['String']['input']>>;
-  learningMaterialId: InputMaybe<Scalars['Int']['input']>;
-  level: InputMaybe<Scalars['Int']['input']>;
+  commonErrors: Array<Scalars['String']['input']>;
+  learningMaterialId: Scalars['Int']['input'];
+  level: Scalars['Int']['input'];
   name: Scalars['String']['input'];
   requiredFunctionId: Scalars['Int']['input'];
-  targetMuscles: InputMaybe<Array<Scalars['String']['input']>>;
-  tips: InputMaybe<Scalars['String']['input']>;
+  targetMuscles: Array<Scalars['String']['input']>;
+  tips: Scalars['String']['input'];
 };
 
 export type CreateTreatmentMenuInput = {
-  commonErrors: InputMaybe<Array<Scalars['String']['input']>>;
-  learningMaterialId: InputMaybe<Scalars['Int']['input']>;
+  commonErrors: Array<Scalars['String']['input']>;
+  learningMaterialId: Scalars['Int']['input'];
   name: Scalars['String']['input'];
   requiredFunctionId: Scalars['Int']['input'];
-  targetMuscles: InputMaybe<Array<Scalars['String']['input']>>;
-  tips: InputMaybe<Scalars['String']['input']>;
+  targetMuscles: Array<Scalars['String']['input']>;
+  tips: Scalars['String']['input'];
 };
 
 export type CreateUserInput = {
@@ -264,11 +264,11 @@ export type CurriculumUnit = {
   __typename?: 'CurriculumUnit';
   createdAt: Scalars['String']['output'];
   evaluationCriteria: Scalars['String']['output'];
-  evaluationCriteriaUrl: Maybe<Scalars['String']['output']>;
+  evaluationCriteriaUrl: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   overview: Scalars['String']['output'];
-  overviewUrl: Maybe<Scalars['String']['output']>;
+  overviewUrl: Scalars['String']['output'];
   requiredFunctions: Array<RequiredFunction>;
   type: Scalars['String']['output'];
   updatedAt: Scalars['String']['output'];
@@ -497,7 +497,7 @@ export type PtSession = {
   kind: Scalars['String']['output'];
   memo: Maybe<Scalars['String']['output']>;
   performedAt: Scalars['String']['output'];
-  theme: Maybe<Scalars['String']['output']>;
+  theme: Scalars['String']['output'];
   trainer: Trainer;
   trainerComment: Maybe<Scalars['String']['output']>;
   trainerId: Scalars['Int']['output'];
@@ -662,11 +662,11 @@ export type RequiredFunction = {
   curriculumUnit: Maybe<CurriculumUnit>;
   curriculumUnitId: Scalars['Int']['output'];
   evaluationCriteria: Scalars['String']['output'];
-  evaluationCriteriaUrl: Maybe<Scalars['String']['output']>;
+  evaluationCriteriaUrl: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   overview: Scalars['String']['output'];
-  overviewUrl: Maybe<Scalars['String']['output']>;
+  overviewUrl: Scalars['String']['output'];
   trainingMenus: Array<TrainingMenu>;
   treatmentMenus: Array<TreatmentMenu>;
   updatedAt: Scalars['String']['output'];
@@ -693,17 +693,17 @@ export type TrainerProfile = {
 
 export type TrainingMenu = {
   __typename?: 'TrainingMenu';
-  commonErrors: Maybe<Array<Scalars['String']['output']>>;
+  commonErrors: Array<Scalars['String']['output']>;
   createdAt: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   learningMaterial: Maybe<LearningMaterial>;
-  learningMaterialId: Maybe<Scalars['Int']['output']>;
-  level: Maybe<Scalars['Int']['output']>;
+  learningMaterialId: Scalars['Int']['output'];
+  level: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   requiredFunction: Maybe<RequiredFunction>;
   requiredFunctionId: Scalars['Int']['output'];
-  targetMuscles: Maybe<Array<Scalars['String']['output']>>;
-  tips: Maybe<Scalars['String']['output']>;
+  targetMuscles: Array<Scalars['String']['output']>;
+  tips: Scalars['String']['output'];
   updatedAt: Scalars['String']['output'];
 };
 
@@ -723,16 +723,16 @@ export type TrainingTask = {
 
 export type TreatmentMenu = {
   __typename?: 'TreatmentMenu';
-  commonErrors: Maybe<Array<Scalars['String']['output']>>;
+  commonErrors: Array<Scalars['String']['output']>;
   createdAt: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   learningMaterial: Maybe<LearningMaterial>;
-  learningMaterialId: Maybe<Scalars['Int']['output']>;
+  learningMaterialId: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   requiredFunction: Maybe<RequiredFunction>;
   requiredFunctionId: Scalars['Int']['output'];
-  targetMuscles: Maybe<Array<Scalars['String']['output']>>;
-  tips: Maybe<Scalars['String']['output']>;
+  targetMuscles: Array<Scalars['String']['output']>;
+  tips: Scalars['String']['output'];
   updatedAt: Scalars['String']['output'];
 };
 
@@ -1026,11 +1026,11 @@ export type ClientProfileResolvers<ContextType = Context, ParentType extends Res
 export type CurriculumUnitResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CurriculumUnit'] = ResolversParentTypes['CurriculumUnit']> = {
   createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   evaluationCriteria: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  evaluationCriteriaUrl: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  evaluationCriteriaUrl: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   overview: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  overviewUrl: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  overviewUrl: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   requiredFunctions: Resolver<Array<ResolversTypes['RequiredFunction']>, ParentType, ContextType>;
   type: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1159,7 +1159,7 @@ export type PtSessionResolvers<ContextType = Context, ParentType extends Resolve
   kind: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   memo: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   performedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  theme: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  theme: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   trainer: Resolver<ResolversTypes['Trainer'], ParentType, ContextType>;
   trainerComment: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trainerId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -1204,11 +1204,11 @@ export type RequiredFunctionResolvers<ContextType = Context, ParentType extends 
   curriculumUnit: Resolver<Maybe<ResolversTypes['CurriculumUnit']>, ParentType, ContextType>;
   curriculumUnitId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   evaluationCriteria: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  evaluationCriteriaUrl: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  evaluationCriteriaUrl: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   overview: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  overviewUrl: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  overviewUrl: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   trainingMenus: Resolver<Array<ResolversTypes['TrainingMenu']>, ParentType, ContextType>;
   treatmentMenus: Resolver<Array<ResolversTypes['TreatmentMenu']>, ParentType, ContextType>;
   updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1232,17 +1232,17 @@ export type TrainerProfileResolvers<ContextType = Context, ParentType extends Re
 };
 
 export type TrainingMenuResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TrainingMenu'] = ResolversParentTypes['TrainingMenu']> = {
-  commonErrors: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  commonErrors: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   learningMaterial: Resolver<Maybe<ResolversTypes['LearningMaterial']>, ParentType, ContextType>;
-  learningMaterialId: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  level: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  learningMaterialId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  level: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   requiredFunction: Resolver<Maybe<ResolversTypes['RequiredFunction']>, ParentType, ContextType>;
   requiredFunctionId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  targetMuscles: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  tips: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  targetMuscles: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  tips: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
@@ -1260,16 +1260,16 @@ export type TrainingTaskResolvers<ContextType = Context, ParentType extends Reso
 };
 
 export type TreatmentMenuResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TreatmentMenu'] = ResolversParentTypes['TreatmentMenu']> = {
-  commonErrors: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  commonErrors: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   learningMaterial: Resolver<Maybe<ResolversTypes['LearningMaterial']>, ParentType, ContextType>;
-  learningMaterialId: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  learningMaterialId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   requiredFunction: Resolver<Maybe<ResolversTypes['RequiredFunction']>, ParentType, ContextType>;
   requiredFunctionId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  targetMuscles: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  tips: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  targetMuscles: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  tips: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 

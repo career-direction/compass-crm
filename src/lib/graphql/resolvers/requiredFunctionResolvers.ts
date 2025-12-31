@@ -20,9 +20,7 @@ const mapTreatmentMenu = (
 	name: row.name,
 	requiredFunctionId: Number(row.requiredFunctionId),
 	requiredFunction: null,
-	learningMaterialId: row.learningMaterialId
-		? Number(row.learningMaterialId)
-		: null,
+	learningMaterialId: Number(row.learningMaterialId),
 	learningMaterial: null,
 	tips: row.tips,
 	commonErrors: row.commonErrors,
@@ -38,9 +36,7 @@ const mapTrainingMenu = (
 	name: row.name,
 	requiredFunctionId: Number(row.requiredFunctionId),
 	requiredFunction: null,
-	learningMaterialId: row.learningMaterialId
-		? Number(row.learningMaterialId)
-		: null,
+	learningMaterialId: Number(row.learningMaterialId),
 	learningMaterial: null,
 	tips: row.tips,
 	commonErrors: row.commonErrors,
@@ -139,17 +135,17 @@ export const requiredFunctionResolvers = {
 				evaluationCriteriaUrl,
 			} = args.input;
 
-			const [created] = await context.db
-				.insert(requiredFunctions)
-				.values({
-					curriculumUnitId,
-					name,
-					overview,
-					overviewUrl: overviewUrl ?? "",
-					evaluationCriteria,
-					evaluationCriteriaUrl: evaluationCriteriaUrl ?? "",
-				})
-				.returning();
+		const [created] = await context.db
+			.insert(requiredFunctions)
+			.values({
+				curriculumUnitId,
+				name,
+				overview,
+				overviewUrl,
+				evaluationCriteria,
+				evaluationCriteriaUrl,
+			})
+			.returning();
 
 			return mapRequiredFunction(created);
 		},

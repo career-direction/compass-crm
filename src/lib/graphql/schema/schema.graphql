@@ -159,7 +159,7 @@ type PTSession {
 	key: String!
 	performedAt: String!
 	kind: String!
-	theme: String
+	theme: String!
 	archiveUrl: String
 	trainerComment: String
 	memo: String
@@ -356,12 +356,12 @@ type TrainingMenu {
 	name: String!
 	requiredFunctionId: Int!
 	requiredFunction: RequiredFunction
-	learningMaterialId: Int
+	learningMaterialId: Int!
 	learningMaterial: LearningMaterial
-	tips: String
-	commonErrors: [String!]
-	targetMuscles: [String!]
-	level: Int
+	tips: String!
+	commonErrors: [String!]!
+	targetMuscles: [String!]!
+	level: Int!
 	createdAt: String!
 	updatedAt: String!
 }
@@ -371,11 +371,11 @@ type TreatmentMenu {
 	name: String!
 	requiredFunctionId: Int!
 	requiredFunction: RequiredFunction
-	learningMaterialId: Int
+	learningMaterialId: Int!
 	learningMaterial: LearningMaterial
-	tips: String
-	commonErrors: [String!]
-	targetMuscles: [String!]
+	tips: String!
+	commonErrors: [String!]!
+	targetMuscles: [String!]!
 	createdAt: String!
 	updatedAt: String!
 }
@@ -386,9 +386,9 @@ type RequiredFunction {
 	curriculumUnit: CurriculumUnit
 	name: String!
 	overview: String!
-	overviewUrl: String
+	overviewUrl: String!
 	evaluationCriteria: String!
-	evaluationCriteriaUrl: String
+	evaluationCriteriaUrl: String!
 	treatmentMenus: [TreatmentMenu!]!
 	trainingMenus: [TrainingMenu!]!
 	createdAt: String!
@@ -400,9 +400,9 @@ type CurriculumUnit {
 	name: String!
 	type: String!
 	overview: String!
-	overviewUrl: String
+	overviewUrl: String!
 	evaluationCriteria: String!
-	evaluationCriteriaUrl: String
+	evaluationCriteriaUrl: String!
 	requiredFunctions: [RequiredFunction!]!
 	createdAt: String!
 	updatedAt: String!
@@ -480,7 +480,7 @@ input CreateSessionInput {
 	trainerId: Int!
 	performedAt: String!
 	kind: String!
-	theme: String
+	theme: String!
 }
 
 input CreateBodyConditionInput {
@@ -580,35 +580,35 @@ input CreateCurriculumUnitInput {
 	name: String!
 	type: String!
 	overview: String!
-	overviewUrl: String
+	overviewUrl: String!
 	evaluationCriteria: String!
-	evaluationCriteriaUrl: String
+	evaluationCriteriaUrl: String!
 }
 
 input CreateRequiredFunctionInput {
 	curriculumUnitId: Int!
 	name: String!
 	overview: String!
-	overviewUrl: String
+	overviewUrl: String!
 	evaluationCriteria: String!
-	evaluationCriteriaUrl: String
+	evaluationCriteriaUrl: String!
 }
 
 input CreateTreatmentMenuInput {
 	name: String!
 	requiredFunctionId: Int!
-	learningMaterialId: Int
-	tips: String
-	commonErrors: [String!]
-	targetMuscles: [String!]
+	learningMaterialId: Int!
+	tips: String!
+	commonErrors: [String!]!
+	targetMuscles: [String!]!
 }
 
 input CreateTrainingMenuInput {
 	name: String!
 	requiredFunctionId: Int!
-	learningMaterialId: Int
-	tips: String
-	commonErrors: [String!]
-	targetMuscles: [String!]
-	level: Int
+	learningMaterialId: Int!
+	tips: String!
+	commonErrors: [String!]!
+	targetMuscles: [String!]!
+	level: Int!
 }
