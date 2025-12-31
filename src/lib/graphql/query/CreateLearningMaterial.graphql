@@ -1,0 +1,14 @@
+mutation CreateLearningMaterial($input: CreateLearningMaterialInput!) {
+	createLearningMaterial(input: $input) {
+		id
+		ownerId
+		key
+		name
+		status
+		sourceUrl
+		contentType
+		contentId
+		createdAt
+		updatedAt
+	}
+}

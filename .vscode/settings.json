@@ -1,7 +1,7 @@
 {
 	"editor.defaultFormatter": "biomejs.biome",
 	"editor.formatOnSave": true,
-	"cSpell.words": ["biomejs", "urql"],
+	"cSpell.words": ["biomejs", "tabler", "urql"],
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"typescript.enablePromptUseWorkspaceTsdk": true
 }

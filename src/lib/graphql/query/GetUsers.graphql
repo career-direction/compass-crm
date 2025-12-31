@@ -1,0 +1,10 @@
+query GetUsers($limit: Int, $offset: Int) {
+	users(limit: $limit, offset: $offset) {
+		id
+		key
+		first_name
+		last_name
+		first_name_kana
+		last_name_kana
+	}
+}
