@@ -47,7 +47,7 @@ export const mapUser = (user: DbUser): User => ({
 
 const mapClientProfile = (profile: DbClientProfile): GqlClientProfile => ({
 	id: Number(profile.id),
-	clientId: profile.clientId?.toString() ?? "",
+	clientId: Number(profile.clientId),
 	occupation: profile.occupation,
 	hobby: profile.hobby,
 	allowSnsPost: profile.allowSnsPost,
@@ -56,10 +56,10 @@ const mapClientProfile = (profile: DbClientProfile): GqlClientProfile => ({
 
 const mapTrainerProfile = (profile: DbTrainerProfile): GqlTrainerProfile => ({
 	id: Number(profile.id),
-	trainerId: profile.trainerId?.toString() ?? "",
+	trainerId: Number(profile.trainerId),
 	motivationStatement: profile.motivationStatement,
-	signatureMuscle: profile.signatureMuscle,
-	specialization: profile.specialization,
+	signatureMuscles: profile.signatureMuscle,
+	specializations: profile.specialization,
 	certifications: profile.certifications,
 });
 
@@ -69,10 +69,13 @@ export const mapClient = (
 	profile?: DbClientProfile | null,
 ): Client => ({
 	id: Number(client.id),
-	userId: client.userId?.toString() ?? "",
+	userId: Number(client.userId),
 	user: mapUser(user),
 	profile: profile ? mapClientProfile(profile) : null,
 	sessions: [] as PtSession[],
+	bodyConditions: [],
+	midtermHealthPurposes: [],
+	assignments: [],
 });
 
 export const mapTrainer = (
@@ -81,7 +84,7 @@ export const mapTrainer = (
 	profile?: DbTrainerProfile | null,
 ): Trainer => ({
 	id: Number(trainer.id),
-	userId: trainer.userId?.toString() ?? "",
+	userId: Number(trainer.userId),
 	user: mapUser(user),
 	profile: profile ? mapTrainerProfile(profile) : null,
 	sessions: [] as PtSession[],

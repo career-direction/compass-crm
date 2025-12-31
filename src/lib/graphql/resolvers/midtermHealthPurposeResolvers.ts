@@ -22,6 +22,7 @@ const mapMidtermHealthPurpose = (
 	settingDate: formatDateString(row.settingDate),
 	startDate: formatDateString(row.startDate),
 	memo: row.memo,
+	milestones: [],
 	createdAt: formatDateString(row.createdAt),
 	updatedAt: formatDateString(row.updatedAt),
 });

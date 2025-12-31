@@ -201,6 +201,7 @@ export type CreateMonthlyHealthMilestoneInput = {
   asIs: Scalars['String']['input'];
   clientId: Scalars['Int']['input'];
   midtermHealthGoalId: Scalars['Int']['input'];
+  results?: InputMaybe<Scalars['String']['input']>;
   target: Scalars['String']['input'];
   toBe?: InputMaybe<Scalars['String']['input']>;
   yearMonth: Scalars['String']['input'];
@@ -368,6 +369,7 @@ export type MonthlyHealthMilestone = {
   id: Scalars['Int']['output'];
   key: Scalars['String']['output'];
   midtermHealthGoalId: Scalars['Int']['output'];
+  results?: Maybe<Scalars['String']['output']>;
   target: Scalars['String']['output'];
   toBe?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['String']['output'];
@@ -580,6 +582,7 @@ export type QueryHomeworkRecordsArgs = {
 export type QueryLearningMaterialsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  ownerId?: InputMaybe<Scalars['String']['input']>;
 };
 
 

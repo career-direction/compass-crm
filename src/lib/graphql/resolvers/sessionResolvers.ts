@@ -13,12 +13,24 @@ import type {
 	PtSession,
 	PtSessionItem,
 	QueryResolvers,
-	SessionStatus,
 } from "@/lib/graphql/generated/server/graphql-resolvers";
 
 import type { Context } from "../context";
 import { requireTrainer } from "@/features/auth/auth";
 import { formatDateString, mapClient, mapTrainer } from "./mappers";
+
+const mapPtSessionItem = (
+	item: typeof ptSessionItems.$inferSelect,
+): PtSessionItem => ({
+	id: Number(item.id),
+	ptSessionId: Number(item.ptSessionId),
+	taskId: Number(item.taskId),
+	taskType: item.taskType,
+	trainerAdvice: item.trainerAdvice,
+	memo: item.memo,
+	createdAt: formatDateString(item.createdAt),
+	updatedAt: formatDateString(item.updatedAt),
+});
 
 export const sessionResolvers = {
 	Query: {
@@ -57,18 +69,7 @@ export const sessionResolvers = {
 			for (const { item } of itemRows) {
 				const sessionId = item.ptSessionId;
 				const list = itemsBySession.get(sessionId) ?? [];
-				list.push({
-					id: Number(item.id),
-					sessionId: item.ptSessionId?.toString() ?? "",
-					exerciseName: item.taskType,
-					sets: null,
-					reps: null,
-					weight: null,
-					duration: null,
-					notes: item.trainerAdvice ?? item.memo ?? null,
-					createdAt: formatDateString(item.createdAt),
-					updatedAt: formatDateString(item.updatedAt),
-				});
+				list.push(mapPtSessionItem(item));
 				itemsBySession.set(sessionId, list);
 			}
 
@@ -82,23 +83,24 @@ export const sessionResolvers = {
 						throw new Error("セッションのトレーナー情報が不足しています");
 					}
 
-					const scheduleBase =
-						session.performedAt ?? session.createdAt ?? new Date();
-
 					const mappedSession: PtSession = {
 						id: Number(session.id),
-						clientId: client.id?.toString() ?? "",
-						trainerId: trainer.id?.toString() ?? "",
+						clientId: Number(client.id),
+						trainerId: Number(trainer.id),
+						key: session.key,
+						performedAt: formatDateString(session.performedAt),
+						kind: session.kind ?? "",
+						theme: session.theme,
+						archiveUrl: session.archiveUrl,
+						trainerComment: session.trainerComment,
+						memo: session.memo,
+						chatContents: session.chatContents,
 						client: mapClient(client, clientUser),
 						trainer: mapTrainer(trainer, trainerUser),
 						items: itemsBySession.get(Number(session.id)) ?? [],
-						scheduledAt: formatDateString(scheduleBase),
+						assignments: [],
 						createdAt: formatDateString(session.createdAt),
 						updatedAt: formatDateString(session.updatedAt),
-						status: ((session.kind?.toUpperCase() as SessionStatus) ??
-							"SCHEDULED") as SessionStatus,
-						notes: session.memo ?? session.trainerComment ?? null,
-						duration: 0,
 					};
 
 					return mappedSession;
@@ -112,18 +114,17 @@ export const sessionResolvers = {
 			// トレーナー以上の権限が必要
 			requireTrainer(context.user);
 
-			const { clientId, trainerId, scheduledAt, duration, notes } = args.input;
-			const performedAt = scheduledAt ? new Date(scheduledAt) : new Date();
+			const { clientId, trainerId, performedAt, kind, theme } = args.input;
+			const performedAtDate = performedAt ? new Date(performedAt) : new Date();
+
 			const [session] = await context.db
 				.insert(ptSessions)
 				.values({
-					clientId: Number(clientId),
-					trainerId: Number(trainerId),
-					performedAt,
-					kind: "SCHEDULED",
-					theme: "Session",
-					memo: notes,
-					trainerComment: notes ?? null,
+					clientId,
+					trainerId,
+					performedAt: performedAtDate,
+					kind,
+					theme: theme ?? "",
 				})
 				.returning();
 
@@ -137,7 +138,7 @@ export const sessionResolvers = {
 				})
 				.from(clients)
 				.leftJoin(clientUser, eq(clients.userId, clientUser.id))
-				.where(eq(clients.id, Number(clientId)))
+				.where(eq(clients.id, clientId))
 				.limit(1);
 
 			if (!clientRow?.client || !clientRow?.user) {
@@ -151,29 +152,31 @@ export const sessionResolvers = {
 				})
 				.from(trainers)
 				.leftJoin(trainerUser, eq(trainers.userId, trainerUser.id))
-				.where(eq(trainers.id, Number(trainerId)))
+				.where(eq(trainers.id, trainerId))
 				.limit(1);
 
 			if (!trainerRow?.trainer || !trainerRow?.user) {
 				throw new Error("トレーナー情報が見つかりません");
 			}
 
-			const baseScheduledAt = session.performedAt ?? performedAt;
-
 			const mappedSession: PtSession = {
 				id: Number(session.id),
-				clientId: session.clientId?.toString() ?? "",
-				trainerId: session.trainerId?.toString() ?? "",
+				clientId: Number(session.clientId),
+				trainerId: Number(session.trainerId),
+				key: session.key,
+				performedAt: formatDateString(session.performedAt),
+				kind: session.kind ?? "",
+				theme: session.theme,
+				archiveUrl: session.archiveUrl,
+				trainerComment: session.trainerComment,
+				memo: session.memo,
+				chatContents: session.chatContents,
 				client: mapClient(clientRow.client, clientRow.user),
 				trainer: mapTrainer(trainerRow.trainer, trainerRow.user),
 				items: [],
-				scheduledAt: formatDateString(baseScheduledAt),
+				assignments: [],
 				createdAt: formatDateString(session.createdAt),
 				updatedAt: formatDateString(session.updatedAt),
-				status: ((session.kind?.toUpperCase() as SessionStatus) ??
-					"SCHEDULED") as SessionStatus,
-				notes: notes ?? null,
-				duration: duration ?? 0,
 			};
 
 			return mappedSession;

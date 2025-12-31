@@ -17,6 +17,7 @@ const mapRequiredFunction = (
 ): RequiredFunction => ({
 	id: Number(row.id),
 	curriculumUnitId: Number(row.curriculumUnitId),
+	curriculumUnit: null,
 	name: row.name,
 	overview: row.overview,
 	overviewUrl: row.overviewUrl,
@@ -102,9 +103,9 @@ export const curriculumUnitResolvers = {
 					name,
 					type,
 					overview,
-					overviewUrl,
+					overviewUrl: overviewUrl ?? "",
 					evaluationCriteria,
-					evaluationCriteriaUrl,
+					evaluationCriteriaUrl: evaluationCriteriaUrl ?? "",
 				})
 				.returning();
 

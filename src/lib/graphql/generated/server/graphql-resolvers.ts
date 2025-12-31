@@ -202,6 +202,7 @@ export type CreateMonthlyHealthMilestoneInput = {
   asIs: Scalars['String']['input'];
   clientId: Scalars['Int']['input'];
   midtermHealthGoalId: Scalars['Int']['input'];
+  results: InputMaybe<Scalars['String']['input']>;
   target: Scalars['String']['input'];
   toBe: InputMaybe<Scalars['String']['input']>;
   yearMonth: Scalars['String']['input'];
@@ -369,6 +370,7 @@ export type MonthlyHealthMilestone = {
   id: Scalars['Int']['output'];
   key: Scalars['String']['output'];
   midtermHealthGoalId: Scalars['Int']['output'];
+  results: Maybe<Scalars['String']['output']>;
   target: Scalars['String']['output'];
   toBe: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['String']['output'];
@@ -581,6 +583,7 @@ export type QueryHomeworkRecordsArgs = {
 export type QueryLearningMaterialsArgs = {
   limit: InputMaybe<Scalars['Int']['input']>;
   offset: InputMaybe<Scalars['Int']['input']>;
+  ownerId: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1116,6 +1119,7 @@ export type MonthlyHealthMilestoneResolvers<ContextType = Context, ParentType ex
   id: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   key: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   midtermHealthGoalId: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  results: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   target: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   toBe: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt: Resolver<ResolversTypes['String'], ParentType, ContextType>;

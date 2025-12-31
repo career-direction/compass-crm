@@ -31,7 +31,11 @@ type Query {
 		limit: Int
 		offset: Int
 	): [RequiredFunction!]!
-	learningMaterials(limit: Int, offset: Int): [LearningMaterial!]!
+	learningMaterials(
+		ownerId: String
+		limit: Int
+		offset: Int
+	): [LearningMaterial!]!
 	homeworkAssignments(
 		clientId: Int!
 		limit: Int
@@ -236,6 +240,7 @@ type MonthlyHealthMilestone {
 	target: String!
 	asIs: String!
 	toBe: String
+	results: String
 	achieved: Boolean
 	yearMonth: String!
 	actionGoals: [MonthlyActionGoal!]!
@@ -519,6 +524,7 @@ input CreateMonthlyHealthMilestoneInput {
 	target: String!
 	asIs: String!
 	toBe: String
+	results: String
 	yearMonth: String!
 }
 

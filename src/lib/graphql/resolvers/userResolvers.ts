@@ -43,10 +43,12 @@ export const userResolvers = {
 				if (credentials) {
 					mappedUser.credentials = {
 						id: Number(credentials.id),
+						userId: credentials.userId,
 						email: credentials.email,
-						reset_at: credentials.resetAt,
-						created_at: formatDateString(credentials.createdAt),
-						updated_at: formatDateString(credentials.updatedAt),
+						passwordDigest: credentials.passwordDigest,
+						resetAt: credentials.resetAt,
+						createdAt: formatDateString(credentials.createdAt),
+						updatedAt: formatDateString(credentials.updatedAt),
 					};
 				}
 				return mappedUser as User;
@@ -61,11 +63,11 @@ export const userResolvers = {
 
 			const {
 				kind,
-				first_name,
-				last_name,
-				first_name_kana,
-				last_name_kana,
-				birth_date,
+				firstName,
+				lastName,
+				firstNameKana,
+				lastNameKana,
+				birthDate,
 				gender,
 				email,
 				password,
@@ -78,11 +80,11 @@ export const userResolvers = {
 				.insert(users)
 				.values({
 					kind,
-					firstName: first_name,
-					lastName: last_name,
-					firstNameKana: first_name_kana,
-					lastNameKana: last_name_kana,
-					birthDate: birth_date,
+					firstName,
+					lastName,
+					firstNameKana,
+					lastNameKana,
+					birthDate,
 					gender,
 				})
 				.returning();
@@ -100,10 +102,12 @@ export const userResolvers = {
 			const mappedUser = mapUser(createdUser);
 			mappedUser.credentials = {
 				id: Number(createdCredentials.id),
+				userId: createdCredentials.userId,
 				email: createdCredentials.email,
-				reset_at: createdCredentials.resetAt,
-				created_at: formatDateString(createdCredentials.createdAt),
-				updated_at: formatDateString(createdCredentials.updatedAt),
+				passwordDigest: createdCredentials.passwordDigest,
+				resetAt: createdCredentials.resetAt,
+				createdAt: formatDateString(createdCredentials.createdAt),
+				updatedAt: formatDateString(createdCredentials.updatedAt),
 			};
 
 			return mappedUser as User;

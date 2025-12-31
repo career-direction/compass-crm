@@ -19,7 +19,11 @@ const mapTreatmentMenu = (
 	id: Number(row.id),
 	name: row.name,
 	requiredFunctionId: Number(row.requiredFunctionId),
-	learningMaterialId: Number(row.learningMaterialId),
+	requiredFunction: null,
+	learningMaterialId: row.learningMaterialId
+		? Number(row.learningMaterialId)
+		: null,
+	learningMaterial: null,
 	tips: row.tips,
 	commonErrors: row.commonErrors,
 	targetMuscles: row.targetMuscles,
@@ -33,7 +37,11 @@ const mapTrainingMenu = (
 	id: Number(row.id),
 	name: row.name,
 	requiredFunctionId: Number(row.requiredFunctionId),
-	learningMaterialId: Number(row.learningMaterialId),
+	requiredFunction: null,
+	learningMaterialId: row.learningMaterialId
+		? Number(row.learningMaterialId)
+		: null,
+	learningMaterial: null,
 	tips: row.tips,
 	commonErrors: row.commonErrors,
 	targetMuscles: row.targetMuscles,
@@ -49,6 +57,7 @@ const mapRequiredFunction = (
 ): RequiredFunction => ({
 	id: Number(row.id),
 	curriculumUnitId: Number(row.curriculumUnitId),
+	curriculumUnit: null,
 	name: row.name,
 	overview: row.overview,
 	overviewUrl: row.overviewUrl,
@@ -136,9 +145,9 @@ export const requiredFunctionResolvers = {
 					curriculumUnitId,
 					name,
 					overview,
-					overviewUrl,
+					overviewUrl: overviewUrl ?? "",
 					evaluationCriteria,
-					evaluationCriteriaUrl,
+					evaluationCriteriaUrl: evaluationCriteriaUrl ?? "",
 				})
 				.returning();
 

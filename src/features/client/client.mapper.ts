@@ -15,8 +15,8 @@ const genderLabel = (gender: number): string => {
 export function toClients(data: Operations.GetClientsQuery): ClientType[] {
 	return data.clients.map((client) => ({
 		id: client.id,
-		name: `${client.user.last_name} ${client.user.first_name}`,
-		nameKana: `${client.user.last_name_kana} ${client.user.first_name_kana}`,
+		name: `${client.user.lastName} ${client.user.firstName}`,
+		nameKana: `${client.user.lastNameKana} ${client.user.firstNameKana}`,
 		occupation: client.profile?.occupation ?? "",
 		hobby: client.profile?.hobby ?? "",
 		gender: genderLabel(client.user.gender),

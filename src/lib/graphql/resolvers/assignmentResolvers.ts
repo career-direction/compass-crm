@@ -18,6 +18,7 @@ const mapAssignment = (row: typeof assignments.$inferSelect): Assignment => ({
 	dueDate: row.dueDate,
 	taskType: row.taskType,
 	taskId: Number(row.taskId),
+	executions: [],
 	createdAt: formatDateString(row.createdAt),
 	updatedAt: formatDateString(row.updatedAt),
 });
@@ -31,7 +32,7 @@ export const assignmentResolvers = {
 			const rows = await context.db
 				.select()
 				.from(assignments)
-				.where(eq(assignments.ptSessionId, args.sessionId))
+				.where(eq(assignments.ptSessionId, args.ptSessionId))
 				.limit(limit)
 				.offset(offset);
 

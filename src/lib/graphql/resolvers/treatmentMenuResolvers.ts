@@ -17,7 +17,11 @@ const mapTreatmentMenu = (
 	id: Number(row.id),
 	name: row.name,
 	requiredFunctionId: Number(row.requiredFunctionId),
-	learningMaterialId: Number(row.learningMaterialId),
+	requiredFunction: null,
+	learningMaterialId: row.learningMaterialId
+		? Number(row.learningMaterialId)
+		: null,
+	learningMaterial: null,
 	tips: row.tips,
 	commonErrors: row.commonErrors,
 	targetMuscles: row.targetMuscles,
@@ -31,15 +35,11 @@ export const treatmentMenuResolvers = {
 			const limit = Math.min(args.limit ?? 50, 100);
 			const offset = args.offset ?? 0;
 
-			let query = context.db.select().from(treatmentMenus);
-
-			if (args.requiredFunctionId) {
-				query = query.where(
-					eq(treatmentMenus.requiredFunctionId, args.requiredFunctionId),
-				) as typeof query;
-			}
-
-			const rows = await query.limit(limit).offset(offset);
+			const rows = await context.db
+				.select()
+				.from(treatmentMenus)
+				.limit(limit)
+				.offset(offset);
 
 			return rows.map(mapTreatmentMenu);
 		},
@@ -64,10 +64,10 @@ export const treatmentMenuResolvers = {
 				.values({
 					name,
 					requiredFunctionId,
-					learningMaterialId,
-					tips,
-					commonErrors,
-					targetMuscles,
+					learningMaterialId: learningMaterialId ?? 0,
+					tips: tips ?? "",
+					commonErrors: commonErrors ?? [],
+					targetMuscles: targetMuscles ?? [],
 				})
 				.returning();
 

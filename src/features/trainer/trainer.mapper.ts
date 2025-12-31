@@ -6,7 +6,7 @@ export function toTrainers(
 ): TrainerType[] {
 	return trainers.trainers.map((trainer) => ({
 		id: trainer.id,
-		firstName: trainer.user.first_name,
-		lastName: trainer.user.last_name,
+		firstName: trainer.user.firstName,
+		lastName: trainer.user.lastName,
 	}));
 }
