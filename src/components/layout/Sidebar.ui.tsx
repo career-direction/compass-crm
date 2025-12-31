@@ -1,17 +1,20 @@
 "use client";
 
-import { Box, NavLink } from "@mantine/core";
 import {
 	IconBook,
 	IconCalendar,
 	IconChevronsLeft,
 	IconChevronsRight,
+	IconLogout,
+	IconSettings,
 	IconUser,
 	IconUsers,
 } from "@tabler/icons-react";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { memo, useMemo } from "react";
+import { memo } from "react";
+import classes from "./Sidebar.module.css";
 
 type SidebarProps = {
 	isOpen: boolean;
@@ -41,69 +44,42 @@ const navItems = [
 	},
 ];
 
-const navLinkStyles = {
-	root: {
-		backgroundColor: "transparent",
-		borderRadius: "8px",
-		'&[dataActive="true"]': {
-			color: "white",
-		},
-		"&:hover": {
-			backgroundColor: "#fff4e6",
-		},
-	},
-};
-
 export const Sidebar = memo(({ isOpen, onToggle }: SidebarProps) => {
 	const pathname = usePathname();
 
-	const renderedNavItems = useMemo(() => {
-		return navItems.map((item) => (
-			<NavLink
-				key={item.href}
-				href={item.href}
-				label={item.label}
-				leftSection={<item.icon size="1rem" />}
-				active={pathname.startsWith(item.href)}
-				styles={navLinkStyles}
-			/>
-		));
-	}, [pathname]);
-
-	const containerPadding = isOpen ? "16px" : "8px";
-	const toggleLabel = isOpen ? "Close sidebar" : "Open sidebar";
+	if (!isOpen) {
+		return (
+			<div className={classes.collapsedNavbar}>
+				<button
+					type="button"
+					onClick={onToggle}
+					className={classes.toggleButton}
+					aria-label="Open sidebar"
+				>
+					<IconChevronsRight size="1.4rem" stroke={1.5} />
+				</button>
+				<div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "4px" }}>
+					{navItems.map((item) => (
+						<Link
+							key={item.href}
+							href={item.href}
+							className={classes.collapsedLink}
+							data-active={pathname.startsWith(item.href) || undefined}
+							title={item.label}
+						>
+							<item.icon className={classes.collapsedLinkIcon} stroke={1.5} />
+						</Link>
+					))}
+				</div>
+			</div>
+		);
+	}
 
 	return (
-		<div
-			style={{
-				padding: containerPadding,
-				display: "flex",
-				flexDirection: "column",
-				alignItems: isOpen ? "center" : "flex-start",
-				height: "100%",
-				gap: isOpen ? "24px" : "0",
-				justifyContent: "flex-start",
-				backgroundColor: "#FAFAFA",
-			}}
-		>
-			<Box
-				component="button"
-				onClick={onToggle}
-				type="button"
-				aria-label={toggleLabel}
-				style={{
-					display: "flex",
-					alignItems: "center",
-					justifyContent: isOpen ? "center" : "flex-start",
-					gap: isOpen ? "8px" : "0",
-					backgroundColor: "transparent",
-					border: "none",
-					cursor: "pointer",
-					width: isOpen ? "100%" : "auto",
-				}}
-			>
-				{isOpen ? (
-					<>
+		<nav className={classes.navbar}>
+			<div className={classes.navbarMain}>
+				<div className={classes.header}>
+					<div className={classes.logoContainer}>
 						<Image
 							alt="COMPASS logo"
 							height={401}
@@ -112,26 +88,46 @@ export const Sidebar = memo(({ isOpen, onToggle }: SidebarProps) => {
 							style={{ width: "140px", height: "auto" }}
 							priority
 						/>
-						<IconChevronsLeft size="1.4rem" stroke={1.5} />
-					</>
-				) : (
-					<IconChevronsRight size="1.4rem" stroke={1.5} />
-				)}
-			</Box>
+						<button
+							type="button"
+							onClick={onToggle}
+							className={classes.toggleButton}
+							aria-label="Close sidebar"
+						>
+							<IconChevronsLeft size="1.4rem" stroke={1.5} />
+						</button>
+					</div>
+				</div>
+				{navItems.map((item) => (
+					<Link
+						key={item.href}
+						href={item.href}
+						className={classes.link}
+						data-active={pathname.startsWith(item.href) || undefined}
+					>
+						<item.icon className={classes.linkIcon} stroke={1.5} />
+						<span>{item.label}</span>
+					</Link>
+				))}
+			</div>
 
-			{isOpen && (
-				<div
-					style={{
-						display: "flex",
-						flexDirection: "column",
-						gap: "4px",
-						width: "100%",
+			<div className={classes.footer}>
+				<Link href="/settings" className={classes.link}>
+					<IconSettings className={classes.linkIcon} stroke={1.5} />
+					<span>設定</span>
+				</Link>
+				<button
+					type="button"
+					className={classes.link}
+					onClick={() => {
+						// TODO: ログアウト処理を実装
 					}}
 				>
-					{renderedNavItems}
-				</div>
-			)}
-		</div>
+					<IconLogout className={classes.linkIcon} stroke={1.5} />
+					<span>ログアウト</span>
+				</button>
+			</div>
+		</nav>
 	);
 });
 
