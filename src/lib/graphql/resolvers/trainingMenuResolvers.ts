@@ -59,18 +59,18 @@ export const trainingMenuResolvers = {
 				level,
 			} = args.input;
 
-		const [created] = await context.db
-			.insert(trainingMenus)
-			.values({
-				name,
-				requiredFunctionId,
-				learningMaterialId,
-				tips,
-				commonErrors,
-				targetMuscles,
-				level,
-			})
-			.returning();
+			const [created] = await context.db
+				.insert(trainingMenus)
+				.values({
+					name,
+					requiredFunctionId,
+					learningMaterialId,
+					tips,
+					commonErrors,
+					targetMuscles,
+					level,
+				})
+				.returning();
 
 			return mapTrainingMenu(created);
 		},

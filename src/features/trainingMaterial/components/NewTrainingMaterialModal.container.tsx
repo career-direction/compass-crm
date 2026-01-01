@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useCreateLearningMaterialMutation } from "@/lib/graphql/generated/client/gql/urql";
+import { useAuth } from "@/features/auth/contexts/AuthContext";
 import {
 	NewTrainingMaterialModalUI,
 	type TrainingMaterialFormData,
@@ -26,6 +27,7 @@ export const NewTrainingMaterialModal = ({
 		useState<TrainingMaterialFormData>(initialFormData);
 	const [, createLearningMaterial] = useCreateLearningMaterialMutation();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const { user } = useAuth();
 
 	const handleSubmit = async () => {
 		if (
@@ -33,7 +35,8 @@ export const NewTrainingMaterialModal = ({
 			!formData.status ||
 			!formData.sourceUrl ||
 			!formData.contentType ||
-			formData.contentId === ""
+			formData.contentId === "" ||
+			!user
 		) {
 			return;
 		}
@@ -42,6 +45,7 @@ export const NewTrainingMaterialModal = ({
 		try {
 			const result = await createLearningMaterial({
 				input: {
+					ownerId: user.key,
 					name: formData.name,
 					status: formData.status,
 					sourceUrl: formData.sourceUrl,

@@ -117,16 +117,16 @@ export const sessionResolvers = {
 			const { clientId, trainerId, performedAt, kind, theme } = args.input;
 			const performedAtDate = performedAt ? new Date(performedAt) : new Date();
 
-		const [session] = await context.db
-			.insert(ptSessions)
-			.values({
-				clientId,
-				trainerId,
-				performedAt: performedAtDate,
-				kind,
-				theme,
-			})
-			.returning();
+			const [session] = await context.db
+				.insert(ptSessions)
+				.values({
+					clientId,
+					trainerId,
+					performedAt: performedAtDate,
+					kind,
+					theme,
+				})
+				.returning();
 
 			const clientUser = alias(users, "client_user_mutation");
 			const trainerUser = alias(users, "trainer_user_mutation");

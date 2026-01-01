@@ -1,0 +1,209 @@
+# ============================================
+# カスタムフィールド定義
+# 
+# Database-Firstアプローチでは、基本的な型は自動生成されますが、
+# カスタムフィールド（逆方向リレーション、計算フィールドなど）は
+# このファイルで定義します。
+#
+# このファイルは schema.graphql にマージされます。
+# ============================================
+
+# ユーザー関連のカスタムフィールド
+extend type User {
+	credentials: UserCredential
+}
+
+# クライアント関連のカスタムフィールド
+extend type Client {
+	user: User!
+	profile: ClientProfile
+	sessions: [PTSession!]!
+	bodyConditions: [BodyCondition!]!
+	midtermHealthPurposes: [MidtermHealthPurpose!]!
+	assignments: [Assignment!]!
+}
+
+# トレーナー関連のカスタムフィールド
+extend type Trainer {
+	user: User!
+	profile: TrainerProfile
+	sessions: [PTSession!]!
+}
+
+extend type TrainerProfile {
+	signatureMuscles: String!
+	specializations: String!
+}
+
+# セッション関連のカスタムフィールド
+extend type PTSession {
+	client: Client!
+	trainer: Trainer!
+	items: [PTSessionItem!]!
+	assignments: [Assignment!]!
+}
+
+# 課題関連のカスタムフィールド
+extend type Assignment {
+	executions: [AssignmentExecution!]!
+}
+
+# 身体情報関連のカスタムフィールド
+# 注意: DBスキーマではtext型だが、GraphQLではFloat型として扱う
+# 将来的にはDBスキーマをnumeric型に変更することを推奨
+extend type BodyCondition {
+	weight: Float
+	bodyFat: Float
+	muscleMass: Float
+	skeletalMuscleRate: Float
+	bmi: Float
+	bmr: Float
+	avgSleepTime: Float
+	avgRespirationRate: Float
+	sympathetic: Float
+	parasympathetic: Float
+	bust: Float
+	underbust: Float
+	waist: Float
+	hip: Float
+	armCircumference: Float
+	buttockHeight: Float
+	thighCircumference: Float
+	calfCircumference: Float
+	ffd: Float
+	hwd: Float
+}
+
+# DBスキーマに存在しない型（将来的にDBに追加予定）
+type AssignmentExecution {
+	id: Int!
+	assignmentId: Int!
+	executionDate: String!
+	createdAt: String!
+	updatedAt: String!
+}
+
+# カリキュラム関連のカスタムフィールド
+extend type RequiredFunction {
+	curriculumUnit: CurriculumUnit
+	treatmentMenus: [TreatmentMenu!]!
+	trainingMenus: [TrainingMenu!]!
+}
+
+extend type CurriculumUnit {
+	requiredFunctions: [RequiredFunction!]!
+}
+
+extend type TreatmentMenu {
+	requiredFunction: RequiredFunction
+	learningMaterial: LearningMaterial
+}
+
+extend type TrainingMenu {
+	requiredFunction: RequiredFunction
+	learningMaterial: LearningMaterial
+}
+
+# 健康目標関連のカスタムフィールド
+extend type MidtermHealthPurpose {
+	milestones: [MonthlyHealthMilestone!]!
+}
+
+# DBスキーマに存在しない型（将来的にDBに追加予定）
+type MonthlyHealthMilestone {
+	id: Int!
+	key: String!
+	clientId: Int!
+	midtermHealthGoalId: Int!
+	target: String!
+	asIs: String!
+	toBe: String
+	results: String
+	achieved: Boolean
+	yearMonth: String!
+	actionGoals: [MonthlyActionGoal!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type MonthlyActionGoal {
+	id: Int!
+	key: String!
+	monthlyHealthMilestoneId: Int!
+	goal: String!
+	frequencyPerWeek: Int!
+	actionType: String
+	achieved: String
+	targetMonth: String!
+	createdAt: String!
+	updatedAt: String!
+}
+
+extend type MonthlyHealthMilestone {
+	actionGoals: [MonthlyActionGoal!]!
+}
+
+# その他のカスタムQuery/Mutation
+# 注意: ここで定義されたQueryは自動生成をスキップします
+extend type Query {
+	hello: String
+	sessions(limit: Int, offset: Int): [PTSession!]!
+	bodyConditions(clientId: Int!, limit: Int, offset: Int): [BodyCondition!]!
+	midtermHealthPurposes(
+		clientId: Int!
+		limit: Int
+		offset: Int
+	): [MidtermHealthPurpose!]!
+	assignments(ptSessionId: Int!, limit: Int, offset: Int): [Assignment!]!
+	requiredFunctions(
+		curriculumUnitId: Int!
+		limit: Int
+		offset: Int
+	): [RequiredFunction!]!
+	learningMaterials(
+		ownerId: String
+		limit: Int
+		offset: Int
+	): [LearningMaterial!]!
+}
+
+extend type Mutation {
+	createClientWithProfile(input: CreateClientWithProfileInput!): Client!
+	createSession(input: CreateSessionInput!): PTSession!
+}
+
+# カスタムInput型
+input CreateClientWithProfileInput {
+	firstName: String!
+	lastName: String!
+	firstNameKana: String!
+	lastNameKana: String!
+	birthDate: String!
+	gender: Int!
+	occupation: String!
+	hobby: String!
+	allowSnsPost: String!
+	exerciseHistory: String!
+}
+
+input CreateSessionInput {
+	clientId: Int!
+	trainerId: Int!
+	performedAt: String!
+	kind: String!
+	theme: String!
+}
+
+# カスタムInput型（DBスキーマと異なる構造）
+input CreateUserInput {
+	kind: Int!
+	firstName: String!
+	lastName: String!
+	firstNameKana: String!
+	lastNameKana: String!
+	birthDate: String!
+	gender: Int!
+	email: String!
+	password: String!
+}
+

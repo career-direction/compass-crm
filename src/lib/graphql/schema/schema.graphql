@@ -1,80 +1,58 @@
+# ============================================
+# 自動生成されたGraphQLスキーマ
+# 生成元: src/db/schema.ts (Drizzle ORM)
+#
+# Database-Firstアプローチ:
+# - DrizzleスキーマがSingle Source of Truth
+# - このファイルは自動生成されるため、手動編集は推奨されません
+# - カスタマイズが必要な場合は、scripts/generate-graphql-schema-from-db.ts を編集してください
+#
+# 生成日時: 2026-01-01T12:08:51.725Z
+# ============================================
+
 type Query {
-	hello: String
 	users(limit: Int, offset: Int): [User!]!
+	usersById(id: Int!): User
+	userCredentials(limit: Int, offset: Int): [UserCredential!]!
+	userCredentialsById(id: Int!): UserCredential
 	clients(limit: Int, offset: Int): [Client!]!
+	clientsById(id: Int!): Client
+	clientProfiles(limit: Int, offset: Int): [ClientProfile!]!
+	clientProfilesById(id: Int!): ClientProfile
 	trainers(limit: Int, offset: Int): [Trainer!]!
-	sessions(limit: Int, offset: Int): [PTSession!]!
-	bodyConditions(clientId: Int!, limit: Int, offset: Int): [BodyCondition!]!
-	midtermHealthPurposes(
-		clientId: Int!
-		limit: Int
-		offset: Int
-	): [MidtermHealthPurpose!]!
-	monthlyHealthMilestones(
-		clientId: Int!
-		limit: Int
-		offset: Int
-	): [MonthlyHealthMilestone!]!
-	monthlyActionGoals(
-		monthlyHealthMilestoneId: Int!
-		limit: Int
-		offset: Int
-	): [MonthlyActionGoal!]!
-	assignments(ptSessionId: Int!, limit: Int, offset: Int): [Assignment!]!
-	trainingTasks(limit: Int, offset: Int): [TrainingTask!]!
-	treatmentTasks(limit: Int, offset: Int): [TreatmentTask!]!
-	trainingMenus(limit: Int, offset: Int): [TrainingMenu!]!
-	treatmentMenus(limit: Int, offset: Int): [TreatmentMenu!]!
+	trainersById(id: Int!): Trainer
+	trainerProfiles(limit: Int, offset: Int): [TrainerProfile!]!
+	trainerProfilesById(id: Int!): TrainerProfile
+	ptSessions(limit: Int, offset: Int): [PTSession!]!
+	ptSessionsById(id: Int!): PTSession
+	ptSessionItems(limit: Int, offset: Int): [PTSessionItem!]!
+	ptSessionItemsById(id: Int!): PTSessionItem
 	curriculumUnits(limit: Int, offset: Int): [CurriculumUnit!]!
-	requiredFunctions(
-		curriculumUnitId: Int!
-		limit: Int
-		offset: Int
-	): [RequiredFunction!]!
-	learningMaterials(
-		ownerId: String
-		limit: Int
-		offset: Int
-	): [LearningMaterial!]!
-	homeworkAssignments(
-		clientId: Int!
-		limit: Int
-		offset: Int
-	): [HomeworkAssignment!]!
-	homeworkRecords(homeworkId: Int!, limit: Int, offset: Int): [HomeworkRecord!]!
+	curriculumUnitsById(id: Int!): CurriculumUnit
+	treatmentMenus(limit: Int, offset: Int): [TreatmentMenu!]!
+	treatmentMenusById(id: Int!): TreatmentMenu
+	trainingMenus(limit: Int, offset: Int): [TrainingMenu!]!
+	trainingMenusById(id: Int!): TrainingMenu
 }
 
 type Mutation {
 	createUser(input: CreateUserInput!): User!
+	createUserCredential(input: CreateUserCredentialInput!): UserCredential!
 	createClient(input: CreateClientInput!): Client!
-	createClientWithProfile(input: CreateClientWithProfileInput!): Client!
+	createClientProfile(input: CreateClientProfileInput!): ClientProfile!
 	createTrainer(input: CreateTrainerInput!): Trainer!
-	createSession(input: CreateSessionInput!): PTSession!
+	createTrainerProfile(input: CreateTrainerProfileInput!): TrainerProfile!
+	createPTSession(input: CreatePTSessionInput!): PTSession!
+	createPTSessionItem(input: CreatePTSessionItemInput!): PTSessionItem!
 	createBodyCondition(input: CreateBodyConditionInput!): BodyCondition!
-	createMidtermHealthPurpose(
-		input: CreateMidtermHealthPurposeInput!
-	): MidtermHealthPurpose!
-	createMonthlyHealthMilestone(
-		input: CreateMonthlyHealthMilestoneInput!
-	): MonthlyHealthMilestone!
-	createMonthlyActionGoal(
-		input: CreateMonthlyActionGoalInput!
-	): MonthlyActionGoal!
+	createMidtermHealthPurpose(input: CreateMidtermHealthPurposeInput!): MidtermHealthPurpose!
 	createAssignment(input: CreateAssignmentInput!): Assignment!
-	createHomeworkAssignment(
-		input: CreateHomeworkAssignmentInput!
-	): HomeworkAssignment!
-	createHomeworkRecord(input: CreateHomeworkRecordInput!): HomeworkRecord!
 	createLearningMaterial(input: CreateLearningMaterialInput!): LearningMaterial!
 	createCurriculumUnit(input: CreateCurriculumUnitInput!): CurriculumUnit!
 	createRequiredFunction(input: CreateRequiredFunctionInput!): RequiredFunction!
 	createTreatmentMenu(input: CreateTreatmentMenuInput!): TreatmentMenu!
 	createTrainingMenu(input: CreateTrainingMenuInput!): TrainingMenu!
 }
-
-# ====================
-# ユーザー関連
-# ====================
 
 type User {
 	id: Int!
@@ -88,12 +66,11 @@ type User {
 	gender: Int!
 	activeFlag: Boolean!
 	deletedAt: String
-	credentials: UserCredentials
 	createdAt: String!
 	updatedAt: String!
 }
 
-type UserCredentials {
+type UserCredential {
 	id: Int!
 	userId: String!
 	email: String!
@@ -103,19 +80,9 @@ type UserCredentials {
 	updatedAt: String!
 }
 
-# ====================
-# クライアント関連
-# ====================
-
 type Client {
 	id: Int!
 	userId: Int!
-	user: User!
-	profile: ClientProfile
-	sessions: [PTSession!]!
-	bodyConditions: [BodyCondition!]!
-	midtermHealthPurposes: [MidtermHealthPurpose!]!
-	assignments: [Assignment!]!
 }
 
 type ClientProfile {
@@ -127,30 +94,17 @@ type ClientProfile {
 	exerciseHistory: String!
 }
 
-# ====================
-# トレーナー関連
-# ====================
-
 type Trainer {
 	id: Int!
 	userId: Int!
-	user: User!
-	profile: TrainerProfile
-	sessions: [PTSession!]!
 }
 
 type TrainerProfile {
 	id: Int!
 	trainerId: Int!
 	motivationStatement: String!
-	signatureMuscles: String!
-	specializations: String!
 	certifications: String!
 }
-
-# ====================
-# セッション関連
-# ====================
 
 type PTSession {
 	id: Int!
@@ -164,10 +118,6 @@ type PTSession {
 	trainerComment: String
 	memo: String
 	chatContents: String
-	client: Client!
-	trainer: Trainer!
-	items: [PTSessionItem!]!
-	assignments: [Assignment!]!
 	createdAt: String!
 	updatedAt: String!
 }
@@ -183,40 +133,12 @@ type PTSessionItem {
 	updatedAt: String!
 }
 
-# ====================
-# 身体情報関連
-# ====================
-
 type BodyCondition {
 	id: Int!
 	clientId: Int!
 	measuredAt: String!
-	weight: Float
-	bodyFat: Float
-	muscleMass: Float
-	skeletalMuscleRate: Float
-	bmi: Float
-	bmr: Float
-	avgSleepTime: Float
-	avgRespirationRate: Float
-	sympathetic: Float
-	parasympathetic: Float
-	bust: Float
-	underbust: Float
-	waist: Float
-	hip: Float
-	armCircumference: Float
-	buttockHeight: Float
-	thighCircumference: Float
-	calfCircumference: Float
-	ffd: Float
-	hwd: Float
 	memo: String
 }
-
-# ====================
-# 健康目標関連
-# ====================
 
 type MidtermHealthPurpose {
 	id: Int!
@@ -227,43 +149,9 @@ type MidtermHealthPurpose {
 	settingDate: String!
 	startDate: String!
 	memo: String
-	milestones: [MonthlyHealthMilestone!]!
 	createdAt: String!
 	updatedAt: String!
 }
-
-type MonthlyHealthMilestone {
-	id: Int!
-	key: String!
-	clientId: Int!
-	midtermHealthGoalId: Int!
-	target: String!
-	asIs: String!
-	toBe: String
-	results: String
-	achieved: Boolean
-	yearMonth: String!
-	actionGoals: [MonthlyActionGoal!]!
-	createdAt: String!
-	updatedAt: String!
-}
-
-type MonthlyActionGoal {
-	id: Int!
-	key: String!
-	monthlyHealthMilestoneId: Int!
-	goal: String!
-	frequencyPerWeek: Int!
-	actionType: String
-	achieved: String
-	targetMonth: String!
-	createdAt: String!
-	updatedAt: String!
-}
-
-# ====================
-# 宿題関連
-# ====================
 
 type Assignment {
 	id: Int!
@@ -272,138 +160,6 @@ type Assignment {
 	dueDate: String!
 	taskType: String!
 	taskId: Int!
-	executions: [AssignmentExecution!]!
-	createdAt: String!
-	updatedAt: String!
-}
-
-type AssignmentExecution {
-	id: Int!
-	assignmentId: Int!
-	executionDate: String!
-	createdAt: String!
-	updatedAt: String!
-}
-
-type HomeworkAssignment {
-	id: Int!
-	key: String!
-	sessionId: Int!
-	clientId: Int!
-	trainerId: Int!
-	homeworkType: String!
-	title: String!
-	description: String!
-	frequency: String!
-	durationDays: Int!
-	notes: String
-	materialUrl: String
-	priority: String!
-	status: String!
-	records: [HomeworkRecord!]!
-	createdAt: String!
-	updatedAt: String!
-}
-
-type HomeworkRecord {
-	id: Int!
-	homeworkId: Int!
-	clientId: Int!
-	performedAt: String!
-	completionStatus: String!
-	durationMinutes: Int
-	repetitions: Int
-	feedback: String
-	difficulties: String
-	createdAt: String!
-	updatedAt: String!
-}
-
-# ====================
-# タスク関連
-# ====================
-
-type TrainingTask {
-	id: Int!
-	key: String!
-	contentType: String!
-	contentId: Int!
-	weight: Float
-	reps: Int
-	sec: Int
-	memo: String
-	createdAt: String!
-	updatedAt: String!
-}
-
-type TreatmentTask {
-	id: Int!
-	key: String!
-	contentType: String!
-	contentId: Int!
-	sec: Int
-	memo: String
-	createdAt: String!
-	updatedAt: String!
-}
-
-# ====================
-# マスターデータ
-# ====================
-
-type TrainingMenu {
-	id: Int!
-	name: String!
-	requiredFunctionId: Int!
-	requiredFunction: RequiredFunction
-	learningMaterialId: Int!
-	learningMaterial: LearningMaterial
-	tips: String!
-	commonErrors: [String!]!
-	targetMuscles: [String!]!
-	level: Int!
-	createdAt: String!
-	updatedAt: String!
-}
-
-type TreatmentMenu {
-	id: Int!
-	name: String!
-	requiredFunctionId: Int!
-	requiredFunction: RequiredFunction
-	learningMaterialId: Int!
-	learningMaterial: LearningMaterial
-	tips: String!
-	commonErrors: [String!]!
-	targetMuscles: [String!]!
-	createdAt: String!
-	updatedAt: String!
-}
-
-type RequiredFunction {
-	id: Int!
-	curriculumUnitId: Int!
-	curriculumUnit: CurriculumUnit
-	name: String!
-	overview: String!
-	overviewUrl: String!
-	evaluationCriteria: String!
-	evaluationCriteriaUrl: String!
-	treatmentMenus: [TreatmentMenu!]!
-	trainingMenus: [TrainingMenu!]!
-	createdAt: String!
-	updatedAt: String!
-}
-
-type CurriculumUnit {
-	id: Int!
-	name: String!
-	type: String!
-	overview: String!
-	overviewUrl: String!
-	evaluationCriteria: String!
-	evaluationCriteriaUrl: String!
-	requiredFunctions: [RequiredFunction!]!
 	createdAt: String!
 	updatedAt: String!
 }
@@ -421,50 +177,67 @@ type LearningMaterial {
 	updatedAt: String!
 }
 
-# ====================
-# Enum定義
-# ====================
-
-enum UserRole {
-	ADMIN
-	TRAINER
-	CLIENT
+type CurriculumUnit {
+	id: Int!
+	name: String!
+	type: String!
+	overview: String!
+	overviewUrl: String!
+	evaluationCriteria: String!
+	evaluationCriteriaUrl: String!
+	createdAt: String!
+	updatedAt: String!
 }
 
-enum Gender {
-	MALE
-	FEMALE
-	OTHER
-	PREFER_NOT_TO_SAY
+type RequiredFunction {
+	id: Int!
+	curriculumUnitId: Int!
+	name: String!
+	overview: String!
+	overviewUrl: String!
+	evaluationCriteria: String!
+	evaluationCriteriaUrl: String!
+	createdAt: String!
+	updatedAt: String!
 }
 
-# ====================
-# Input定義
-# ====================
+type TreatmentMenu {
+	id: Int!
+	name: String!
+	requiredFunctionId: Int!
+	learningMaterialId: Int!
+	tips: String!
+	commonErrors: [String!]!
+	targetMuscles: [String!]!
+	createdAt: String!
+	updatedAt: String!
+}
 
-input CreateUserInput {
-	kind: Int!
-	firstName: String!
-	lastName: String!
-	firstNameKana: String!
-	lastNameKana: String!
-	birthDate: String!
-	gender: Int!
+type TrainingMenu {
+	id: Int!
+	name: String!
+	requiredFunctionId: Int!
+	learningMaterialId: Int!
+	tips: String!
+	commonErrors: [String!]!
+	targetMuscles: [String!]!
+	level: Int!
+	createdAt: String!
+	updatedAt: String!
+}
+
+input CreateUserCredentialInput {
+	userId: String!
 	email: String!
-	password: String!
+	passwordDigest: String!
 }
 
 input CreateClientInput {
 	userId: Int!
 }
 
-input CreateClientWithProfileInput {
-	firstName: String!
-	lastName: String!
-	firstNameKana: String!
-	lastNameKana: String!
-	birthDate: String!
-	gender: Int!
+input CreateClientProfileInput {
+	clientId: Int!
 	occupation: String!
 	hobby: String!
 	allowSnsPost: String!
@@ -475,37 +248,57 @@ input CreateTrainerInput {
 	userId: Int!
 }
 
-input CreateSessionInput {
+input CreateTrainerProfileInput {
+	trainerId: Int!
+	motivationStatement: String!
+	signatureMuscle: String!
+	specialization: String!
+	certifications: String!
+}
+
+input CreatePTSessionInput {
 	clientId: Int!
 	trainerId: Int!
 	performedAt: String!
 	kind: String!
 	theme: String!
+	archiveUrl: String
+	trainerComment: String
+	memo: String
+	chatContents: String
+}
+
+input CreatePTSessionItemInput {
+	ptSessionId: Int!
+	taskId: Int!
+	taskType: String!
+	trainerAdvice: String
+	memo: String
 }
 
 input CreateBodyConditionInput {
 	clientId: Int!
 	measuredAt: String!
-	weight: Float
-	bodyFat: Float
-	muscleMass: Float
-	skeletalMuscleRate: Float
-	bmi: Float
-	bmr: Float
-	avgSleepTime: Float
-	avgRespirationRate: Float
-	sympathetic: Float
-	parasympathetic: Float
-	bust: Float
-	underbust: Float
-	waist: Float
-	hip: Float
-	armCircumference: Float
-	buttockHeight: Float
-	thighCircumference: Float
-	calfCircumference: Float
-	ffd: Float
-	hwd: Float
+	weight: String
+	bodyFat: String
+	muscleMass: String
+	skeletalMuscleRate: String
+	bmi: String
+	bmr: String
+	avgSleepTime: String
+	avgRespirationRate: String
+	sympathetic: String
+	parasympathetic: String
+	bust: String
+	underbust: String
+	waist: String
+	hip: String
+	armCircumference: String
+	buttockHeight: String
+	thighCircumference: String
+	calfCircumference: String
+	ffd: String
+	hwd: String
 	memo: String
 }
 
@@ -518,24 +311,6 @@ input CreateMidtermHealthPurposeInput {
 	memo: String
 }
 
-input CreateMonthlyHealthMilestoneInput {
-	clientId: Int!
-	midtermHealthGoalId: Int!
-	target: String!
-	asIs: String!
-	toBe: String
-	results: String
-	yearMonth: String!
-}
-
-input CreateMonthlyActionGoalInput {
-	monthlyHealthMilestoneId: Int!
-	goal: String!
-	frequencyPerWeek: Int!
-	actionType: String
-	targetMonth: String!
-}
-
 input CreateAssignmentInput {
 	ptSessionId: Int!
 	dueDate: String!
@@ -543,32 +318,8 @@ input CreateAssignmentInput {
 	taskId: Int!
 }
 
-input CreateHomeworkAssignmentInput {
-	sessionId: Int!
-	clientId: Int!
-	trainerId: Int!
-	homeworkType: String!
-	title: String!
-	description: String!
-	frequency: String!
-	durationDays: Int!
-	notes: String
-	materialUrl: String
-	priority: String!
-}
-
-input CreateHomeworkRecordInput {
-	homeworkId: Int!
-	clientId: Int!
-	performedAt: String!
-	completionStatus: String!
-	durationMinutes: Int
-	repetitions: Int
-	feedback: String
-	difficulties: String
-}
-
 input CreateLearningMaterialInput {
+	ownerId: String!
 	name: String!
 	status: String!
 	sourceUrl: String!
@@ -612,3 +363,213 @@ input CreateTrainingMenuInput {
 	targetMuscles: [String!]!
 	level: Int!
 }
+
+# ============================================
+# カスタムフィールド定義
+# 
+# Database-Firstアプローチでは、基本的な型は自動生成されますが、
+# カスタムフィールド（逆方向リレーション、計算フィールドなど）は
+# このファイルで定義します。
+#
+# このファイルは schema.graphql にマージされます。
+# ============================================
+
+# ユーザー関連のカスタムフィールド
+extend type User {
+	credentials: UserCredential
+}
+
+# クライアント関連のカスタムフィールド
+extend type Client {
+	user: User!
+	profile: ClientProfile
+	sessions: [PTSession!]!
+	bodyConditions: [BodyCondition!]!
+	midtermHealthPurposes: [MidtermHealthPurpose!]!
+	assignments: [Assignment!]!
+}
+
+# トレーナー関連のカスタムフィールド
+extend type Trainer {
+	user: User!
+	profile: TrainerProfile
+	sessions: [PTSession!]!
+}
+
+extend type TrainerProfile {
+	signatureMuscles: String!
+	specializations: String!
+}
+
+# セッション関連のカスタムフィールド
+extend type PTSession {
+	client: Client!
+	trainer: Trainer!
+	items: [PTSessionItem!]!
+	assignments: [Assignment!]!
+}
+
+# 課題関連のカスタムフィールド
+extend type Assignment {
+	executions: [AssignmentExecution!]!
+}
+
+# 身体情報関連のカスタムフィールド
+# 注意: DBスキーマではtext型だが、GraphQLではFloat型として扱う
+# 将来的にはDBスキーマをnumeric型に変更することを推奨
+extend type BodyCondition {
+	weight: Float
+	bodyFat: Float
+	muscleMass: Float
+	skeletalMuscleRate: Float
+	bmi: Float
+	bmr: Float
+	avgSleepTime: Float
+	avgRespirationRate: Float
+	sympathetic: Float
+	parasympathetic: Float
+	bust: Float
+	underbust: Float
+	waist: Float
+	hip: Float
+	armCircumference: Float
+	buttockHeight: Float
+	thighCircumference: Float
+	calfCircumference: Float
+	ffd: Float
+	hwd: Float
+}
+
+# DBスキーマに存在しない型（将来的にDBに追加予定）
+type AssignmentExecution {
+	id: Int!
+	assignmentId: Int!
+	executionDate: String!
+	createdAt: String!
+	updatedAt: String!
+}
+
+# カリキュラム関連のカスタムフィールド
+extend type RequiredFunction {
+	curriculumUnit: CurriculumUnit
+	treatmentMenus: [TreatmentMenu!]!
+	trainingMenus: [TrainingMenu!]!
+}
+
+extend type CurriculumUnit {
+	requiredFunctions: [RequiredFunction!]!
+}
+
+extend type TreatmentMenu {
+	requiredFunction: RequiredFunction
+	learningMaterial: LearningMaterial
+}
+
+extend type TrainingMenu {
+	requiredFunction: RequiredFunction
+	learningMaterial: LearningMaterial
+}
+
+# 健康目標関連のカスタムフィールド
+extend type MidtermHealthPurpose {
+	milestones: [MonthlyHealthMilestone!]!
+}
+
+# DBスキーマに存在しない型（将来的にDBに追加予定）
+type MonthlyHealthMilestone {
+	id: Int!
+	key: String!
+	clientId: Int!
+	midtermHealthGoalId: Int!
+	target: String!
+	asIs: String!
+	toBe: String
+	results: String
+	achieved: Boolean
+	yearMonth: String!
+	actionGoals: [MonthlyActionGoal!]!
+	createdAt: String!
+	updatedAt: String!
+}
+
+type MonthlyActionGoal {
+	id: Int!
+	key: String!
+	monthlyHealthMilestoneId: Int!
+	goal: String!
+	frequencyPerWeek: Int!
+	actionType: String
+	achieved: String
+	targetMonth: String!
+	createdAt: String!
+	updatedAt: String!
+}
+
+extend type MonthlyHealthMilestone {
+	actionGoals: [MonthlyActionGoal!]!
+}
+
+# その他のカスタムQuery/Mutation
+# 注意: ここで定義されたQueryは自動生成をスキップします
+extend type Query {
+	hello: String
+	sessions(limit: Int, offset: Int): [PTSession!]!
+	bodyConditions(clientId: Int!, limit: Int, offset: Int): [BodyCondition!]!
+	midtermHealthPurposes(
+		clientId: Int!
+		limit: Int
+		offset: Int
+	): [MidtermHealthPurpose!]!
+	assignments(ptSessionId: Int!, limit: Int, offset: Int): [Assignment!]!
+	requiredFunctions(
+		curriculumUnitId: Int!
+		limit: Int
+		offset: Int
+	): [RequiredFunction!]!
+	learningMaterials(
+		ownerId: String
+		limit: Int
+		offset: Int
+	): [LearningMaterial!]!
+}
+
+extend type Mutation {
+	createClientWithProfile(input: CreateClientWithProfileInput!): Client!
+	createSession(input: CreateSessionInput!): PTSession!
+}
+
+# カスタムInput型
+input CreateClientWithProfileInput {
+	firstName: String!
+	lastName: String!
+	firstNameKana: String!
+	lastNameKana: String!
+	birthDate: String!
+	gender: Int!
+	occupation: String!
+	hobby: String!
+	allowSnsPost: String!
+	exerciseHistory: String!
+}
+
+input CreateSessionInput {
+	clientId: Int!
+	trainerId: Int!
+	performedAt: String!
+	kind: String!
+	theme: String!
+}
+
+# カスタムInput型（DBスキーマと異なる構造）
+input CreateUserInput {
+	kind: Int!
+	firstName: String!
+	lastName: String!
+	firstNameKana: String!
+	lastNameKana: String!
+	birthDate: String!
+	gender: Int!
+	email: String!
+	password: String!
+}
+

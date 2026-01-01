@@ -96,33 +96,41 @@ export type CreateAssignmentInput = {
 };
 
 export type CreateBodyConditionInput = {
-  armCircumference?: InputMaybe<Scalars['Float']['input']>;
-  avgRespirationRate?: InputMaybe<Scalars['Float']['input']>;
-  avgSleepTime?: InputMaybe<Scalars['Float']['input']>;
-  bmi?: InputMaybe<Scalars['Float']['input']>;
-  bmr?: InputMaybe<Scalars['Float']['input']>;
-  bodyFat?: InputMaybe<Scalars['Float']['input']>;
-  bust?: InputMaybe<Scalars['Float']['input']>;
-  buttockHeight?: InputMaybe<Scalars['Float']['input']>;
-  calfCircumference?: InputMaybe<Scalars['Float']['input']>;
+  armCircumference?: InputMaybe<Scalars['String']['input']>;
+  avgRespirationRate?: InputMaybe<Scalars['String']['input']>;
+  avgSleepTime?: InputMaybe<Scalars['String']['input']>;
+  bmi?: InputMaybe<Scalars['String']['input']>;
+  bmr?: InputMaybe<Scalars['String']['input']>;
+  bodyFat?: InputMaybe<Scalars['String']['input']>;
+  bust?: InputMaybe<Scalars['String']['input']>;
+  buttockHeight?: InputMaybe<Scalars['String']['input']>;
+  calfCircumference?: InputMaybe<Scalars['String']['input']>;
   clientId: Scalars['Int']['input'];
-  ffd?: InputMaybe<Scalars['Float']['input']>;
-  hip?: InputMaybe<Scalars['Float']['input']>;
-  hwd?: InputMaybe<Scalars['Float']['input']>;
+  ffd?: InputMaybe<Scalars['String']['input']>;
+  hip?: InputMaybe<Scalars['String']['input']>;
+  hwd?: InputMaybe<Scalars['String']['input']>;
   measuredAt: Scalars['String']['input'];
   memo?: InputMaybe<Scalars['String']['input']>;
-  muscleMass?: InputMaybe<Scalars['Float']['input']>;
-  parasympathetic?: InputMaybe<Scalars['Float']['input']>;
-  skeletalMuscleRate?: InputMaybe<Scalars['Float']['input']>;
-  sympathetic?: InputMaybe<Scalars['Float']['input']>;
-  thighCircumference?: InputMaybe<Scalars['Float']['input']>;
-  underbust?: InputMaybe<Scalars['Float']['input']>;
-  waist?: InputMaybe<Scalars['Float']['input']>;
-  weight?: InputMaybe<Scalars['Float']['input']>;
+  muscleMass?: InputMaybe<Scalars['String']['input']>;
+  parasympathetic?: InputMaybe<Scalars['String']['input']>;
+  skeletalMuscleRate?: InputMaybe<Scalars['String']['input']>;
+  sympathetic?: InputMaybe<Scalars['String']['input']>;
+  thighCircumference?: InputMaybe<Scalars['String']['input']>;
+  underbust?: InputMaybe<Scalars['String']['input']>;
+  waist?: InputMaybe<Scalars['String']['input']>;
+  weight?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateClientInput = {
   userId: Scalars['Int']['input'];
+};
+
+export type CreateClientProfileInput = {
+  allowSnsPost: Scalars['String']['input'];
+  clientId: Scalars['Int']['input'];
+  exerciseHistory: Scalars['String']['input'];
+  hobby: Scalars['String']['input'];
+  occupation: Scalars['String']['input'];
 };
 
 export type CreateClientWithProfileInput = {
@@ -147,35 +155,11 @@ export type CreateCurriculumUnitInput = {
   type: Scalars['String']['input'];
 };
 
-export type CreateHomeworkAssignmentInput = {
-  clientId: Scalars['Int']['input'];
-  description: Scalars['String']['input'];
-  durationDays: Scalars['Int']['input'];
-  frequency: Scalars['String']['input'];
-  homeworkType: Scalars['String']['input'];
-  materialUrl?: InputMaybe<Scalars['String']['input']>;
-  notes?: InputMaybe<Scalars['String']['input']>;
-  priority: Scalars['String']['input'];
-  sessionId: Scalars['Int']['input'];
-  title: Scalars['String']['input'];
-  trainerId: Scalars['Int']['input'];
-};
-
-export type CreateHomeworkRecordInput = {
-  clientId: Scalars['Int']['input'];
-  completionStatus: Scalars['String']['input'];
-  difficulties?: InputMaybe<Scalars['String']['input']>;
-  durationMinutes?: InputMaybe<Scalars['Int']['input']>;
-  feedback?: InputMaybe<Scalars['String']['input']>;
-  homeworkId: Scalars['Int']['input'];
-  performedAt: Scalars['String']['input'];
-  repetitions?: InputMaybe<Scalars['Int']['input']>;
-};
-
 export type CreateLearningMaterialInput = {
   contentId: Scalars['Int']['input'];
   contentType: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  ownerId: Scalars['String']['input'];
   sourceUrl: Scalars['String']['input'];
   status: Scalars['String']['input'];
 };
@@ -189,22 +173,24 @@ export type CreateMidtermHealthPurposeInput = {
   startDate: Scalars['String']['input'];
 };
 
-export type CreateMonthlyActionGoalInput = {
-  actionType?: InputMaybe<Scalars['String']['input']>;
-  frequencyPerWeek: Scalars['Int']['input'];
-  goal: Scalars['String']['input'];
-  monthlyHealthMilestoneId: Scalars['Int']['input'];
-  targetMonth: Scalars['String']['input'];
+export type CreatePtSessionInput = {
+  archiveUrl?: InputMaybe<Scalars['String']['input']>;
+  chatContents?: InputMaybe<Scalars['String']['input']>;
+  clientId: Scalars['Int']['input'];
+  kind: Scalars['String']['input'];
+  memo?: InputMaybe<Scalars['String']['input']>;
+  performedAt: Scalars['String']['input'];
+  theme: Scalars['String']['input'];
+  trainerComment?: InputMaybe<Scalars['String']['input']>;
+  trainerId: Scalars['Int']['input'];
 };
 
-export type CreateMonthlyHealthMilestoneInput = {
-  asIs: Scalars['String']['input'];
-  clientId: Scalars['Int']['input'];
-  midtermHealthGoalId: Scalars['Int']['input'];
-  results?: InputMaybe<Scalars['String']['input']>;
-  target: Scalars['String']['input'];
-  toBe?: InputMaybe<Scalars['String']['input']>;
-  yearMonth: Scalars['String']['input'];
+export type CreatePtSessionItemInput = {
+  memo?: InputMaybe<Scalars['String']['input']>;
+  ptSessionId: Scalars['Int']['input'];
+  taskId: Scalars['Int']['input'];
+  taskType: Scalars['String']['input'];
+  trainerAdvice?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateRequiredFunctionInput = {
@@ -228,6 +214,14 @@ export type CreateTrainerInput = {
   userId: Scalars['Int']['input'];
 };
 
+export type CreateTrainerProfileInput = {
+  certifications: Scalars['String']['input'];
+  motivationStatement: Scalars['String']['input'];
+  signatureMuscle: Scalars['String']['input'];
+  specialization: Scalars['String']['input'];
+  trainerId: Scalars['Int']['input'];
+};
+
 export type CreateTrainingMenuInput = {
   commonErrors: Array<Scalars['String']['input']>;
   learningMaterialId: Scalars['Int']['input'];
@@ -245,6 +239,12 @@ export type CreateTreatmentMenuInput = {
   requiredFunctionId: Scalars['Int']['input'];
   targetMuscles: Array<Scalars['String']['input']>;
   tips: Scalars['String']['input'];
+};
+
+export type CreateUserCredentialInput = {
+  email: Scalars['String']['input'];
+  passwordDigest: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 export type CreateUserInput = {
@@ -270,49 +270,6 @@ export type CurriculumUnit = {
   overviewUrl: Scalars['String']['output'];
   requiredFunctions: Array<RequiredFunction>;
   type: Scalars['String']['output'];
-  updatedAt: Scalars['String']['output'];
-};
-
-export enum Gender {
-  Female = 'FEMALE',
-  Male = 'MALE',
-  Other = 'OTHER',
-  PreferNotToSay = 'PREFER_NOT_TO_SAY'
-}
-
-export type HomeworkAssignment = {
-  __typename?: 'HomeworkAssignment';
-  clientId: Scalars['Int']['output'];
-  createdAt: Scalars['String']['output'];
-  description: Scalars['String']['output'];
-  durationDays: Scalars['Int']['output'];
-  frequency: Scalars['String']['output'];
-  homeworkType: Scalars['String']['output'];
-  id: Scalars['Int']['output'];
-  key: Scalars['String']['output'];
-  materialUrl?: Maybe<Scalars['String']['output']>;
-  notes?: Maybe<Scalars['String']['output']>;
-  priority: Scalars['String']['output'];
-  records: Array<HomeworkRecord>;
-  sessionId: Scalars['Int']['output'];
-  status: Scalars['String']['output'];
-  title: Scalars['String']['output'];
-  trainerId: Scalars['Int']['output'];
-  updatedAt: Scalars['String']['output'];
-};
-
-export type HomeworkRecord = {
-  __typename?: 'HomeworkRecord';
-  clientId: Scalars['Int']['output'];
-  completionStatus: Scalars['String']['output'];
-  createdAt: Scalars['String']['output'];
-  difficulties?: Maybe<Scalars['String']['output']>;
-  durationMinutes?: Maybe<Scalars['Int']['output']>;
-  feedback?: Maybe<Scalars['String']['output']>;
-  homeworkId: Scalars['Int']['output'];
-  id: Scalars['Int']['output'];
-  performedAt: Scalars['String']['output'];
-  repetitions?: Maybe<Scalars['Int']['output']>;
   updatedAt: Scalars['String']['output'];
 };
 
@@ -381,20 +338,21 @@ export type Mutation = {
   createAssignment: Assignment;
   createBodyCondition: BodyCondition;
   createClient: Client;
+  createClientProfile: ClientProfile;
   createClientWithProfile: Client;
   createCurriculumUnit: CurriculumUnit;
-  createHomeworkAssignment: HomeworkAssignment;
-  createHomeworkRecord: HomeworkRecord;
   createLearningMaterial: LearningMaterial;
   createMidtermHealthPurpose: MidtermHealthPurpose;
-  createMonthlyActionGoal: MonthlyActionGoal;
-  createMonthlyHealthMilestone: MonthlyHealthMilestone;
+  createPTSession: PtSession;
+  createPTSessionItem: PtSessionItem;
   createRequiredFunction: RequiredFunction;
   createSession: PtSession;
   createTrainer: Trainer;
+  createTrainerProfile: TrainerProfile;
   createTrainingMenu: TrainingMenu;
   createTreatmentMenu: TreatmentMenu;
   createUser: User;
+  createUserCredential: UserCredential;
 };
 
 
@@ -413,6 +371,11 @@ export type MutationCreateClientArgs = {
 };
 
 
+export type MutationCreateClientProfileArgs = {
+  input: CreateClientProfileInput;
+};
+
+
 export type MutationCreateClientWithProfileArgs = {
   input: CreateClientWithProfileInput;
 };
@@ -420,16 +383,6 @@ export type MutationCreateClientWithProfileArgs = {
 
 export type MutationCreateCurriculumUnitArgs = {
   input: CreateCurriculumUnitInput;
-};
-
-
-export type MutationCreateHomeworkAssignmentArgs = {
-  input: CreateHomeworkAssignmentInput;
-};
-
-
-export type MutationCreateHomeworkRecordArgs = {
-  input: CreateHomeworkRecordInput;
 };
 
 
@@ -443,13 +396,13 @@ export type MutationCreateMidtermHealthPurposeArgs = {
 };
 
 
-export type MutationCreateMonthlyActionGoalArgs = {
-  input: CreateMonthlyActionGoalInput;
+export type MutationCreatePtSessionArgs = {
+  input: CreatePtSessionInput;
 };
 
 
-export type MutationCreateMonthlyHealthMilestoneArgs = {
-  input: CreateMonthlyHealthMilestoneInput;
+export type MutationCreatePtSessionItemArgs = {
+  input: CreatePtSessionItemInput;
 };
 
 
@@ -468,6 +421,11 @@ export type MutationCreateTrainerArgs = {
 };
 
 
+export type MutationCreateTrainerProfileArgs = {
+  input: CreateTrainerProfileInput;
+};
+
+
 export type MutationCreateTrainingMenuArgs = {
   input: CreateTrainingMenuInput;
 };
@@ -480,6 +438,11 @@ export type MutationCreateTreatmentMenuArgs = {
 
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
+};
+
+
+export type MutationCreateUserCredentialArgs = {
+  input: CreateUserCredentialInput;
 };
 
 export type PtSession = {
@@ -519,23 +482,33 @@ export type Query = {
   __typename?: 'Query';
   assignments: Array<Assignment>;
   bodyConditions: Array<BodyCondition>;
+  clientProfiles: Array<ClientProfile>;
+  clientProfilesById?: Maybe<ClientProfile>;
   clients: Array<Client>;
+  clientsById?: Maybe<Client>;
   curriculumUnits: Array<CurriculumUnit>;
+  curriculumUnitsById?: Maybe<CurriculumUnit>;
   hello?: Maybe<Scalars['String']['output']>;
-  homeworkAssignments: Array<HomeworkAssignment>;
-  homeworkRecords: Array<HomeworkRecord>;
   learningMaterials: Array<LearningMaterial>;
   midtermHealthPurposes: Array<MidtermHealthPurpose>;
-  monthlyActionGoals: Array<MonthlyActionGoal>;
-  monthlyHealthMilestones: Array<MonthlyHealthMilestone>;
+  ptSessionItems: Array<PtSessionItem>;
+  ptSessionItemsById?: Maybe<PtSessionItem>;
+  ptSessions: Array<PtSession>;
+  ptSessionsById?: Maybe<PtSession>;
   requiredFunctions: Array<RequiredFunction>;
   sessions: Array<PtSession>;
+  trainerProfiles: Array<TrainerProfile>;
+  trainerProfilesById?: Maybe<TrainerProfile>;
   trainers: Array<Trainer>;
+  trainersById?: Maybe<Trainer>;
   trainingMenus: Array<TrainingMenu>;
-  trainingTasks: Array<TrainingTask>;
+  trainingMenusById?: Maybe<TrainingMenu>;
   treatmentMenus: Array<TreatmentMenu>;
-  treatmentTasks: Array<TreatmentTask>;
+  treatmentMenusById?: Maybe<TreatmentMenu>;
+  userCredentials: Array<UserCredential>;
+  userCredentialsById?: Maybe<UserCredential>;
   users: Array<User>;
+  usersById?: Maybe<User>;
 };
 
 
@@ -553,9 +526,25 @@ export type QueryBodyConditionsArgs = {
 };
 
 
+export type QueryClientProfilesArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryClientProfilesByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type QueryClientsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryClientsByIdArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -565,17 +554,8 @@ export type QueryCurriculumUnitsArgs = {
 };
 
 
-export type QueryHomeworkAssignmentsArgs = {
-  clientId: Scalars['Int']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QueryHomeworkRecordsArgs = {
-  homeworkId: Scalars['Int']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
+export type QueryCurriculumUnitsByIdArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -593,17 +573,25 @@ export type QueryMidtermHealthPurposesArgs = {
 };
 
 
-export type QueryMonthlyActionGoalsArgs = {
+export type QueryPtSessionItemsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
-  monthlyHealthMilestoneId: Scalars['Int']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
-export type QueryMonthlyHealthMilestonesArgs = {
-  clientId: Scalars['Int']['input'];
+export type QueryPtSessionItemsByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryPtSessionsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryPtSessionsByIdArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -620,9 +608,25 @@ export type QuerySessionsArgs = {
 };
 
 
+export type QueryTrainerProfilesArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryTrainerProfilesByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type QueryTrainersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryTrainersByIdArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -632,9 +636,8 @@ export type QueryTrainingMenusArgs = {
 };
 
 
-export type QueryTrainingTasksArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
+export type QueryTrainingMenusByIdArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -644,15 +647,30 @@ export type QueryTreatmentMenusArgs = {
 };
 
 
-export type QueryTreatmentTasksArgs = {
+export type QueryTreatmentMenusByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryUserCredentialsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryUserCredentialsByIdArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
 export type QueryUsersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryUsersByIdArgs = {
+  id: Scalars['Int']['input'];
 };
 
 export type RequiredFunction = {
@@ -706,20 +724,6 @@ export type TrainingMenu = {
   updatedAt: Scalars['String']['output'];
 };
 
-export type TrainingTask = {
-  __typename?: 'TrainingTask';
-  contentId: Scalars['Int']['output'];
-  contentType: Scalars['String']['output'];
-  createdAt: Scalars['String']['output'];
-  id: Scalars['Int']['output'];
-  key: Scalars['String']['output'];
-  memo?: Maybe<Scalars['String']['output']>;
-  reps?: Maybe<Scalars['Int']['output']>;
-  sec?: Maybe<Scalars['Int']['output']>;
-  updatedAt: Scalars['String']['output'];
-  weight?: Maybe<Scalars['Float']['output']>;
-};
-
 export type TreatmentMenu = {
   __typename?: 'TreatmentMenu';
   commonErrors: Array<Scalars['String']['output']>;
@@ -735,24 +739,12 @@ export type TreatmentMenu = {
   updatedAt: Scalars['String']['output'];
 };
 
-export type TreatmentTask = {
-  __typename?: 'TreatmentTask';
-  contentId: Scalars['Int']['output'];
-  contentType: Scalars['String']['output'];
-  createdAt: Scalars['String']['output'];
-  id: Scalars['Int']['output'];
-  key: Scalars['String']['output'];
-  memo?: Maybe<Scalars['String']['output']>;
-  sec?: Maybe<Scalars['Int']['output']>;
-  updatedAt: Scalars['String']['output'];
-};
-
 export type User = {
   __typename?: 'User';
   activeFlag: Scalars['Boolean']['output'];
   birthDate: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
-  credentials?: Maybe<UserCredentials>;
+  credentials?: Maybe<UserCredential>;
   deletedAt?: Maybe<Scalars['String']['output']>;
   firstName: Scalars['String']['output'];
   firstNameKana: Scalars['String']['output'];
@@ -765,8 +757,8 @@ export type User = {
   updatedAt: Scalars['String']['output'];
 };
 
-export type UserCredentials = {
-  __typename?: 'UserCredentials';
+export type UserCredential = {
+  __typename?: 'UserCredential';
   createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
@@ -775,12 +767,6 @@ export type UserCredentials = {
   updatedAt: Scalars['String']['output'];
   userId: Scalars['String']['output'];
 };
-
-export enum UserRole {
-  Admin = 'ADMIN',
-  Client = 'CLIENT',
-  Trainer = 'TRAINER'
-}
 
 export type CreateClientMutationVariables = Exact<{
   input: CreateClientInput;

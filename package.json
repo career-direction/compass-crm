@@ -13,7 +13,8 @@
 		"codegen": "graphql-codegen --watch",
 		"drizzle:generate": "drizzle-kit generate",
 		"drizzle:migrate": "drizzle-kit migrate",
-		"schema:generate": "npx tsx scripts/generate-graphql-schema.ts"
+		"schema:generate": "npx tsx scripts/generate-graphql-schema.ts",
+		"schema:generate-from-db": "npx tsx scripts/generate-graphql-schema-from-db.ts"
 	},
 	"dependencies": {
 		"@graphql-tools/schema": "^10.0.27",

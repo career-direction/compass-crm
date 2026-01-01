@@ -135,17 +135,17 @@ export const requiredFunctionResolvers = {
 				evaluationCriteriaUrl,
 			} = args.input;
 
-		const [created] = await context.db
-			.insert(requiredFunctions)
-			.values({
-				curriculumUnitId,
-				name,
-				overview,
-				overviewUrl,
-				evaluationCriteria,
-				evaluationCriteriaUrl,
-			})
-			.returning();
+			const [created] = await context.db
+				.insert(requiredFunctions)
+				.values({
+					curriculumUnitId,
+					name,
+					overview,
+					overviewUrl,
+					evaluationCriteria,
+					evaluationCriteriaUrl,
+				})
+				.returning();
 
 			return mapRequiredFunction(created);
 		},

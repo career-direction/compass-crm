@@ -57,17 +57,17 @@ export const treatmentMenuResolvers = {
 				targetMuscles,
 			} = args.input;
 
-		const [created] = await context.db
-			.insert(treatmentMenus)
-			.values({
-				name,
-				requiredFunctionId,
-				learningMaterialId,
-				tips,
-				commonErrors,
-				targetMuscles,
-			})
-			.returning();
+			const [created] = await context.db
+				.insert(treatmentMenus)
+				.values({
+					name,
+					requiredFunctionId,
+					learningMaterialId,
+					tips,
+					commonErrors,
+					targetMuscles,
+				})
+				.returning();
 
 			return mapTreatmentMenu(created);
 		},
