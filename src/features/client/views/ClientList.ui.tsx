@@ -1,19 +1,19 @@
 "use client";
 
 import {
+	Avatar,
 	Center,
 	Group,
 	Loader,
 	Modal,
-	SimpleGrid,
 	Stack,
+	Table,
 	Text,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconUser } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { CPButton } from "@/components/ui/CPButton";
-import { CPCard } from "@/components/ui/CPCard";
 import { NewClientModal } from "../components/NewClientModal.container";
 import type { ClientType } from "../types/client";
 
@@ -33,7 +33,7 @@ export const ClientListUI = ({
 	const router = useRouter();
 	const [opened, { open, close }] = useDisclosure(false);
 
-	const handleCardClick = (id: number) => {
+	const handleRowClick = (id: number) => {
 		router.push(`/clients/${id}`);
 	};
 
@@ -58,6 +58,39 @@ export const ClientListUI = ({
 		);
 	}
 
+	const rows = clients.map((client) => (
+		<Table.Tr
+			key={client.id}
+			onClick={() => handleRowClick(client.id)}
+			style={{ cursor: "pointer" }}
+		>
+			<Table.Td>
+				<Group gap="sm">
+					<Avatar size={40} radius="xl" color="orange">
+						<IconUser size={20} />
+					</Avatar>
+					<div>
+						<Text size="sm" fw={500}>
+							{client.name}
+						</Text>
+						<Text size="xs" c="dimmed">
+							{client.nameKana}
+						</Text>
+					</div>
+				</Group>
+			</Table.Td>
+			<Table.Td>
+				<Text size="sm">{client.gender}</Text>
+			</Table.Td>
+			<Table.Td>
+				<Text size="sm">{client.occupation || "未設定"}</Text>
+			</Table.Td>
+			<Table.Td>
+				<Text size="sm">{client.hobby || "未設定"}</Text>
+			</Table.Td>
+		</Table.Tr>
+	));
+
 	return (
 		<Stack gap="xl">
 			<Group justify="space-between" align="center">
@@ -69,37 +102,19 @@ export const ClientListUI = ({
 					<Text c="dimmed">クライアントがいません</Text>
 				</Center>
 			) : (
-				<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
-					{clients.map((client) => (
-						<CPCard
-							key={client.id}
-							onClick={() => handleCardClick(client.id)}
-							style={{ cursor: "pointer" }}
-						>
-							<Group justify="space-between" mb="sm">
-								<Group>
-									<IconUser size={24} />
-									<Text fw={600}>{client.name}</Text>
-								</Group>
-							</Group>
-
-							<Stack gap="xs" mb="md">
-								<Text size="sm" c="dimmed">
-									{client.nameKana}
-								</Text>
-								<Text size="sm" c="dimmed">
-									職業: {client.occupation || "未設定"}
-								</Text>
-								<Text size="sm" c="dimmed">
-									趣味: {client.hobby || "未設定"}
-								</Text>
-								<Text size="sm" c="dimmed">
-									性別: {client.gender}
-								</Text>
-							</Stack>
-						</CPCard>
-					))}
-				</SimpleGrid>
+				<Table.ScrollContainer minWidth={600}>
+					<Table verticalSpacing="sm" highlightOnHover>
+						<Table.Thead>
+							<Table.Tr>
+								<Table.Th>クライアント</Table.Th>
+								<Table.Th>性別</Table.Th>
+								<Table.Th>職業</Table.Th>
+								<Table.Th>趣味</Table.Th>
+							</Table.Tr>
+						</Table.Thead>
+						<Table.Tbody>{rows}</Table.Tbody>
+					</Table>
+				</Table.ScrollContainer>
 			)}
 
 			{/* クライアント追加モーダル */}
