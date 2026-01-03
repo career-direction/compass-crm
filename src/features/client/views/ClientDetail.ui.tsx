@@ -1,6 +1,15 @@
 "use client";
 
-import { Box, Center, Group, Loader, Stack, Text, Title } from "@mantine/core";
+import {
+	Avatar,
+	Box,
+	Center,
+	Group,
+	Loader,
+	Stack,
+	Text,
+	Title,
+} from "@mantine/core";
 import { IconArrowLeft, IconUser } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { CPButton } from "@/components/ui/CPButton";
@@ -61,7 +70,16 @@ export const ClientDetailUI = ({ client, fetching, error }: Props) => {
 			</Group>
 
 			<Group>
-				<IconUser size={32} />
+				<Avatar
+					size="lg"
+					color="orange"
+					radius="xl"
+					src={
+						"https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png"
+					}
+				>
+					<IconUser size={24} />
+				</Avatar>
 				<Title order={2}>{client.name}</Title>
 			</Group>
 
