@@ -1,4 +1,4 @@
-import { ClientDetail } from "@/features/client/views/ClientDetail.ui";
+import { ClientDetail } from "@/features/client/views/ClientDetail.container";
 
 type Props = {
 	params: Promise<{
