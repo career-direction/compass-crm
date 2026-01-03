@@ -22,3 +22,19 @@ export function toClients(data: Operations.GetClientsQuery): ClientType[] {
 		gender: genderLabel(client.user.gender),
 	}));
 }
+
+export function toClient(data: Operations.GetClientQuery): ClientType | null {
+	const client = data.client;
+	if (!client) {
+		return null;
+	}
+
+	return {
+		id: client.id,
+		name: `${client.user.last_name} ${client.user.first_name}`,
+		nameKana: `${client.user.last_name_kana} ${client.user.first_name_kana}`,
+		occupation: client.profile?.occupation ?? "",
+		hobby: client.profile?.hobby ?? "",
+		gender: genderLabel(client.user.gender),
+	};
+}

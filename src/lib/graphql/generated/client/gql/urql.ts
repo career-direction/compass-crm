@@ -15,6 +15,10 @@ export function useCreateLearningMaterialMutation() {
   return Urql.useMutation<Operations.CreateLearningMaterialMutation, Operations.CreateLearningMaterialMutationVariables>(Operations.CreateLearningMaterialDocument);
 };
 
+export function useGetClientQuery(options: Omit<Urql.UseQueryArgs<Operations.GetClientQueryVariables>, 'query'>) {
+  return Urql.useQuery<Operations.GetClientQuery, Operations.GetClientQueryVariables>({ query: Operations.GetClientDocument, ...options });
+};
+
 export function useGetClientsQuery(options?: Omit<Urql.UseQueryArgs<Operations.GetClientsQueryVariables>, 'query'>) {
   return Urql.useQuery<Operations.GetClientsQuery, Operations.GetClientsQueryVariables>({ query: Operations.GetClientsDocument, ...options });
 };
