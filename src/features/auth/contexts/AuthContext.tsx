@@ -7,21 +7,14 @@ import {
 	useEffect,
 	useState,
 } from "react";
-
-export type AuthUser = {
-	id: number;
-	key: string;
-	kind: number;
-	firstName: string;
-	lastName: string;
-	email: string;
-};
+import { APIError } from "@/lib/api/apiClient";
+import { type AuthAPI, type AuthUser, defaultAuthAPI } from "../api/authAPI";
 
 type AuthContextType = {
 	user: AuthUser | null;
 	loading: boolean;
 	login: (email: string, password: string) => Promise<LoginResult>;
-	logout: () => Promise<void>;
+	logout: () => Promise<LogoutResult>;
 	refetch: () => Promise<void>;
 };
 
@@ -29,20 +22,25 @@ type LoginResult =
 	| { success: true; user: AuthUser }
 	| { success: false; error: string };
 
+type LogoutResult = { success: true } | { success: false; error: string };
+
 const AuthContext = createContext<AuthContextType | null>(null);
 
 type AuthProviderProps = {
 	children: React.ReactNode;
+	authAPI?: AuthAPI; // テスト用にオプショナル
 };
 
-export function AuthProvider({ children }: AuthProviderProps) {
+export function AuthProvider({
+	children,
+	authAPI = defaultAuthAPI,
+}: AuthProviderProps) {
 	const [user, setUser] = useState<AuthUser | null>(null);
 	const [loading, setLoading] = useState(true);
 
 	const fetchUser = useCallback(async () => {
 		try {
-			const response = await fetch("/api/auth/me");
-			const data = await response.json();
+			const data = await authAPI.me();
 			setUser(data.user);
 		} catch (error) {
 			console.error("Failed to fetch user:", error);
@@ -50,7 +48,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 		} finally {
 			setLoading(false);
 		}
-	}, []);
+	}, [authAPI]);
 
 	useEffect(() => {
 		fetchUser();
@@ -59,36 +57,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
 	const login = useCallback(
 		async (email: string, password: string): Promise<LoginResult> => {
 			try {
-				const response = await fetch("/api/auth/login", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ email, password }),
-				});
-
-				const data = await response.json();
-
-				if (!response.ok) {
-					return { success: false, error: data.error };
-				}
-
+				const data = await authAPI.login(email, password);
 				setUser(data.user);
 				return { success: true, user: data.user };
 			} catch (error) {
 				console.error("Login error:", error);
+				if (error instanceof APIError) {
+					const errorMessage = (error.errorData as { error?: string })?.error;
+					return {
+						success: false,
+						error: errorMessage ?? "ログインに失敗しました",
+					};
+				}
 				return { success: false, error: "ログインに失敗しました" };
 			}
 		},
-		[],
+		[authAPI],
 	);
 
-	const logout = useCallback(async () => {
+	const logout = useCallback(async (): Promise<LogoutResult> => {
 		try {
-			await fetch("/api/auth/logout", { method: "POST" });
+			await authAPI.logout();
 			setUser(null);
+			return { success: true };
 		} catch (error) {
 			console.error("Logout error:", error);
+			return { success: false, error: "ログアウトに失敗しました" };
 		}
-	}, []);
+	}, [authAPI]);
 
 	const refetch = useCallback(async () => {
 		await fetchUser();

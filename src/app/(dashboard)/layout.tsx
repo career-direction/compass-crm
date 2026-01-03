@@ -1,9 +1,9 @@
 "use client";
 
-import { AppShell, Text } from "@mantine/core";
+import { Sidebar } from "@/components/layout/Sidebar/Sidebar.container";
+import { AppShell } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import type { ReactNode } from "react";
-import { Sidebar } from "@/components/layout/Sidebar.ui";
 
 type Props = {
 	children: ReactNode;
@@ -32,14 +32,8 @@ export default function DashboardLayout({ children }: Props) {
 					minHeight: "100vh",
 				}}
 			>
-				<Header />
 				{children}
 			</AppShell.Main>
 		</AppShell>
 	);
 }
-
-// TODO: Headerをいい感じにする
-const Header = () => {
-	return <Text>TODO: Session</Text>;
-};

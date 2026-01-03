@@ -50,7 +50,7 @@ export function LoginForm() {
 					message: `${result.user.lastName} ${result.user.firstName}さん、ようこそ！`,
 					color: "green",
 				});
-				router.push("/");
+				router.push("/sessions");
 			} else {
 				notifications.show({
 					title: "ログイン失敗",
