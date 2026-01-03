@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconUser } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
 import { NewClientModal } from "../components/NewClientModal.container";
@@ -29,14 +30,11 @@ export const ClientListUI = ({
 	error,
 	onAddSuccess,
 }: ClientListUIProps) => {
+	const router = useRouter();
 	const [opened, { open, close }] = useDisclosure(false);
 
-	const handleDetailClick = (id: number) => {
-		console.log("詳細ボタンがクリックされました:", id);
-	};
-
-	const handleEditClick = (id: number) => {
-		console.log("編集ボタンがクリックされました:", id);
+	const handleCardClick = (id: number) => {
+		router.push(`/clients/${id}`);
 	};
 
 	const handleClose = () => {
@@ -73,7 +71,11 @@ export const ClientListUI = ({
 			) : (
 				<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
 					{clients.map((client) => (
-						<CPCard key={client.id}>
+						<CPCard
+							key={client.id}
+							onClick={() => handleCardClick(client.id)}
+							style={{ cursor: "pointer" }}
+						>
 							<Group justify="space-between" mb="sm">
 								<Group>
 									<IconUser size={24} />
@@ -95,23 +97,6 @@ export const ClientListUI = ({
 									性別: {client.gender}
 								</Text>
 							</Stack>
-
-							<Group justify="space-between">
-								<CPButton
-									variant="light"
-									size="sm"
-									onClick={() => handleDetailClick(client.id)}
-								>
-									詳細
-								</CPButton>
-								<CPButton
-									variant="outline"
-									size="sm"
-									onClick={() => handleEditClick(client.id)}
-								>
-									編集
-								</CPButton>
-							</Group>
 						</CPCard>
 					))}
 				</SimpleGrid>

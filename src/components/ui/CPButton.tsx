@@ -2,9 +2,7 @@ import { Button, type ButtonProps } from "@mantine/core";
 import { type ComponentPropsWithoutRef, forwardRef } from "react";
 
 export type Props = ButtonProps &
-	Pick<ComponentPropsWithoutRef<"button">, "type"> & {
-		onClick?: () => void;
-	};
+	Pick<ComponentPropsWithoutRef<"button">, "type" | "onClick">;
 
 export const CPButton = forwardRef<HTMLButtonElement, Props>(
 	({ children, variant = "filled", ...props }, ref) => {
