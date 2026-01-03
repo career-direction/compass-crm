@@ -1,11 +1,14 @@
 import { Button, type ButtonProps } from "@mantine/core";
-import { type ComponentPropsWithoutRef, forwardRef } from "react";
+import { type ComponentPropsWithoutRef, type ReactNode, forwardRef } from "react";
 
 export type Props = ButtonProps &
-	Pick<ComponentPropsWithoutRef<"button">, "type" | "onClick">;
+	Pick<ComponentPropsWithoutRef<"button">, "type" | "onClick"> & {
+		prefixIcon?: ReactNode;
+		suffixIcon?: ReactNode;
+	};
 
 export const CPButton = forwardRef<HTMLButtonElement, Props>(
-	({ children, variant = "filled", ...props }, ref) => {
+	({ children, variant = "filled", prefixIcon, suffixIcon, ...props }, ref) => {
 		const getGradientStyles = () => {
 			switch (variant) {
 				case "filled":
@@ -62,6 +65,8 @@ export const CPButton = forwardRef<HTMLButtonElement, Props>(
 				ref={ref}
 				color="brand"
 				variant={variant}
+				leftSection={prefixIcon}
+				rightSection={suffixIcon}
 				styles={getGradientStyles()}
 				{...props}
 			>

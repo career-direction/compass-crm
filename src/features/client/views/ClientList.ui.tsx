@@ -11,7 +11,7 @@ import {
 	Text,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconUser } from "@tabler/icons-react";
+import { IconPlus, IconUser } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { CPButton } from "@/components/ui/CPButton";
 import { NewClientModal } from "../components/NewClientModal.container";
@@ -92,9 +92,14 @@ export const ClientListUI = ({
 	));
 
 	return (
-		<Stack gap="xl">
+		<Stack>
 			<Group justify="space-between" align="center">
-				<CPButton onClick={open}>新規クライアント登録</CPButton>
+				<Text fw={600} size="lg">
+					クライアント一覧
+				</Text>
+				<CPButton onClick={open} prefixIcon={<IconPlus size={16} />}>
+					新規クライアント
+				</CPButton>
 			</Group>
 
 			{clients.length === 0 ? (
@@ -106,7 +111,7 @@ export const ClientListUI = ({
 					<Table verticalSpacing="sm" highlightOnHover>
 						<Table.Thead>
 							<Table.Tr>
-								<Table.Th>クライアント</Table.Th>
+								<Table.Th>名前</Table.Th>
 								<Table.Th>性別</Table.Th>
 								<Table.Th>職業</Table.Th>
 								<Table.Th>趣味</Table.Th>
