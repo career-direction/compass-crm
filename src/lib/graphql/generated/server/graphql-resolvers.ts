@@ -369,6 +369,7 @@ export type Query = {
   __typename?: 'Query';
   assignments: Array<Assignment>;
   bodyConditions: Array<BodyCondition>;
+  client: Maybe<Client>;
   clients: Array<Client>;
   curriculumUnits: Array<CurriculumUnit>;
   hello: Maybe<Scalars['String']['output']>;
@@ -394,6 +395,11 @@ export type QueryBodyConditionsArgs = {
   clientId: Scalars['Int']['input'];
   limit: InputMaybe<Scalars['Int']['input']>;
   offset: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryClientArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -854,6 +860,7 @@ export type PtSessionItemResolvers<ContextType = Context, ParentType extends Res
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   assignments: Resolver<Array<ResolversTypes['Assignment']>, ParentType, ContextType, RequireFields<QueryAssignmentsArgs, 'sessionId'>>;
   bodyConditions: Resolver<Array<ResolversTypes['BodyCondition']>, ParentType, ContextType, RequireFields<QueryBodyConditionsArgs, 'clientId'>>;
+  client: Resolver<Maybe<ResolversTypes['Client']>, ParentType, ContextType, RequireFields<QueryClientArgs, 'id'>>;
   clients: Resolver<Array<ResolversTypes['Client']>, ParentType, ContextType, QueryClientsArgs>;
   curriculumUnits: Resolver<Array<ResolversTypes['CurriculumUnit']>, ParentType, ContextType, QueryCurriculumUnitsArgs>;
   hello: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

@@ -1,6 +1,7 @@
 type Query {
 	hello: String
 	users(limit: Int, offset: Int): [User!]!
+	client(id: Int!): Client
 	clients(limit: Int, offset: Int): [Client!]!
 	trainers(limit: Int, offset: Int): [Trainer!]!
 	sessions(limit: Int, offset: Int): [PTSession!]!
