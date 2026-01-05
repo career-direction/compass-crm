@@ -1,5 +1,3 @@
-"use client";
-
 import {
 	Avatar,
 	Box,
@@ -11,7 +9,6 @@ import {
 	Title,
 } from "@mantine/core";
 import { IconArrowLeft, IconUser } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
 import { CPButton } from "@/components/ui/CPButton";
 import type { ClientType } from "../types/client";
 
@@ -19,14 +16,10 @@ type Props = {
 	client: ClientType | null;
 	fetching: boolean;
 	error?: string;
+	onBack: () => void;
 };
 
-export const ClientDetailUI = ({ client, fetching, error }: Props) => {
-	const router = useRouter();
-
-	const handleBack = () => {
-		router.push("/clients");
-	};
+export const ClientDetailUI = ({ client, fetching, error, onBack }: Props) => {
 
 	if (fetching) {
 		return (
@@ -48,7 +41,7 @@ export const ClientDetailUI = ({ client, fetching, error }: Props) => {
 		return (
 			<Stack gap="xl">
 				<Group>
-					<CPButton variant="light" onClick={handleBack}>
+					<CPButton variant="light" onClick={onBack}>
 						<IconArrowLeft size={16} />
 						<Text ml="xs">戻る</Text>
 					</CPButton>
@@ -63,7 +56,7 @@ export const ClientDetailUI = ({ client, fetching, error }: Props) => {
 	return (
 		<Stack gap="xl">
 			<Group>
-				<CPButton variant="light" onClick={handleBack}>
+				<CPButton variant="light" onClick={onBack}>
 					<IconArrowLeft size={16} />
 					<Text ml="xs">戻る</Text>
 				</CPButton>

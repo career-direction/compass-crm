@@ -1,5 +1,3 @@
-"use client";
-
 import {
 	Avatar,
 	Center,
@@ -10,9 +8,7 @@ import {
 	Table,
 	Text,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { IconPlus, IconUser } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
 import { CPButton } from "@/components/ui/CPButton";
 import { NewClientModal } from "../components/NewClientModal.container";
 import type { ClientType } from "../types/client";
@@ -21,26 +17,21 @@ type ClientListUIProps = {
 	clients: ClientType[];
 	fetching: boolean;
 	error?: string;
-	onAddSuccess: () => void;
+	modalOpened: boolean;
+	onRowClick: (id: number) => void;
+	onOpenModal: () => void;
+	onCloseModal: () => void;
 };
 
 export const ClientListUI = ({
 	clients,
 	fetching,
 	error,
-	onAddSuccess,
+	modalOpened,
+	onRowClick,
+	onOpenModal,
+	onCloseModal,
 }: ClientListUIProps) => {
-	const router = useRouter();
-	const [opened, { open, close }] = useDisclosure(false);
-
-	const handleRowClick = (id: number) => {
-		router.push(`/clients/${id}`);
-	};
-
-	const handleClose = () => {
-		close();
-		onAddSuccess();
-	};
 
 	if (fetching) {
 		return (
@@ -61,7 +52,7 @@ export const ClientListUI = ({
 	const rows = clients.map((client) => (
 		<Table.Tr
 			key={client.id}
-			onClick={() => handleRowClick(client.id)}
+			onClick={() => onRowClick(client.id)}
 			style={{ cursor: "pointer" }}
 		>
 			<Table.Td>
@@ -97,7 +88,7 @@ export const ClientListUI = ({
 				<Text fw={600} size="lg">
 					クライアント一覧
 				</Text>
-				<CPButton onClick={open} prefixIcon={<IconPlus size={16} />}>
+				<CPButton onClick={onOpenModal} prefixIcon={<IconPlus size={16} />}>
 					新規クライアント
 				</CPButton>
 			</Group>
@@ -124,13 +115,13 @@ export const ClientListUI = ({
 
 			{/* クライアント追加モーダル */}
 			<Modal
-				opened={opened}
-				onClose={close}
+				opened={modalOpened}
+				onClose={onCloseModal}
 				title="新規クライアント登録"
 				centered
 				size="lg"
 			>
-				<NewClientModal onClose={handleClose} />
+				<NewClientModal onClose={onCloseModal} />
 			</Modal>
 		</Stack>
 	);
