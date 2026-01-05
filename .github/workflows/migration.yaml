@@ -2,13 +2,11 @@ name: Migration
 
 on:
   push:
-    branches: [main]
     paths:
       - 'src/db/schema.ts'
       - 'src/db/migrations/**'
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches: [main]
     paths:
       - 'src/db/schema.ts'
       - 'src/db/migrations/**'
@@ -47,7 +45,7 @@ jobs:
 
   # main マージ時: Supabase dev DB へマイグレーション実行
   migrate:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
