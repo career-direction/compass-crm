@@ -17,6 +17,7 @@ export const users = pgTable("users", {
 	key: uuid("key").unique().default(sql`gen_random_uuid()`).notNull(),
 	kind: integer("kind").notNull(), // 0: 管理者, 1: トレーナー, 2: クライアント
 	firstName: varchar("first_name").notNull(),
+	middleName: varchar("first_name").notNull(),
 	lastName: varchar("last_name").notNull(),
 	firstNameKana: varchar("first_name_kana").notNull(),
 	lastNameKana: varchar("last_name_kana").notNull(),
