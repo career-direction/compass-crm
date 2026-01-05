@@ -1,0 +1,70 @@
+name: Migration
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/db/schema.ts'
+      - 'src/db/migrations/**'
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
+    paths:
+      - 'src/db/schema.ts'
+      - 'src/db/migrations/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # PR時: マイグレーションファイルがスキーマと同期しているかチェック
+  check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          # .nvmrc が更新されたらここも更新する
+          node-version: '22.15.1'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # スキーマ定義からマイグレーションファイルを生成し、
+      # 差分があれば CI を失敗させる。
+      # これにより、開発者がローカルで drizzle:generate を実行し忘れた場合を検知できる。
+      - name: Check migration is up to date
+        run: |
+          npm run drizzle:generate
+          git diff --exit-code src/db/migrations/
+
+  # main マージ時: Supabase dev DB へマイグレーション実行
+  migrate:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          # .nvmrc が更新されたらここも更新する
+          node-version: '22.15.1'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run migrations
+        run: npm run drizzle:migrate
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DEVELOPMENT_DB_URL }}
