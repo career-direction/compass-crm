@@ -1,1 +1,0 @@
-ALTER TABLE "users" ALTER COLUMN "middle_name" SET DEFAULT '';
