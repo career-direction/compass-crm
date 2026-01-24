@@ -15,6 +15,20 @@
       "when": 1769244176575,
       "tag": "0001_tense_senator_kelly",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769249471873,
+      "tag": "0002_shocking_anita_blake",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1769250219023,
+      "tag": "0003_flowery_toxin",
+      "breakpoints": true
     }
   ]
 }
