@@ -13,6 +13,29 @@ import { mapClient } from "./mappers";
 
 export const clientResolvers = {
 	Query: {
+		client: async (_parent, args, context) => {
+			const { id } = args;
+
+			const rows = await context.db
+				.select({
+					client: clients,
+					user: users,
+					profile: clientProfiles,
+				})
+				.from(clients)
+				.leftJoin(users, eq(clients.userId, users.id))
+				.leftJoin(clientProfiles, eq(clients.id, clientProfiles.clientId))
+				.where(eq(clients.id, id))
+				.limit(1);
+
+			const row = rows[0];
+			if (!row || !row.user) {
+				return null;
+			}
+
+			return mapClient(row.client, row.user, row.profile) as Client;
+		},
+
 		clients: async (_parent, args, context) => {
 			// ページネーション強制（大量データ取得防止）
 			const limit = Math.min(args.limit ?? 50, 100); // 最大100件
@@ -131,7 +154,7 @@ export const clientResolvers = {
 		},
 	},
 } satisfies {
-	Query: Pick<QueryResolvers<Context>, "clients">;
+	Query: Pick<QueryResolvers<Context>, "client" | "clients">;
 	Mutation: Pick<
 		MutationResolvers<Context>,
 		"createClient" | "createClientWithProfile"

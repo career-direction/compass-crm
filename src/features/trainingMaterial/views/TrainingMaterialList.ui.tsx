@@ -1,5 +1,3 @@
-"use client";
-
 import {
 	Center,
 	Group,
@@ -10,7 +8,6 @@ import {
 	Text,
 	Title,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { CPButton } from "@/components/ui/CPButton";
 import { CPCard } from "@/components/ui/CPCard";
 import type { TrainingMaterialType } from "../types/trainingMaterial";
@@ -20,7 +17,11 @@ type TrainingMaterialListUIProps = {
 	materials: TrainingMaterialType[];
 	fetching: boolean;
 	error?: string;
-	onAddSuccess: () => void;
+	modalOpened: boolean;
+	onFilterClick: () => void;
+	onDetailClick: (key: string) => void;
+	onOpenModal: () => void;
+	onCloseModal: () => void;
 };
 
 const contentTypeLabel: Record<string, string> = {
@@ -39,22 +40,12 @@ export const TrainingMaterialListUI = ({
 	materials,
 	fetching,
 	error,
-	onAddSuccess,
+	modalOpened,
+	onFilterClick,
+	onDetailClick,
+	onOpenModal,
+	onCloseModal,
 }: TrainingMaterialListUIProps) => {
-	const [opened, { open, close }] = useDisclosure(false);
-
-	const handleFilterClick = () => {
-		console.log("フィルターボタンがクリックされました");
-	};
-
-	const handleDetailClick = (key: string) => {
-		console.log("詳細を見る:", key);
-	};
-
-	const handleClose = () => {
-		close();
-		onAddSuccess();
-	};
 
 	if (fetching) {
 		return (
@@ -76,10 +67,10 @@ export const TrainingMaterialListUI = ({
 		<>
 			<Group justify="space-between" align="center" my="md">
 				<Group gap="sm">
-					<CPButton variant="light" size="sm" onClick={handleFilterClick}>
+					<CPButton variant="light" size="sm" onClick={onFilterClick}>
 						フィルター
 					</CPButton>
-					<CPButton size="sm" onClick={open}>
+					<CPButton size="sm" onClick={onOpenModal}>
 						教材追加
 					</CPButton>
 				</Group>
@@ -113,7 +104,7 @@ export const TrainingMaterialListUI = ({
 									mt="md"
 									radius="md"
 									size="sm"
-									onClick={() => handleDetailClick(material.key)}
+									onClick={() => onDetailClick(material.key)}
 								>
 									詳細を見る
 								</CPButton>
@@ -125,13 +116,13 @@ export const TrainingMaterialListUI = ({
 
 			{/* 教材追加モーダル */}
 			<Modal
-				opened={opened}
-				onClose={close}
+				opened={modalOpened}
+				onClose={onCloseModal}
 				title="新しい教材"
 				centered
 				size="lg"
 			>
-				<NewTrainingMaterialModal onClose={handleClose} />
+				<NewTrainingMaterialModal onClose={onCloseModal} />
 			</Modal>
 		</>
 	);

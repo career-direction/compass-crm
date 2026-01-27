@@ -1,18 +1,15 @@
-"use client";
-
 import {
+	Avatar,
 	Center,
 	Group,
 	Loader,
 	Modal,
-	SimpleGrid,
 	Stack,
+	Table,
 	Text,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconUser } from "@tabler/icons-react";
+import { IconPlus, IconUser } from "@tabler/icons-react";
 import { CPButton } from "@/components/ui/CPButton";
-import { CPCard } from "@/components/ui/CPCard";
 import { NewClientModal } from "../components/NewClientModal.container";
 import type { ClientType } from "../types/client";
 
@@ -20,29 +17,21 @@ type ClientListUIProps = {
 	clients: ClientType[];
 	fetching: boolean;
 	error?: string;
-	onAddSuccess: () => void;
+	modalOpened: boolean;
+	onRowClick: (id: number) => void;
+	onOpenModal: () => void;
+	onCloseModal: () => void;
 };
 
 export const ClientListUI = ({
 	clients,
 	fetching,
 	error,
-	onAddSuccess,
+	modalOpened,
+	onRowClick,
+	onOpenModal,
+	onCloseModal,
 }: ClientListUIProps) => {
-	const [opened, { open, close }] = useDisclosure(false);
-
-	const handleDetailClick = (id: number) => {
-		console.log("詳細ボタンがクリックされました:", id);
-	};
-
-	const handleEditClick = (id: number) => {
-		console.log("編集ボタンがクリックされました:", id);
-	};
-
-	const handleClose = () => {
-		close();
-		onAddSuccess();
-	};
 
 	if (fetching) {
 		return (
@@ -60,10 +49,48 @@ export const ClientListUI = ({
 		);
 	}
 
+	const rows = clients.map((client) => (
+		<Table.Tr
+			key={client.id}
+			onClick={() => onRowClick(client.id)}
+			style={{ cursor: "pointer" }}
+		>
+			<Table.Td>
+				<Group gap="sm">
+					<Avatar size={40} radius="xl" color="orange">
+						<IconUser size={20} />
+					</Avatar>
+					<div>
+						<Text size="sm" fw={500}>
+							{client.name}
+						</Text>
+						<Text size="xs" c="dimmed">
+							{client.nameKana}
+						</Text>
+					</div>
+				</Group>
+			</Table.Td>
+			<Table.Td>
+				<Text size="sm">{client.gender}</Text>
+			</Table.Td>
+			<Table.Td>
+				<Text size="sm">{client.occupation || "未設定"}</Text>
+			</Table.Td>
+			<Table.Td>
+				<Text size="sm">{client.hobby || "未設定"}</Text>
+			</Table.Td>
+		</Table.Tr>
+	));
+
 	return (
-		<Stack gap="xl">
+		<Stack>
 			<Group justify="space-between" align="center">
-				<CPButton onClick={open}>新規クライアント登録</CPButton>
+				<Text fw={600} size="lg">
+					クライアント一覧
+				</Text>
+				<CPButton onClick={onOpenModal} prefixIcon={<IconPlus size={16} />}>
+					新規クライアント
+				</CPButton>
 			</Group>
 
 			{clients.length === 0 ? (
@@ -71,61 +98,30 @@ export const ClientListUI = ({
 					<Text c="dimmed">クライアントがいません</Text>
 				</Center>
 			) : (
-				<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
-					{clients.map((client) => (
-						<CPCard key={client.id}>
-							<Group justify="space-between" mb="sm">
-								<Group>
-									<IconUser size={24} />
-									<Text fw={600}>{client.name}</Text>
-								</Group>
-							</Group>
-
-							<Stack gap="xs" mb="md">
-								<Text size="sm" c="dimmed">
-									{client.nameKana}
-								</Text>
-								<Text size="sm" c="dimmed">
-									職業: {client.occupation || "未設定"}
-								</Text>
-								<Text size="sm" c="dimmed">
-									趣味: {client.hobby || "未設定"}
-								</Text>
-								<Text size="sm" c="dimmed">
-									性別: {client.gender}
-								</Text>
-							</Stack>
-
-							<Group justify="space-between">
-								<CPButton
-									variant="light"
-									size="sm"
-									onClick={() => handleDetailClick(client.id)}
-								>
-									詳細
-								</CPButton>
-								<CPButton
-									variant="outline"
-									size="sm"
-									onClick={() => handleEditClick(client.id)}
-								>
-									編集
-								</CPButton>
-							</Group>
-						</CPCard>
-					))}
-				</SimpleGrid>
+				<Table.ScrollContainer minWidth={600}>
+					<Table verticalSpacing="sm" highlightOnHover>
+						<Table.Thead>
+							<Table.Tr>
+								<Table.Th>名前</Table.Th>
+								<Table.Th>性別</Table.Th>
+								<Table.Th>職業</Table.Th>
+								<Table.Th>趣味</Table.Th>
+							</Table.Tr>
+						</Table.Thead>
+						<Table.Tbody>{rows}</Table.Tbody>
+					</Table>
+				</Table.ScrollContainer>
 			)}
 
 			{/* クライアント追加モーダル */}
 			<Modal
-				opened={opened}
-				onClose={close}
+				opened={modalOpened}
+				onClose={onCloseModal}
 				title="新規クライアント登録"
 				centered
 				size="lg"
 			>
-				<NewClientModal onClose={handleClose} />
+				<NewClientModal onClose={onCloseModal} />
 			</Modal>
 		</Stack>
 	);
